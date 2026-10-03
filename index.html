@@ -1,0 +1,88 @@
+<!doctype html>
+<html lang="de">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="description" content="Kalifornische Strafrahmen durchsuchen, berechnen und für Discord, PDF oder Google Docs exportieren.">
+  <title>California Strafrechner</title>
+  <link rel="icon" type="image/png" href="city-of-los-angeles-seal.png">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <header class="topbar">
+    <a class="brand" href="#" aria-label="California Strafrechner Startseite">
+      <img src="city-of-los-angeles-seal.png" alt="Siegel der City of Los Angeles">
+      <span><strong>California Strafrechner</strong><small>Penal · Vehicle · Weapons</small></span>
+    </a>
+    <div class="top-actions">
+      <div class="language-switch" role="group" aria-label="Sprache der Deliktnamen">
+        <button class="active" type="button" data-language="de" aria-pressed="true">DE</button>
+        <button type="button" data-language="en" aria-pressed="false">EN</button>
+      </div>
+      <span class="status-pill"><i></i> Datenstand 03.10.2026</span>
+    </div>
+  </header>
+
+  <main>
+    <section class="hero" aria-labelledby="page-title">
+      <div><p class="eyebrow">California Criminal Code Toolkit</p><h1 id="page-title">Strafrahmen. Klar. Einsatzbereit.</h1><p>Gesetze durchsuchen, Höchstwerte kumulieren und eine fertige Akte für Discord, PDF oder Google Docs erstellen.</p></div>
+      <div class="hero-stat"><strong id="hero-catalog-count">—</strong><span>durchsuchbare Einträge</span></div>
+    </section>
+
+    <nav class="tabs" role="tablist" aria-label="Bereiche">
+      <button class="active" id="tab-calculator" role="tab" aria-selected="true" aria-controls="panel-calculator" data-tab="calculator"><span>01</span> Rechner</button>
+      <button id="tab-catalog" role="tab" aria-selected="false" aria-controls="panel-catalog" data-tab="catalog"><span>02</span> Deliktkatalog</button>
+      <button id="tab-export" role="tab" aria-selected="false" aria-controls="panel-export" data-tab="export"><span>03</span> Export</button>
+    </nav>
+
+    <section class="tab-panel active" id="panel-calculator" role="tabpanel" aria-labelledby="tab-calculator">
+      <div class="workspace">
+        <div class="entry-panel panel">
+          <div class="panel-heading"><div><span class="step">01</span><h2>Akte vorbereiten</h2></div><span id="catalog-count" class="catalog-count"></span></div>
+          <div class="agency-field"><label for="agency-input">Fraktion / Behörde</label><input id="agency-input" type="text" maxlength="80" placeholder="z. B. LAPD, LASD oder CHP"><div class="agency-presets" aria-label="Behörde schnell auswählen"><button type="button" data-agency="LAPD">LAPD</button><button type="button" data-agency="LASD">LASD</button><button type="button" data-agency="CHP">CHP</button></div></div>
+          <form id="offense-form" autocomplete="off">
+            <label for="offense-input">Gesetzesnummer oder Beschreibung</label>
+            <div class="search-wrap"><svg class="search-icon" viewBox="0 0 24 24" aria-hidden="true"><circle cx="10.8" cy="10.8" r="6.8"/><path d="m16 16 4.5 4.5"/></svg><textarea id="offense-input" rows="3" placeholder="z. B. PC 26350, DUI, robbery"></textarea><kbd>Ctrl ↵</kbd></div>
+            <p class="field-help">Mehrere Einträge mit Komma, Semikolon oder neuer Zeile trennen.</p>
+            <div class="suggestions" id="suggestions" role="listbox" aria-label="Suchvorschläge"></div>
+            <button class="primary-button" type="submit"><span>＋</span> Zur Berechnung hinzufügen</button>
+            <button class="secondary-button" id="open-catalog" type="button">Katalog öffnen <span id="catalog-button-count"></span></button>
+          </form>
+          <div class="quick-section"><div class="section-label">Häufig gesucht</div><div class="quick-chips" id="quick-chips"></div></div>
+        </div>
+        <div class="results-panel panel">
+          <div class="panel-heading"><div><span class="step">02</span><h2>Berechnung</h2></div><button class="ghost-button danger" id="clear-all" type="button" disabled>Alle entfernen</button></div>
+          <div class="summary-grid" aria-live="polite"><div class="summary-card"><span>Delikte</span><strong id="total-count">0</strong><small id="known-count">Noch keine Auswahl</small></div><div class="summary-card accent"><span>Max. Haft</span><strong id="total-jail">0 Monate</strong><small>Kumulativ gerechnet</small></div><div class="summary-card"><span>Max. Geldstrafe</span><strong id="total-fine">$0</strong><small>Ohne Aufschläge & Gebühren</small></div></div>
+          <div class="offense-list" id="offense-list"></div>
+          <div class="principle-note"><strong>Wichtig</strong><p>Die Summe unterstellt aufeinanderfolgende Höchststrafen. Gerichte können Strafen concurrent verhängen; PC 654 kann Mehrfachbestrafung ausschließen.</p></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="tab-panel" id="panel-catalog" role="tabpanel" aria-labelledby="tab-catalog" hidden>
+      <div class="catalog-page panel">
+        <div class="catalog-header"><div><p class="eyebrow">Offizieller Deliktindex</p><h2>Gesetze auswählen</h2><p>Suche deutsch oder englisch, filtere nach Rechtsgebiet und füge mehrere Tatbestände gemeinsam hinzu.</p></div></div>
+        <div class="catalog-controls">
+          <label class="sr-only" for="catalog-search">Katalog durchsuchen</label>
+          <div class="catalog-search-wrap"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="10.8" cy="10.8" r="6.8"/><path d="m16 16 4.5 4.5"/></svg><input id="catalog-search" type="search" placeholder="Code oder Tatbestand suchen"></div>
+          <div class="catalog-filters" id="catalog-filters" aria-label="Katalog filtern"><button class="active" type="button" data-filter="all">Alle</button><button type="button" data-filter="penal">Penal Code</button><button type="button" data-filter="vehicle">Vehicle Code</button><button type="button" data-filter="weapons">Waffenrecht</button><button type="button" data-filter="Felony">Felony</button><button type="button" data-filter="Wobbler">Wobbler</button><button type="button" data-filter="Misd.">Misd.</button><button type="button" data-filter="Infraction">Infraction</button></div>
+          <div class="catalog-result-bar"><span id="catalog-result-count"></span><button type="button" id="select-visible">Sichtbare auswählen</button></div>
+        </div>
+        <div class="catalog-list" id="catalog-list"></div>
+        <div class="catalog-footer"><div><strong id="catalog-selected-count">0</strong><span>ausgewählt</span></div><button class="primary-button" id="add-catalog-selection" type="button" disabled>Auswahl hinzufügen</button></div>
+      </div>
+    </section>
+
+    <section class="tab-panel" id="panel-export" role="tabpanel" aria-labelledby="tab-export" hidden>
+      <div class="export-grid">
+        <div class="panel export-panel"><div class="panel-heading"><div><span class="step">03</span><h2>Discord-Codeblock</h2></div><button class="copy-button" id="copy-output" type="button">Kopieren</button></div><pre id="discord-output" tabindex="0"></pre><div class="discord-footer"><span><i></i> Live-Vorschau</span><span>Monospace · direkt einfügbar</span></div></div>
+        <aside class="panel export-actions"><p class="eyebrow">Dokumente</p><h2>Akte exportieren</h2><p>Das PDF wird über den Druckdialog gespeichert. Die DOC-Datei lässt sich direkt in Google Docs oder Word öffnen.</p><button class="export-button" id="export-pdf" type="button"><span>PDF</span><div><strong>Als PDF speichern</strong><small>Druckfertige Akte</small></div></button><button class="export-button" id="export-doc" type="button"><span>DOC</span><div><strong>Für Google Docs</strong><small>Kompatible Word-Datei</small></div></button><div class="legal-flag"><strong>Keine Rechtsberatung</strong><span>Vor Verwendung immer den aktuellen Gesetzestext und den konkreten Sachverhalt prüfen.</span></div></aside>
+      </div>
+      <div class="method-grid"><article><span>01</span><div><h3>Höchster Strafrahmen</h3><p>Bei Wobblern wird für die Summe die Felony-Höchststrafe angesetzt.</p></div></article><article><span>02</span><div><h3>Jede Zeile zählt</h3><p>Mehrfach hinzugefügte Delikte werden mehrfach kumuliert.</p></div></article><article><span>03</span><div><h3>Unsicher bleibt offen</h3><p>Nicht verifizierte Werte werden nicht erfunden oder addiert.</p></div></article></div>
+    </section>
+  </main>
+  <footer><span>California Strafrechner</span><p>Allgemeine Information · Kein Ersatz für anwaltliche Beratung.</p></footer>
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+  <script src="catalog.generated.js"></script><script src="app.js"></script>
+</body>
+</html>
