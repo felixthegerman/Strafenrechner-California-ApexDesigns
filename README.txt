@@ -41,7 +41,13 @@ Git-Integration umgestellt werden; dafür müsste ein neues Projekt angelegt wer
 - „Als PDF speichern“ öffnet den Druckdialog. Dort als Ziel „Als PDF speichern“ wählen.
 - „Für Google Docs“ lädt eine DOC-Datei. Diese in Google Drive hochladen und mit
   Google Docs öffnen; alternativ funktioniert sie in Microsoft Word.
-- Der Discord-Codeblock enthält automatisch „Akte von _Behörde_“.
+- Der Discord-Codeblock enthält automatisch „Akte von Behörde“ (ohne Unterstriche).
+- Der Tab „Embed JSON“ erzeugt eine Discord-API-Payload mit Components V2,
+  Container, Textblöcken und Trennlinien. Sie muss von einem Bot/Webhook gesendet werden.
+- Unklare Strafwerte werden als Näherung berechnet und mit „≈“/„geschätzt“ markiert.
+- Die mögliche Kaution orientiert sich am Los-Angeles-County-Schedule 2026. Sie ist
+  kein verbindlicher Betrag: OR/Release, Magistrate Review, Geldkaution oder keine
+  Freilassung können je nach Tat, Vorgeschichte, Risiko und richterlicher Entscheidung gelten.
 
 5. WICHTIGER RECHTLICHER HINWEIS
 --------------------------------
@@ -52,5 +58,7 @@ Enhancements, Mindeststrafen, concurrent sentencing und Penal Code 654 prüfen.
 
 Offizielle Quellen:
 https://leginfo.legislature.ca.gov/
+https://lascpubstorage.blob.core.windows.net/cpw/LIBOPSCriminal-32-FelonyBailSchedule.pdf
+https://docs.discord.com/developers/components/reference
 https://docs.github.com/en/pages/quickstart
 https://developers.cloudflare.com/pages/get-started/direct-upload/

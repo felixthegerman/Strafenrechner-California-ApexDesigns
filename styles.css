@@ -18,3 +18,10 @@ footer{min-height:80px;display:flex;align-items:center;justify-content:space-bet
 @media(max-width:900px){.workspace,.export-grid{grid-template-columns:1fr}.entry-panel,.results-panel{min-height:0}.hero{grid-template-columns:1fr}.hero-stat{display:none}.method-grid{grid-template-columns:1fr}}
 @media(max-width:620px){.topbar{height:72px;padding:0 14px}.brand img{width:44px;height:44px}.brand strong{font-size:.86rem}.brand small{font-size:.56rem}.status-pill{display:none}.top-actions{gap:8px}main{width:min(100% - 26px,1240px);padding-top:34px}.hero h1{font-size:2.45rem}.tabs button{padding:11px 7px;font-size:.75rem}.tabs button span{display:none}.entry-panel,.results-panel,.export-panel,.export-actions{padding:18px}.summary-grid{grid-template-columns:1fr}.summary-card{min-height:84px}.catalog-row{grid-template-columns:auto 1fr}.catalog-row-meta{display:none}.catalog-footer{padding:12px 16px}.catalog-footer .primary-button{min-width:150px}.offense-meta{display:grid}.discord-footer,footer{align-items:flex-start;flex-direction:column;padding-top:20px;padding-bottom:20px}}
 @media print{body{background:#fff;color:#111}.topbar,.hero,.tabs,#panel-calculator,#panel-catalog,.export-actions,.method-grid,footer,.toast,.panel-heading,.discord-footer{display:none!important}main{width:100%;padding:0}#panel-export{display:block!important}.export-grid{display:block}.export-panel{border:0;box-shadow:none;padding:0}pre{min-height:0;border:0;color:#111;background:#fff;font-size:9pt;white-space:pre-wrap}.export-panel:before{content:"California Strafrechner – Akte";display:block;margin-bottom:16px;font-size:20pt;font-weight:800}}
+
+/* Result extensions */
+.summary-grid{grid-template-columns:repeat(2,1fr)}
+.summary-card.bail{border-top:2px solid #6ea8d8}
+.summary-card.bail strong{font-size:1.05rem}
+.estimate-badge{padding:3px 6px;border:1px solid rgba(110,168,216,.35);border-radius:999px;color:#9bc7eb;background:rgba(110,168,216,.09);font-size:.6rem;font-weight:800;text-transform:uppercase;letter-spacing:.05em}
+@media(max-width:620px){.summary-grid{grid-template-columns:1fr}.tabs{display:grid;grid-template-columns:repeat(2,1fr)}}

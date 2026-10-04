@@ -162,6 +162,13 @@ const curatedCatalog = [
   }
 ];
 
+curatedCatalog.push(
+  {code:'HSC 11350',name:'Besitz kontrollierter Substanzen',short:'Drogenbesitz',type:'Misd.',months:12,fine:70,jail:'1 Jahr',fineText:'$70',aliases:['drug possession','controlled substance possession','kokainbesitz','heroinbesitz'],note:'Grundfall ohne einschlägige schwere Vorstrafe; Sonderregeln und Diversion können gelten.',source:source('HSC','11350')},
+  {code:'HSC 11351',name:'Besitz kontrollierter Substanzen zum Verkauf',short:'Drogenbesitz z. Verkauf',type:'Felony',months:48,fine:20000,jail:'4 Jahre',fineText:'$20.000',aliases:['possession for sale','drug sales possession'],note:'Felony mit Straftriade von zwei, drei oder vier Jahren; zusätzliche mengen- oder vorstrafenbezogene Folgen möglich.',source:source('HSC','11351')},
+  {code:'HSC 11359',name:'Cannabisbesitz zum Verkauf',short:'Cannabisverkaufsbesitz',type:'Wobbler',months:36,fine:10000,jail:'3 J. / 6 Mon.',fineText:'$10.000 / $500',aliases:['marijuana for sale','cannabis for sale'],note:'Grundfall ab 18: bis zu sechs Monate und $500; bei gesetzlichen Erschwerungsgründen Felony nach PC 1170(h).',source:source('HSC','11359')},
+  {code:'HSC 11377',name:'Besitz bestimmter kontrollierter Substanzen',short:'Besitz kontroll. Stoffe',type:'Misd.',months:12,fine:70,jail:'1 Jahr',fineText:'$70',aliases:['meth possession','amphetamine possession','drug possession'],note:'Grundfall; bei bestimmten schweren Vorverurteilungen ist Felony-Behandlung möglich.',source:source('HSC','11377')}
+);
+
 const englishNames = {
   'PC 187':'Murder','PC 211':'Robbery','PC 459':'Burglary','PC 245(a)(1)':'Assault with a deadly weapon',
   'PC 422':'Criminal threats','PC 487':'Grand theft','PC 490.2':'Petty theft up to $950',
@@ -173,7 +180,25 @@ const englishNames = {
   'VC 23153':'DUI causing injury — first offense','VC 22348(b)':'Speeding over 100 mph — first offense',
   'VC 14601.1(a)':'Driving with a suspended license','VC 2800.1':'Evading a peace officer',
   'VC 2800.2':'Reckless evading','VC 20001(b)(2)':'Hit-and-run causing death or permanent serious injury',
-  'VC 10851(a)':'Unlawful taking or driving of a vehicle'
+  'VC 10851(a)':'Unlawful taking or driving of a vehicle',
+  'HSC 11350':'Possession of a controlled substance','HSC 11351':'Possession of a controlled substance for sale',
+  'HSC 11359':'Possession of cannabis for sale','HSC 11377':'Possession of specified controlled substances'
+};
+
+const friendlyGeneratedNames = {
+  'PC 32':['Beihilfe nach der Tat','Accessory after the fact'],'PC 67':['Bestechung eines Staatsbeamten','Bribery of a state executive officer'],
+  'PC 68':['Bestechlichkeit eines Amtsträgers','Bribe solicitation by a public officer'],'PC 69':['Widerstand oder Drohung gegen Amtsträger','Resisting or threatening an executive officer'],
+  'PC 92':['Bestechung von Richter oder Juror','Bribery of a judge or juror'],'PC 118':['Meineid','Perjury'],
+  'PC 136.1':['Zeugenbeeinflussung','Dissuading a witness'],'PC 207':['Entführung','Kidnapping'],
+  'PC 213':['Strafe für Raub','Robbery penalty provision'],'PC 215':['Carjacking','Carjacking'],
+  'PC 220':['Angriff mit Sexual- oder Raubabsicht','Assault with intent to commit a sex offense or robbery'],
+  'PC 242':['Körperverletzung (Battery)','Battery'],'PC 243':['Strafen für Battery','Battery penalty provision'],
+  'PC 261':['Vergewaltigung','Rape'],'PC 288':['Sexueller Missbrauch eines Kindes','Lewd acts with a child'],
+  'PC 415':['Störung des öffentlichen Friedens','Disturbing the peace'],'PC 484':['Diebstahl','Theft'],
+  'PC 496':['Hehlerei','Receiving stolen property'],'PC 503':['Veruntreuung','Embezzlement'],
+  'PC 647':['Ordnungswidriges Verhalten','Disorderly conduct'],'VC 12500':['Fahren ohne gültige Fahrerlaubnis','Driving without a valid license'],
+  'VC 20002':['Unfallflucht mit Sachschaden','Hit-and-run causing property damage'],'VC 23103':['Rücksichtsloses Fahren','Reckless driving'],
+  'VC 23109':['Illegales Straßenrennen','Illegal speed contest'],'VC 2800.3':['Flucht mit Verletzung oder Tod','Evading causing injury or death']
 };
 
 const curatedCodes = new Set(curatedCatalog.map(item => item.code.toUpperCase()));
@@ -184,16 +209,32 @@ const catalog = [...curatedCatalog, ...generatedCatalog].map((item, index) => {
   const numeric = Number.parseFloat(String(item.code).replace(/^[A-Z]+\s+/, '')) || 0;
   const category = item.code.startsWith('VC ')
     ? 'vehicle'
+    : item.code.startsWith('HSC ')
+      ? 'health'
     : numeric >= 16000
       ? 'weapons'
       : 'penal';
+  const friendly = friendlyGeneratedNames[item.code];
+  const inferredType = item.type === 'Unklar'
+    ? (item.lifeTerms || item.months > 12 ? 'Felony' : item.months > 0 ? 'Misd.' : item.fine > 0 ? 'Infraction' : 'Unklar')
+    : item.type;
+  const estimatedMonths = item.months == null && ['Felony','Wobbler','Misd.'].includes(inferredType)
+    ? (inferredType === 'Misd.' ? 6 : 36) : item.months;
+  const estimatedFine = item.fine == null && ['Felony','Wobbler','Misd.','Infraction'].includes(inferredType)
+    ? (inferredType === 'Felony' || inferredType === 'Wobbler' ? 10000 : inferredType === 'Misd.' ? 1000 : 250) : item.fine;
+  const estimated = item.generated && (item.months == null || item.fine == null || item.type === 'Unklar');
   return {
     aliases: [],
-    jail: item.lifeTerms ? 'Lebenslang' : generatedMonthsLabel(item.months),
-    fineText: generatedMoneyLabel(item.fine),
     ...item,
-    nameDe: item.generated ? null : item.name,
-    nameEn: item.generated ? item.name : (englishNames[item.code] || item.name),
+    type: inferredType,
+    months: estimatedMonths,
+    fine: estimatedFine,
+    jail: item.lifeTerms ? 'Lebenslang' : `${estimated ? '≈ ' : ''}${generatedMonthsLabel(estimatedMonths)}`,
+    fineText: `${estimated ? '≈ ' : ''}${generatedMoneyLabel(estimatedFine)}`,
+    estimated,
+    originalText: item.generated ? item.name : null,
+    nameDe: item.generated ? (friendly?.[0] || `Straftatbestand nach ${item.code}`) : item.name,
+    nameEn: item.generated ? (friendly?.[1] || `Offense under ${item.code}`) : (englishNames[item.code] || item.name),
     category,
     catalogId: index
   };
@@ -218,8 +259,10 @@ function itemName(item) {
 }
 
 function itemShort(item) {
-  if (state.language === 'en') return item.nameEn || item.short || item.name;
-  return item.short || item.nameDe || item.nameEn || item.name;
+  const value = state.language === 'en'
+    ? (item.nameEn || item.short || item.name)
+    : (item.nameDe || item.short || item.nameEn || item.name);
+  return truncate(value, 40);
 }
 
 function normalize(value) {
@@ -287,13 +330,13 @@ function addTerms(terms) {
 }
 
 function unknownEntry(raw) {
-  const codeMatch = raw.match(/^\s*(PC|VC)\s*([0-9]+(?:\.[0-9]+)?(?:\([a-z0-9]+\))*)\s*$/i);
+  const codeMatch = raw.match(/^\s*(PC|VC|HSC)\s*([0-9]+(?:\.[0-9]+)?(?:\([a-z0-9]+\))*)\s*$/i);
   let official = 'https://leginfo.legislature.ca.gov/faces/codes.xhtml';
-  if (codeMatch) official = source(codeMatch[1].toUpperCase() === 'PC' ? 'PEN' : 'VEH', codeMatch[2]);
+  if (codeMatch) official = source(codeMatch[1].toUpperCase() === 'PC' ? 'PEN' : codeMatch[1].toUpperCase() === 'VC' ? 'VEH' : 'HSC', codeMatch[2]);
   return {
-    instanceId: state.sequence++, code: raw.toUpperCase(), name: 'Nicht verifiziert', short: raw,
-    type: 'Unsicher', months: null, fine: null, jail: '—', fineText: '—', unknown: true, excluded: true,
-    note: 'Kein verlässlicher Treffer in der lokalen Datenbasis. Nicht in der Gesamtsumme enthalten.', source: official
+    instanceId: state.sequence++, code: raw.toUpperCase(), name: 'Geschätzter Tatbestand', nameDe:'Geschätzter Tatbestand', nameEn:'Estimated offense', short: raw,
+    type: 'Schätzung', months: 12, fine: 1000, jail: '≈ 1 Jahr', fineText: '≈ $1.000', unknown: true, estimated: true,
+    note: 'Kein eindeutiger Katalogtreffer. Als konservative Näherung mit allgemeinem Misdemeanor-Höchstrahmen angesetzt; unbedingt prüfen.', source: official
   };
 }
 
@@ -339,6 +382,28 @@ function totalFineLabel(total) {
   return `${formatMoney(total.fine)}${total.openFine ? ' + offen' : ''}`;
 }
 
+function bailFor(entry) {
+  const code = String(entry.code).toUpperCase();
+  if (code === 'PC 187') return { amount: 2000000, label: '$2.000.000 / ggf. keine', reason: 'Mord; bei special circumstance kann Freilassung ausgeschlossen sein.' };
+  if (entry.type === 'Infraction') return { amount: 0, label: '$0 / Erscheinen', reason: 'Bei Infractions ist regelmäßig Erscheinen ohne Kautionshinterlegung möglich.' };
+  if (entry.type === 'Misd.' || entry.type === 'Ausnahme') return { amount: 0, label: '$0 / OR möglich', reason: 'LA County PARP: häufig Cite/Book & Release oder Own Recognizance; Ausnahmen möglich.' };
+  if (entry.unknown) return { amount: 75000, label: '≈ $0–$75.000', reason: 'Tatbestand unklar; Magistrate Review oder richterliche Festsetzung möglich.' };
+  const violent = ['PC 211','PC 215','PC 220','PC 245(A)(1)','PC 273.5(A)','VC 23153'];
+  if (violent.includes(code)) return { amount: 100000, label: '≈ bis $100.000', reason: 'Gewalt-/Verletzungsdelikt; Geldkaution oder richterliche Prüfung möglich.' };
+  if (entry.lifeTerms) return { amount: 1000000, label: '≈ $1.000.000+ / ggf. keine', reason: 'Lebenslange Strafdrohung; Kaution kann sehr hoch oder ausgeschlossen sein.' };
+  const years = Math.max(3, Math.ceil((entry.months || 36) / 12));
+  const schedule = {3:20000,4:25000,5:30000,6:35000,7:40000,8:45000,9:50000,10:55000,11:65000,12:70000,13:75000,14:80000,15:90000,16:100000};
+  const amount = schedule[Math.min(16, years)] || 20000;
+  return { amount, label: `≈ $0–${formatMoney(amount)}`, reason: 'LA County 2026: $0/Release-Protokoll oder richterlich festgesetzte Geldkaution; Schätzung nach Höchststrafe.' };
+}
+
+function totalBail() {
+  if (!state.entries.length) return { amount:0, label:'$0 / OR', reason:'Noch keine Auswahl · LA County 2026' };
+  const values = state.entries.map(bailFor);
+  const highest = values.reduce((best, item) => item.amount > best.amount ? item : best, values[0]);
+  return { ...highest, reason: `${highest.reason} Mehrere Delikte werden meist nicht einfach addiert.` };
+}
+
 function render() {
   const total = totals();
   const known = state.entries.filter(entry => !entry.unknown).length;
@@ -348,6 +413,9 @@ function render() {
     : 'Noch keine Auswahl';
   document.querySelector('#total-jail').textContent = totalJailLabel(total);
   document.querySelector('#total-fine').textContent = totalFineLabel(total);
+  const bail = totalBail();
+  document.querySelector('#total-bail').textContent = bail.label;
+  document.querySelector('#bail-reason').textContent = bail.reason;
   clearButton.disabled = state.entries.length === 0;
 
   if (!state.entries.length) {
@@ -359,6 +427,7 @@ function render() {
     list.innerHTML = state.entries.map((entry, index) => offenseCard(entry, index)).join('');
   }
   discordOutput.textContent = discordTable();
+  document.querySelector('#embed-output').textContent = discordEmbedJson();
   if (!document.querySelector('#panel-catalog').hidden) renderCatalog();
 }
 
@@ -368,11 +437,12 @@ function escapeHtml(value) {
 
 function offenseCard(entry, index) {
   const prison = entry.lifeTerms ? entry.jail : entry.jail;
+  const bail = bailFor(entry);
   return `<article class="offense-card ${entry.unknown ? 'unknown-card' : ''}">
     <div class="offense-main">
       <div>
-        <div class="offense-title-row"><span class="code-badge">${escapeHtml(entry.code)}</span><h3>${escapeHtml(itemName(entry))}</h3></div>
-        <div class="offense-data"><span class="type-tag">${escapeHtml(entry.type)}</span><span>Haft: <b>${escapeHtml(prison)}</b></span><span>Geldstrafe: <b>${escapeHtml(entry.fineText)}</b></span></div>
+        <div class="offense-title-row"><span class="code-badge">${escapeHtml(entry.code)}</span><h3>${escapeHtml(itemName(entry))}</h3>${entry.estimated ? '<span class="estimate-badge">geschätzt</span>' : ''}</div>
+        <div class="offense-data"><span class="type-tag">${escapeHtml(entry.type)}</span><span>Haft: <b>${escapeHtml(prison)}</b></span><span>Geldstrafe: <b>${escapeHtml(entry.fineText)}</b></span><span>Kaution: <b>${escapeHtml(bail.label)}</b></span></div>
       </div>
       <div class="offense-actions">
         <button class="icon-button" type="button" data-remove="${entry.instanceId}" aria-label="Zeile ${index + 1} entfernen" title="Entfernen">
@@ -380,7 +450,7 @@ function offenseCard(entry, index) {
         </button>
       </div>
     </div>
-    <div class="offense-meta"><p>${escapeHtml(entry.note)}</p><a href="${escapeHtml(entry.source)}" target="_blank" rel="noopener">Gesetzestext ↗</a></div>
+    <div class="offense-meta"><p>${escapeHtml(entry.note)} <strong>Kaution:</strong> ${escapeHtml(bail.reason)}</p><a href="${escapeHtml(entry.source)}" target="_blank" rel="noopener">Gesetzestext ↗</a></div>
   </article>`;
 }
 
@@ -400,13 +470,42 @@ function discordTable() {
   ]));
   const total = totals();
   const totalRow = row(['GESAMT (Maximum)', '', '', totalJailLabel(total, true), `${totalFineLabel(total)}*`]);
-  const agency = (state.agency || 'Nicht angegeben').replace(/[\r\n`]/g, ' ').trim();
-  const content = [`Akte von _${agency}_`, '', border, row(headers), border, ...(rows.length ? rows : [row(['—', '—', '—', '—', '—'])]), border, totalRow, border,
+  const agency = (state.agency || 'Nicht angegeben').replace(/[\r\n`_]/g, ' ').trim();
+  const bail = totalBail();
+  const content = [`Akte von ${agency}`, '', border, row(headers), border, ...(rows.length ? rows : [row(['—', '—', '—', '—', '—'])]), border, totalRow, border,
+    `Mögliche Kaution (LA County 2026): ${bail.label}`,
+    `Grund: ${bail.reason}`,
     '* zzgl. gerichtlicher Aufschläge & Gebühren',
     '* kumulative Maximalrechnung; concurrent sentencing und PC 654 möglich',
-    '* „offen“ = im Abschnitt kein sicherer Maximalwert ausdrücklich genannt'
+    '* ≈ / geschätzt = Näherung, kein verbindlicher Gerichts- oder Kautionswert'
   ].join('\n');
   return `\`\`\`\n${content}\n\`\`\``;
+}
+
+function discordEmbedJson() {
+  const total = totals();
+  const bail = totalBail();
+  const agency = (state.agency || 'Nicht angegeben').replace(/[\r\n`_*]/g, ' ').trim();
+  const lines = state.entries.length
+    ? state.entries.map((entry, index) => `**${index + 1}. ${itemShort(entry)}** · \`${entry.code}\`\n${entry.type} · Haft: ${entry.jail} · Geld: ${entry.fineText} · Kaution: ${bailFor(entry).label}`).join('\n\n')
+    : '*Noch keine Delikte ausgewählt.*';
+  const payload = {
+    flags: 32768,
+    components: [{
+      type: 17,
+      accent_color: 14133851,
+      components: [
+        { type: 10, content: `## Akte von ${agency}\nCalifornia Strafrechner` },
+        { type: 14, divider: true, spacing: 1 },
+        { type: 10, content: lines.slice(0, 3800) },
+        { type: 14, divider: true, spacing: 1 },
+        { type: 10, content: `### Gesamt (Maximum)\n**Haft:** ${totalJailLabel(total, true)}\n**Geldstrafe:** ${totalFineLabel(total)}*\n**Mögliche Kaution:** ${bail.label}\n-# ${bail.reason}` },
+        { type: 14, divider: true, spacing: 1 },
+        { type: 10, content: '-# Schätzwerte sind unverbindlich. Zuschläge, Gebühren, Enhancements, concurrent sentencing und PC 654 können das Ergebnis verändern.' }
+      ]
+    }]
+  };
+  return JSON.stringify(payload, null, 2);
 }
 
 function showSuggestions() {
@@ -446,7 +545,7 @@ function renderCatalog() {
     ? results.map(item => `<label class="catalog-row">
         <input type="checkbox" data-catalog-item="${item.catalogId}" ${catalogUi.selected.has(item.catalogId) ? 'checked' : ''}>
         <span class="catalog-row-main">
-          <span class="catalog-row-title"><span class="code-badge">${escapeHtml(item.code)}</span><strong>${escapeHtml(item.type)}</strong></span>
+          <span class="catalog-row-title"><span class="code-badge">${escapeHtml(item.code)}</span><strong>${escapeHtml(item.type)}</strong>${item.estimated ? '<span class="estimate-badge">geschätzt</span>' : ''}</span>
           <p>${escapeHtml(itemName(item))}${state.language === 'de' && !item.nameDe ? ' · EN Original' : ''}</p>
         </span>
         <span class="catalog-row-meta"><span>Haft <b>${escapeHtml(item.jail)}</b></span><span>Geld <b>${escapeHtml(item.fineText)}</b></span></span>
@@ -489,9 +588,10 @@ function activateTab(name) {
 
 function reportHtml() {
   const total = totals();
+  const bail = totalBail();
   const agency = escapeHtml(state.agency || 'Nicht angegeben');
   const rows = state.entries.length ? state.entries.map(entry => `<tr><td>${escapeHtml(itemName(entry))}</td><td>${escapeHtml(entry.code)}</td><td>${escapeHtml(entry.type)}</td><td>${escapeHtml(entry.jail)}</td><td>${escapeHtml(entry.fineText)}</td></tr>`).join('') : '<tr><td colspan="5">Keine Delikte ausgewählt</td></tr>';
-  return `<!doctype html><html><head><meta charset="utf-8"><title>California Strafrechner</title><style>body{font-family:Arial,sans-serif;color:#17202a;margin:36px}h1{margin-bottom:4px}p{color:#59636f}table{width:100%;border-collapse:collapse;margin:22px 0}th,td{border:1px solid #aab1ba;padding:8px;text-align:left;font-size:12px}th{background:#e9edf1}.total{font-weight:bold}.note{font-size:11px;color:#555}</style></head><body><h1>California Strafrechner</h1><p><strong>Akte von ${agency}</strong></p><table><thead><tr><th>Delikt</th><th>Code</th><th>Typ</th><th>Max. Haft</th><th>Max. Geldstrafe</th></tr></thead><tbody>${rows}<tr class="total"><td>GESAMT (Maximum)</td><td></td><td></td><td>${escapeHtml(totalJailLabel(total,true))}</td><td>${escapeHtml(totalFineLabel(total))}*</td></tr></tbody></table><p class="note">* zzgl. gerichtlicher Aufschläge & Gebühren. Kumulative Maximalrechnung; concurrent sentencing und PC 654 können die Gesamtstrafe verändern. Keine Rechtsberatung.</p></body></html>`;
+  return `<!doctype html><html><head><meta charset="utf-8"><title>California Strafrechner</title><style>body{font-family:Arial,sans-serif;color:#17202a;margin:36px}h1{margin-bottom:4px}p{color:#59636f}table{width:100%;border-collapse:collapse;margin:22px 0}th,td{border:1px solid #aab1ba;padding:8px;text-align:left;font-size:12px}th{background:#e9edf1}.total{font-weight:bold}.note{font-size:11px;color:#555}</style></head><body><h1>California Strafrechner</h1><p><strong>Akte von ${agency}</strong></p><table><thead><tr><th>Delikt</th><th>Code</th><th>Typ</th><th>Max. Haft</th><th>Max. Geldstrafe</th></tr></thead><tbody>${rows}<tr class="total"><td>GESAMT (Maximum)</td><td></td><td></td><td>${escapeHtml(totalJailLabel(total,true))}</td><td>${escapeHtml(totalFineLabel(total))}*</td></tr></tbody></table><p><strong>Mögliche Kaution (LA County 2026):</strong> ${escapeHtml(bail.label)}<br>${escapeHtml(bail.reason)}</p><p class="note">* zzgl. gerichtlicher Aufschläge & Gebühren. Kumulative Maximalrechnung; concurrent sentencing und PC 654 können die Gesamtstrafe verändern. ≈ kennzeichnet Schätzwerte. Keine Rechtsberatung.</p></body></html>`;
 }
 
 function downloadDoc() {
@@ -558,6 +658,21 @@ document.querySelector('#copy-output').addEventListener('click', async () => {
     selection.removeAllRanges();
     selection.addRange(range);
     notify('Text markiert – jetzt kopieren');
+  }
+});
+
+document.querySelector('#copy-embed').addEventListener('click', async () => {
+  const output = document.querySelector('#embed-output');
+  try {
+    await navigator.clipboard.writeText(output.textContent);
+    notify('Discord Components V2 JSON kopiert');
+  } catch {
+    const selection = window.getSelection();
+    const range = document.createRange();
+    range.selectNodeContents(output);
+    selection.removeAllRanges();
+    selection.addRange(range);
+    notify('JSON markiert – jetzt kopieren');
   }
 });
 
