@@ -34,6 +34,7 @@
       <button id="tab-catalog" role="tab" aria-selected="false" aria-controls="panel-catalog" data-tab="catalog"><span>02</span> Deliktkatalog</button>
       <button id="tab-export" role="tab" aria-selected="false" aria-controls="panel-export" data-tab="export"><span>03</span> Export</button>
       <button id="tab-embed" role="tab" aria-selected="false" aria-controls="panel-embed" data-tab="embed"><span>04</span> Embed JSON</button>
+      <button id="tab-tickets" role="tab" aria-selected="false" aria-controls="panel-tickets" data-tab="tickets"><span>05</span> Strafzettel</button>
     </nav>
 
     <section class="tab-panel active" id="panel-calculator" role="tabpanel" aria-labelledby="tab-calculator">
@@ -53,7 +54,7 @@
         </div>
         <div class="results-panel panel">
           <div class="panel-heading"><div><span class="step">02</span><h2>Berechnung</h2></div><button class="ghost-button danger" id="clear-all" type="button" disabled>Alle entfernen</button></div>
-          <div class="summary-grid" aria-live="polite"><div class="summary-card"><span>Delikte</span><strong id="total-count">0</strong><small id="known-count">Noch keine Auswahl</small></div><div class="summary-card accent"><span>Max. Haft</span><strong id="total-jail">0 Monate</strong><small>Kumulativ gerechnet</small></div><div class="summary-card"><span>Max. Geldstrafe</span><strong id="total-fine">$0</strong><small>Ohne Aufschläge & Gebühren</small></div><div class="summary-card bail"><span>Mögliche Kaution</span><strong id="total-bail">$0 / OR</strong><small id="bail-reason">LA County 2026 · Schätzung</small></div></div>
+          <div class="summary-grid" aria-live="polite"><div class="summary-card"><span>Delikte</span><strong id="total-count">0</strong><small id="known-count">Noch keine Auswahl</small></div><div class="summary-card accent"><span>Max. Haft</span><strong id="total-jail">0 Monate</strong><small>Kumulativ gerechnet</small></div><div class="summary-card"><span>Max. Geldstrafe / Ticket</span><strong id="total-fine">$0</strong><small>Ticketwerte ggf. inkl. Aufschläge</small></div><div class="summary-card bail"><span>Mögliche Kaution</span><strong id="total-bail">$0 / OR</strong><small id="bail-reason">LA County 2026 · Schätzung</small></div></div>
           <div class="offense-list" id="offense-list"></div>
           <div class="principle-note"><strong>Wichtig</strong><p>Die Summe unterstellt aufeinanderfolgende Höchststrafen. Gerichte können Strafen concurrent verhängen; PC 654 kann Mehrfachbestrafung ausschließen.</p></div>
         </div>
@@ -66,7 +67,7 @@
         <div class="catalog-controls">
           <label class="sr-only" for="catalog-search">Katalog durchsuchen</label>
           <div class="catalog-search-wrap"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="10.8" cy="10.8" r="6.8"/><path d="m16 16 4.5 4.5"/></svg><input id="catalog-search" type="search" placeholder="Code oder Tatbestand suchen"></div>
-          <div class="catalog-filters" id="catalog-filters" aria-label="Katalog filtern"><button class="active" type="button" data-filter="all">Alle</button><button type="button" data-filter="penal">Penal Code</button><button type="button" data-filter="vehicle">Vehicle Code</button><button type="button" data-filter="weapons">Waffenrecht</button><button type="button" data-filter="health">Health & Safety</button><button type="button" data-filter="Felony">Felony</button><button type="button" data-filter="Wobbler">Wobbler</button><button type="button" data-filter="Misd.">Misd.</button><button type="button" data-filter="Infraction">Infraction</button></div>
+          <div class="catalog-filters" id="catalog-filters" aria-label="Katalog filtern"><button class="active" type="button" data-filter="all">Alle</button><button type="button" data-filter="trafficFine">Bußgelder</button><button type="button" data-filter="vehicle">Vehicle Code</button><button type="button" data-filter="boating">Bootsverkehr</button><button type="button" data-filter="penal">Penal Code</button><button type="button" data-filter="weapons">Waffenrecht</button><button type="button" data-filter="health">Health & Safety</button><button type="button" data-filter="Felony">Felony</button><button type="button" data-filter="Wobbler">Wobbler</button><button type="button" data-filter="Misd.">Misd.</button><button type="button" data-filter="Infraction">Infraction</button></div>
           <div class="catalog-result-bar"><span id="catalog-result-count"></span><button type="button" id="select-visible">Sichtbare auswählen</button></div>
         </div>
         <div class="catalog-list" id="catalog-list"></div>
@@ -85,7 +86,41 @@
     <section class="tab-panel" id="panel-embed" role="tabpanel" aria-labelledby="tab-embed" hidden>
       <div class="export-grid">
         <div class="panel export-panel"><div class="panel-heading"><div><span class="step">04</span><h2>Discord Components V2 JSON</h2></div><button class="copy-button" id="copy-embed" type="button">JSON kopieren</button></div><pre id="embed-output" tabindex="0"></pre><div class="discord-footer"><span><i></i> Live-Vorschau</span><span>IS_COMPONENTS_V2 · Container · Separator</span></div></div>
-        <aside class="panel export-actions"><p class="eyebrow">Discord API</p><h2>Strukturierte Akte</h2><p>Das JSON nutzt Components V2 mit Textblöcken, Trennlinien und einem farbigen Container. Es ist für Bots oder Webhooks gedacht, die rohe Discord-Nachrichten-Payloads senden können.</p><div class="legal-flag"><strong>Hinweis</strong><span>Normales Einfügen in einen Discord-Chat rendert JSON nur als Text. Für die Darstellung muss ein Bot oder Webhook die Payload an die Discord API senden.</span></div></aside>
+        <aside class="panel discord-preview-panel"><p class="eyebrow">Live-Vorschau</p><h2>So erscheint die Akte</h2><div class="discord-preview" id="discord-preview"></div><div class="legal-flag"><strong>Hinweis</strong><span>Die Vorschau bildet Components V2 nach. Das echte Ergebnis kann je nach Discord-Client geringfügig abweichen; ein Bot oder Webhook muss das JSON senden.</span></div></aside>
+      </div>
+      <div class="panel webhook-panel"><div><p class="eyebrow">Discord Webhook</p><h2>Embed direkt senden</h2><p>Der Link wird nur für diesen Versand im Browser verwendet und nicht gespeichert.</p></div><div class="webhook-controls"><label for="webhook-url">Webhook-Link</label><div><input id="webhook-url" type="url" autocomplete="off" placeholder="https://discord.com/api/webhooks/…"><button id="send-webhook" type="button">An Discord senden</button></div><small id="webhook-status">Noch nicht gesendet</small></div></div>
+    </section>
+
+    <section class="tab-panel" id="panel-tickets" role="tabpanel" aria-labelledby="tab-tickets" hidden>
+      <div class="tickets-page panel">
+        <div class="catalog-header"><div><p class="eyebrow">California Traffic Tickets · 2026</p><h2>Strafzettel & Verkehrsverstöße</h2><p>Grundbuße, mögliche Gesamtsumme mit Aufschlägen und DMV-Punkte auf einen Blick. Mit + und − lassen sich Verstöße mehrfach berechnen.</p></div></div>
+        <div class="ticket-note"><strong>Warum ist „Gesamt“ höher?</strong><span>Zur Grundbuße kommen staatliche und örtliche Penalty Assessments sowie Gerichtsgebühren. Die angezeigten Gesamtwerte orientieren sich am veröffentlichten Yolo-County-Plan 2026; der konkrete Betrag kann je nach County und Fall abweichen.</span></div>
+        <section class="ticket-form-section" aria-labelledby="ticket-form-title">
+          <div class="ticket-form-heading"><div><span class="step">01</span><h3 id="ticket-form-title">Strafzettel ausfüllen</h3></div><span>Angaben erscheinen im PDF und bleiben im Browser</span></div>
+          <div class="ticket-auto-grid"><div><span>Fallakte</span><strong id="auto-case-number">AGENCY-000000</strong></div><div><span>Citation-Nummer</span><strong id="auto-citation-number">00000000</strong></div><div><span>Automatisch erfasst</span><strong id="auto-ticket-datetime">—</strong></div></div>
+          <div class="ticket-form-grid" id="ticket-form">
+            <label><span>Name</span><input type="text" data-ticket-field="personName" placeholder="Vor- und Nachname" required></label>
+            <label><span>Datum</span><input type="date" data-ticket-field="violationDate" required></label>
+            <label><span>Kennzeichen / License Plate</span><input type="text" data-ticket-field="licensePlate" placeholder="z. B. 8ABC123" required></label>
+            <label><span>Fahrzeug</span><input type="text" data-ticket-field="vehicle" placeholder="Marke, Modell, Farbe" required></label>
+            <label><span>Officer</span><input type="text" data-ticket-field="officer" placeholder="Name des Officers" required></label>
+            <label><span>Badge-Nummer</span><input type="text" data-ticket-field="badgeNumber" placeholder="Dienstnummer" required></label>
+            <label class="wide-field"><span>Ort</span><input type="text" data-ticket-field="location" placeholder="Straße / Kreuzung / Gewässer" required></label>
+            <label class="wide-field"><span>Gericht / Department</span><select data-ticket-field="court" required><option value="">Bitte auswählen</option><option>Supreme Court</option><option>Superior Court</option><option>Department of Justice</option><option value="Unbekannt">Unbekannt</option><option value="Nicht verfügbar">Nicht verfügbar</option></select></label>
+            <div class="signature-field wide-field"><div class="signature-heading"><span>Unterschrift</span><div><button class="active" type="button" data-signature-mode="type">Schreiben</button><button type="button" data-signature-mode="draw">Malen</button><button type="button" id="clear-signature">Löschen</button></div></div><div id="signature-type-panel"><input type="text" data-ticket-field="signatureText" placeholder="Name als Unterschrift" required></div><div id="signature-draw-panel" hidden><canvas id="signature-canvas" width="900" height="220" aria-label="Unterschrift zeichnen"></canvas><p>Mit Maus, Stift oder Finger unterschreiben.</p></div></div>
+          </div>
+        </section>
+        <div class="ticket-calculator">
+          <div><span>Ausgewählte Strafzettel</span><strong id="ticket-count">0</strong></div>
+          <div class="ticket-calculator-total"><span>Geschätzte Gesamtsumme</span><strong id="ticket-total">$0</strong></div>
+          <div><span>Mögliche DMV-Punkte</span><strong id="ticket-points">0</strong></div>
+          <button id="clear-tickets" type="button" disabled>Auswahl leeren</button>
+        </div>
+        <div class="ticket-toolbar"><label class="sr-only" for="ticket-search">Strafzettel durchsuchen</label><input id="ticket-search" type="search" placeholder="z. B. rote Ampel, Handy, 20 mph, DUI"><span id="ticket-result-count"></span></div>
+        <div class="arrest-warning-box"><strong>Festnahme statt einfachem Ticket möglich</strong><span>DUI, Fahrerflucht, rücksichtsloses Fahren, Flucht vor der Polizei, Fahren trotz Sperre und weitere Misdemeanors/Felonies sind keine normalen Bußgeldfälle. Die roten Warnkarten erklären warum.</span></div>
+        <div class="ticket-grid" id="ticket-grid"></div>
+        <div class="ticket-document-actions"><div><strong>Strafzettelakte als PDF</strong><span>Erstellt ein druckfertiges Dokument mit den Angaben oben und allen ausgewählten Verstößen.</span></div><button id="download-ticket-pdf" type="button">PDF speichern</button></div>
+        <div class="ticket-source"><span>Stand: 2026 · Erstverstoß/Grundfall</span><a href="https://www.yolo.courts.ca.gov/sites/default/files/yolo/default/Bail%20Schedule.html" target="_blank" rel="noopener">2026 Uniform Bail & Penalty Schedule ↗</a></div>
       </div>
     </section>
   </main>

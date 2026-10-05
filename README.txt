@@ -36,6 +36,16 @@ Git-Integration umgestellt werden; dafür müsste ein neues Projekt angelegt wer
 4. BEDIENUNG & EXPORT
 ---------------------
 - Im Tab „Rechner“ Behörde/Fraktion eintragen und Delikte hinzufügen.
+- Im Tab „Strafzettel“ stehen zahlreiche Verkehrsverstöße mit Grundbuße, möglicher
+  Gesamtsumme inklusive Aufschlägen und DMV-Punkten. Mehrere gleiche Verstöße
+  werden mit +/− gezählt. Rote Karten warnen, wenn statt eines einfachen Tickets
+  eine Festnahme wegen Misdemeanor/Felony möglich ist.
+- Im Formular des Strafzettel-Tabs können Name, Anschrift, Fall- und Citation-Nummer,
+  Datum, Ort, Fahrzeug, Führerschein, Behörde, Officer, Gericht und Notizen erfasst
+  werden. „PDF speichern“ öffnet die druckfertige Strafzettelakte; im Druckdialog
+  als Ziel „Als PDF speichern“ wählen.
+- Die veröffentlichten Ticket-Beispielwerte stammen aus dem Yolo-County-Plan 2026
+  und können örtlich oder je nach Fall abweichen.
 - DE/EN oben rechts schaltet die verfügbaren Deliktnamen um. Amtliche Einträge,
   für die keine geprüfte deutsche Übersetzung hinterlegt ist, bleiben Englisch.
 - „Als PDF speichern“ öffnet den Druckdialog. Dort als Ziel „Als PDF speichern“ wählen.
@@ -43,7 +53,8 @@ Git-Integration umgestellt werden; dafür müsste ein neues Projekt angelegt wer
   Google Docs öffnen; alternativ funktioniert sie in Microsoft Word.
 - Der Discord-Codeblock enthält automatisch „Akte von Behörde“ (ohne Unterstriche).
 - Der Tab „Embed JSON“ erzeugt eine Discord-API-Payload mit Components V2,
-  Container, Textblöcken und Trennlinien. Sie muss von einem Bot/Webhook gesendet werden.
+  Container, Textblöcken und Trennlinien und zeigt daneben eine Live-Vorschau.
+  Die Payload muss von einem Bot/Webhook gesendet werden.
 - Unklare Strafwerte werden als Näherung berechnet und mit „≈“/„geschätzt“ markiert.
 - Die mögliche Kaution orientiert sich am Los-Angeles-County-Schedule 2026. Sie ist
   kein verbindlicher Betrag: OR/Release, Magistrate Review, Geldkaution oder keine
@@ -58,6 +69,8 @@ Enhancements, Mindeststrafen, concurrent sentencing und Penal Code 654 prüfen.
 
 Offizielle Quellen:
 https://leginfo.legislature.ca.gov/
+https://www.yolo.courts.ca.gov/sites/default/files/yolo/default/Bail%20Schedule.html
+https://courts.ca.gov/cms/rules/index/four/rule4_102
 https://lascpubstorage.blob.core.windows.net/cpw/LIBOPSCriminal-32-FelonyBailSchedule.pdf
 https://docs.discord.com/developers/components/reference
 https://docs.github.com/en/pages/quickstart

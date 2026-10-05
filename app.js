@@ -163,10 +163,55 @@ const curatedCatalog = [
 ];
 
 curatedCatalog.push(
+  {code:'PC 69',name:'Gewaltsamer Widerstand oder Drohung gegen Amtsträger',short:'Widerstand m. Gewalt',type:'Wobbler',months:36,fine:10000,jail:'3 J. / 1 J.',fineText:'$10.000',aliases:['resisting executive officer','force against officer','gewalt gegen beamte','widerstand beamte'],note:'Drohung oder Gewalt zur Verhinderung einer Amtspflicht bzw. gewaltsamer Widerstand. Wobbler: County Jail bis 1 Jahr oder Felony nach PC 1170(h).',source:source('PEN','69')},
+  {code:'PC 415',name:'Störung des öffentlichen Friedens',short:'Ruhestörung / Streit',type:'Misd.',months:3,fine:400,jail:'90 Tage',fineText:'$400',aliases:['disturbing the peace','fighting in public','ruhestörung'],note:'Öffentlicher Kampf, störender Lärm oder provokative Worte; je nach Fall auch als Infraction verfolgbar.',source:source('PEN','415')},
+  {code:'PC 242',name:'Körperverletzung (Battery)',short:'Battery',type:'Misd.',months:6,fine:2000,jail:'6 Monate',fineText:'$2.000',aliases:['battery','körperverletzung','unlawful force'],note:'Die Definition steht in PC 242; der allgemeine Strafrahmen folgt PC 243(a). Verletzungen oder geschützte Opfer erhöhen den Rahmen.',source:source('PEN','243')},
+  {code:'PC 207',name:'Entführung',short:'Entführung',type:'Felony',months:96,fine:10000,jail:'8 Jahre',fineText:'$10.000',aliases:['kidnapping','entführung'],note:'Grundtatbestand; PC 208(a) sieht eine Triade von 3, 5 oder 8 Jahren vor. Erschwerungen können lebenslange Strafen auslösen.',source:source('PEN','208')},
+  {code:'PC 215',name:'Carjacking',short:'Carjacking',type:'Felony',months:108,fine:10000,jail:'9 Jahre',fineText:'$10.000',aliases:['carjacking','fahrzeugraub','autoraub'],note:'Straftriade 3, 5 oder 9 Jahre; Waffen- und Gang-Enhancements können hinzukommen.',source:source('PEN','215')},
   {code:'HSC 11350',name:'Besitz kontrollierter Substanzen',short:'Drogenbesitz',type:'Misd.',months:12,fine:70,jail:'1 Jahr',fineText:'$70',aliases:['drug possession','controlled substance possession','kokainbesitz','heroinbesitz'],note:'Grundfall ohne einschlägige schwere Vorstrafe; Sonderregeln und Diversion können gelten.',source:source('HSC','11350')},
   {code:'HSC 11351',name:'Besitz kontrollierter Substanzen zum Verkauf',short:'Drogenbesitz z. Verkauf',type:'Felony',months:48,fine:20000,jail:'4 Jahre',fineText:'$20.000',aliases:['possession for sale','drug sales possession'],note:'Felony mit Straftriade von zwei, drei oder vier Jahren; zusätzliche mengen- oder vorstrafenbezogene Folgen möglich.',source:source('HSC','11351')},
   {code:'HSC 11359',name:'Cannabisbesitz zum Verkauf',short:'Cannabisverkaufsbesitz',type:'Wobbler',months:36,fine:10000,jail:'3 J. / 6 Mon.',fineText:'$10.000 / $500',aliases:['marijuana for sale','cannabis for sale'],note:'Grundfall ab 18: bis zu sechs Monate und $500; bei gesetzlichen Erschwerungsgründen Felony nach PC 1170(h).',source:source('HSC','11359')},
-  {code:'HSC 11377',name:'Besitz bestimmter kontrollierter Substanzen',short:'Besitz kontroll. Stoffe',type:'Misd.',months:12,fine:70,jail:'1 Jahr',fineText:'$70',aliases:['meth possession','amphetamine possession','drug possession'],note:'Grundfall; bei bestimmten schweren Vorverurteilungen ist Felony-Behandlung möglich.',source:source('HSC','11377')}
+  {code:'HSC 11377',name:'Besitz bestimmter kontrollierter Substanzen',short:'Besitz kontroll. Stoffe',type:'Misd.',months:12,fine:70,jail:'1 Jahr',fineText:'$70',aliases:['meth possession','amphetamine possession','drug possession'],note:'Grundfall; bei bestimmten schweren Vorverurteilungen ist Felony-Behandlung möglich.',source:source('HSC','11377')},
+  {code:'VC 22349(a) · 1–15 mph',name:'1–15 mph über dem Tempolimit',short:'Tempo +1–15 mph',type:'Infraction',months:0,fine:274,jail:'Keine Haft',fineText:'≈ $274 gesamt',baseFine:45,totalFee:274,points:1,trafficFine:true,aliases:['speeding 1-15','zu schnell 1-15','tempo 1-15'],note:'Grundbuße $45; veröffentlichter Gesamtbetrag inkl. Assessments/Gebühren ca. $274. County und Einzelfall können abweichen.',source:source('VEH','22349')},
+  {code:'VC 22349(a) · 16–25 mph',name:'16–25 mph über dem Tempolimit',short:'Tempo +16–25 mph',type:'Infraction',months:0,fine:438,jail:'Keine Haft',fineText:'≈ $438 gesamt',baseFine:85,totalFee:438,points:1,trafficFine:true,aliases:['speeding 16-25','zu schnell 16-25','tempo 16-25'],note:'Grundbuße $85; veröffentlichter Gesamtbetrag inkl. Assessments/Gebühren ca. $438. County und Einzelfall können abweichen.',source:source('VEH','22349')},
+  {code:'VC 22349(a) · 26+ mph',name:'Mindestens 26 mph über dem Tempolimit',short:'Tempo +26 mph',type:'Infraction',months:0,fine:567,jail:'Keine Haft',fineText:'≈ $567 gesamt',baseFine:120,totalFee:567,points:1,trafficFine:true,aliases:['speeding 26+','zu schnell 26','tempo 26'],note:'Grundbuße $120; veröffentlichter Gesamtbetrag inkl. Assessments/Gebühren ca. $567. County und Einzelfall können abweichen.',source:source('VEH','22349')},
+  {code:'VC 22348(b) · >100 mph',name:'Geschwindigkeit über 100 mph',short:'Tempo über 100 mph',type:'Infraction',months:0,fine:1059,jail:'Keine Haft',fineText:'≈ $1.059 gesamt',baseFine:240,totalFee:1059,points:2,trafficFine:true,aliases:['speeding over 100','über 100 mph','ueber 100 mph'],note:'Erstverstoß: veröffentlichte Grundbuße $240 und Gesamtbetrag ca. $1.059; bis zu 30 Tage Führerscheinsperre möglich. County und Fall können abweichen.',source:source('VEH','22348')},
+  {code:'VC 21453(a),(c)',name:'Rote Ampel missachtet',short:'Rotlichtverstoß',type:'Infraction',months:0,fine:567,jail:'Keine Haft',fineText:'≈ $567 gesamt',baseFine:120,totalFee:567,points:1,trafficFine:true,aliases:['red light','rote ampel','rotlicht'],note:'Grundbuße $120; veröffentlichter Gesamtbetrag inkl. Assessments/Gebühren ca. $567. Rechtsabbiegen bei Rot ist gesondert günstiger gelistet.',source:source('VEH','21453')},
+  {code:'VC 22450(a)',name:'Stoppschild nicht beachtet',short:'Stoppschild',type:'Infraction',months:0,fine:274,jail:'Keine Haft',fineText:'≈ $274 gesamt',baseFine:45,totalFee:274,points:1,trafficFine:true,aliases:['stop sign','stoppschild','nicht gestoppt'],note:'Grundbuße $45; veröffentlichter Gesamtbetrag inkl. Assessments/Gebühren ca. $274.',source:source('VEH','22450')},
+  {code:'VC 23123.5(a)',name:'Handy während der Fahrt benutzt',short:'Handy am Steuer',type:'Infraction',months:0,fine:179,jail:'Keine Haft',fineText:'≈ $179 gesamt',baseFine:20,totalFee:179,points:0,trafficFine:true,aliases:['handy am steuer','cell phone','telefon fahren'],note:'Erstverstoß: Grundbuße $20; veröffentlichter Gesamtbetrag ca. $179. Wiederholungen können Punkte und höhere Beträge auslösen.',source:source('VEH','23123.5')},
+  {code:'VC 21703',name:'Zu geringer Sicherheitsabstand',short:'Zu dicht aufgefahren',type:'Infraction',months:0,fine:274,jail:'Keine Haft',fineText:'≈ $274 gesamt',baseFine:45,totalFee:274,points:1,trafficFine:true,aliases:['following too closely','tailgating','sicherheitsabstand'],note:'Grundbuße $45; veröffentlichter Gesamtbetrag inkl. Assessments/Gebühren ca. $274.',source:source('VEH','21703')},
+  {code:'VC 22107',name:'Unsicherer Spurwechsel oder Abbiegevorgang',short:'Unsicherer Spurwechsel',type:'Infraction',months:0,fine:274,jail:'Keine Haft',fineText:'≈ $274 gesamt',baseFine:45,totalFee:274,points:1,trafficFine:true,aliases:['unsafe lane change','spurwechsel','unsafe turn'],note:'Grundbuße $45; veröffentlichter Gesamtbetrag inkl. Assessments/Gebühren ca. $274.',source:source('VEH','22107')},
+  {code:'VC 22108',name:'Abbiegen oder Spurwechsel ohne Signal',short:'Nicht geblinkt',type:'Infraction',months:0,fine:274,jail:'Keine Haft',fineText:'≈ $274 gesamt',baseFine:45,totalFee:274,points:1,trafficFine:true,aliases:['failure to signal','nicht geblinkt','no turn signal'],note:'Grundbuße $45; veröffentlichter Gesamtbetrag inkl. Assessments/Gebühren ca. $274.',source:source('VEH','22108')}
+);
+
+curatedCatalog.push(
+  {code:'HNC 655(a) · Bow/Gunwale',name:'Unsicheres Mitfahren auf Bug, Bordwand oder Heck',short:'Unsicheres Mitfahren Boot',type:'Infraction',months:0,fine:280,jail:'Keine Haft',fineText:'≈ $280 gesamt',baseFine:50,totalFee:280,points:0,trafficFine:true,boating:true,aliases:['bow riding','gunwale riding','boot bug sitzen'],note:'Bootsverkehr: Grundbuße $50; veröffentlichter Gesamtbetrag ca. $280.',source:source('HNC','655')},
+  {code:'HNC 655.2(a)',name:'Geschwindigkeitsregel für Motorboote missachtet',short:'Motorboot zu schnell',type:'Infraction',months:0,fine:280,jail:'Keine Haft',fineText:'≈ $280 gesamt',baseFine:50,totalFee:280,points:0,trafficFine:true,boating:true,aliases:['boat speeding','power boat speed','motorboot zu schnell'],note:'Bootsverkehr: Grundbuße $50; veröffentlichter Gesamtbetrag ca. $280.',source:source('HNC','655.2')},
+  {code:'HNC 655.3 · Equipment',name:'Vorgeschriebene Bootsausrüstung fehlt',short:'Bootsausrüstung fehlt',type:'Infraction',months:0,fine:280,jail:'Keine Haft',fineText:'≈ $280 gesamt',baseFine:50,totalFee:280,points:0,trafficFine:true,boating:true,aliases:['vessel equipment','boat equipment','rettungsweste ausrüstung'],note:'Bootsverkehr: Grundbuße $50; veröffentlichter Gesamtbetrag ca. $280.',source:source('HNC','655.3')},
+  {code:'HNC 655.7(a-d)',name:'Regeln für Personal Watercraft missachtet',short:'Jet-Ski-Verstoß',type:'Infraction',months:0,fine:280,jail:'Keine Haft',fineText:'≈ $280 gesamt',baseFine:50,totalFee:280,points:0,trafficFine:true,boating:true,aliases:['personal watercraft','jet ski violation','jetski'],note:'Bootsverkehr: Grundbuße $50; veröffentlichter Gesamtbetrag ca. $280.',source:source('HNC','655.7')},
+  {code:'HNC 655.7(e)(1)',name:'Motorabschalter fehlt oder funktioniert nicht',short:'Engine-Cutoff fehlt',type:'Infraction',months:0,fine:280,jail:'Keine Haft',fineText:'≈ $280 gesamt',baseFine:50,totalFee:280,points:0,trafficFine:true,boating:true,aliases:['engine cutoff switch','kill switch boat'],note:'Bootsverkehr: Grundbuße $50; veröffentlichter Gesamtbetrag ca. $280.',source:source('HNC','655.7')},
+  {code:'HNC 654(b)',name:'Unzulässiger Bootsauspuff oder Cutout',short:'Bootsauspuff',type:'Infraction',months:0,fine:280,jail:'Keine Haft',fineText:'≈ $280 gesamt',baseFine:50,totalFee:280,points:0,trafficFine:true,boating:true,aliases:['boat muffler','boat exhaust','cutout'],note:'Bootsverkehr: Grundbuße $50; veröffentlichter Gesamtbetrag ca. $280.',source:source('HNC','654')},
+  {code:'HNC 654.05(a)',name:'Lärmgrenze für motorisiertes Boot überschritten',short:'Bootslärm',type:'Infraction',months:0,fine:280,jail:'Keine Haft',fineText:'≈ $280 gesamt',baseFine:50,totalFee:280,points:0,trafficFine:true,boating:true,aliases:['motorized vessel noise','boat noise'],note:'Bootsverkehr: Grundbuße $50; veröffentlichter Gesamtbetrag ca. $280.',source:source('HNC','654.05')},
+  {code:'HNC 655(a) · Reckless',name:'Rücksichtsloses oder fahrlässiges Führen eines Boots',short:'Rücksichtsloses Bootfahren',type:'Misd.',months:6,fine:1300,jail:'bis 6 Monate',fineText:'≈ $1.300 gesamt',baseFine:300,totalFee:1300,points:0,boating:true,arrestWarning:true,aliases:['reckless boating','negligent vessel operation'],note:'Bootsverkehr-Misdemeanor; Festnahme und Haft sind möglich.',source:source('HNC','655')},
+  {code:'HNC 655(b)',name:'Bootfahren unter Alkohol- oder Drogeneinfluss',short:'BUI',type:'Misd.',months:6,fine:2735,jail:'bis 6 Monate',fineText:'≈ $2.735 gesamt',baseFine:650,totalFee:2735,points:0,boating:true,arrestWarning:true,aliases:['bui','boating under influence','alkohol boot'],note:'Boating under the influence ist kein einfacher Strafzettel; Festnahme möglich.',source:source('HNC','655')},
+  {code:'HNC 656(a)',name:'Unfallflucht mit einem Boot',short:'Boot-Unfallflucht',type:'Misd.',months:6,fine:1300,jail:'bis 6 Monate',fineText:'≈ $1.300 gesamt',baseFine:300,totalFee:1300,points:0,boating:true,arrestWarning:true,aliases:['boat hit and run','vessel collision assist'],note:'Pflichten nach einer Bootskollision verletzt; Festnahme möglich.',source:source('HNC','656')}
+);
+
+curatedCatalog.push(
+  {code:'VC 22350 · 1–15 mph',name:'Unsichere Geschwindigkeit, 1–15 mph darüber',short:'Basic Speed +1–15',type:'Infraction',months:0,fine:274,jail:'Keine Haft',fineText:'≈ $274 gesamt',baseFine:45,totalFee:274,points:1,trafficFine:true,aliases:['basic speed law 1-15','unsafe speed 1-15'],note:'Gilt bei für die Verhältnisse unangepasster Geschwindigkeit. Grundbuße $45; Gesamtbetrag ca. $274.',source:source('VEH','22350')},
+  {code:'VC 22350 · 16–25 mph',name:'Unsichere Geschwindigkeit, 16–25 mph darüber',short:'Basic Speed +16–25',type:'Infraction',months:0,fine:438,jail:'Keine Haft',fineText:'≈ $438 gesamt',baseFine:85,totalFee:438,points:1,trafficFine:true,aliases:['basic speed law 16-25','unsafe speed 16-25'],note:'Gilt bei für die Verhältnisse unangepasster Geschwindigkeit. Grundbuße $85; Gesamtbetrag ca. $438.',source:source('VEH','22350')},
+  {code:'VC 22350 · 26+ mph',name:'Unsichere Geschwindigkeit, mindestens 26 mph darüber',short:'Basic Speed +26',type:'Infraction',months:0,fine:567,jail:'Keine Haft',fineText:'≈ $567 gesamt',baseFine:120,totalFee:567,points:1,trafficFine:true,aliases:['basic speed law 26','unsafe speed 26'],note:'Gilt bei für die Verhältnisse unangepasster Geschwindigkeit. Grundbuße $120; Gesamtbetrag ca. $567.',source:source('VEH','22350')},
+  {code:'VC 21453(b)',name:'Rechtsabbiegen bei Rot ohne vorgeschriebenen Halt',short:'Rechts bei Rot',type:'Infraction',months:0,fine:274,jail:'Keine Haft',fineText:'≈ $274 gesamt',baseFine:45,totalFee:274,points:1,trafficFine:true,aliases:['right turn on red','rechts bei rot'],note:'Grundbuße $45; veröffentlichter Gesamtbetrag ca. $274.',source:source('VEH','21453')},
+  {code:'VC 21809(a)',name:'Move-Over-Regel missachtet',short:'Move-Over-Verstoß',type:'Infraction',months:0,fine:274,jail:'Keine Haft',fineText:'≈ $274 gesamt',baseFine:45,totalFee:274,points:1,trafficFine:true,aliases:['move over law','einsatzfahrzeug seitenstreifen'],note:'Nicht verlangsamt oder Spur gewechselt bei stehendem Einsatz-/Abschleppfahrzeug. Gesamtbetrag ca. $274.',source:source('VEH','21809')},
+  {code:'VC 21950(a),(c)',name:'Fußgängern am Zebrastreifen keinen Vorrang gewährt',short:'Fußgänger-Vorrang',type:'Infraction',months:0,fine:274,jail:'Keine Haft',fineText:'≈ $274 gesamt',baseFine:45,totalFee:274,points:1,trafficFine:true,aliases:['failure to yield pedestrian','crosswalk','fußgänger'],note:'Grundbuße $45; veröffentlichter Gesamtbetrag ca. $274.',source:source('VEH','21950')},
+  {code:'VC 21951',name:'An einem für Fußgänger haltenden Fahrzeug vorbeigefahren',short:'Haltendes Fahrzeug überholt',type:'Infraction',months:0,fine:567,jail:'Keine Haft',fineText:'≈ $567 gesamt',baseFine:120,totalFee:567,points:1,trafficFine:true,aliases:['passing stopped vehicle pedestrian'],note:'Grundbuße $120; veröffentlichter Gesamtbetrag ca. $567.',source:source('VEH','21951')},
+  {code:'VC 22450(b)',name:'Stoppschild am Bahnübergang missachtet',short:'Bahnübergang-Stopp',type:'Infraction',months:0,fine:567,jail:'Keine Haft',fineText:'≈ $567 gesamt',baseFine:120,totalFee:567,points:1,trafficFine:true,aliases:['railroad stop sign','bahnübergang'],note:'Grundbuße $120; veröffentlichter Gesamtbetrag ca. $567.',source:source('VEH','22450')},
+  {code:'VC 22454(a)',name:'Schulbus mit blinkenden Signalen passiert',short:'Schulbus passiert',type:'Infraction',months:0,fine:813,jail:'Keine Haft',fineText:'≈ $813 gesamt',baseFine:180,totalFee:813,points:1,trafficFine:true,aliases:['passing school bus','schulbus überholt'],note:'Grundbuße $180; veröffentlichter Gesamtbetrag ca. $813.',source:source('VEH','22454')},
+  {code:'VC 27315(d)',name:'Sicherheitsgurt nicht benutzt',short:'Gurtpflicht',type:'Infraction',months:0,fine:192,jail:'Keine Haft',fineText:'≈ $192 gesamt',baseFine:25,totalFee:192,points:0,trafficFine:true,aliases:['seat belt','gurtpflicht','nicht angeschnallt'],note:'Erstverstoß; veröffentlichter Tabellenwert ca. $192. Das Gesetz nennt eine Grundstrafe bis $20, der Plan setzt Gebühren hinzu.',source:source('VEH','27315')},
+  {code:'VC 27360(a)',name:'Kind nicht im vorgeschriebenen Rückhaltesystem gesichert',short:'Kindersitz-Verstoß',type:'Infraction',months:0,fine:567,jail:'Keine Haft',fineText:'≈ $567 gesamt',baseFine:120,totalFee:567,points:1,trafficFine:true,aliases:['child restraint','kindersitz'],note:'Grundbuße $120; veröffentlichter Gesamtbetrag ca. $567. Ausnahmen und Bildungsprogramm möglich.',source:source('VEH','27360')},
+  {code:'VC 22500.1',name:'In gekennzeichneter Feuerwehrzufahrt gehalten',short:'Feuerwehrzufahrt',type:'Infraction',months:0,fine:274,jail:'Keine Haft',fineText:'≈ $274 gesamt',baseFine:45,totalFee:274,points:0,trafficFine:true,aliases:['fire lane','feuerwehrzufahrt'],note:'Veröffentlichter Grundwert $45 und Gesamtbetrag ca. $274; örtliche Parkregeln können abweichen.',source:source('VEH','22500.1')},
+  {code:'VC 23222(a)',name:'Offener Alkoholbehälter beim Fahren',short:'Open Container',type:'Infraction',months:0,fine:364,jail:'Keine Haft',fineText:'≈ $364 gesamt',baseFine:70,totalFee:364,points:1,trafficFine:true,aliases:['open container','offener alkoholbehälter'],note:'Grundbuße $70; veröffentlichter Gesamtbetrag ca. $364.',source:source('VEH','23222')},
+  {code:'VC 21461(a)',name:'Verkehrszeichen oder Signal missachtet',short:'Zeichen missachtet',type:'Infraction',months:0,fine:274,jail:'Keine Haft',fineText:'≈ $274 gesamt',baseFine:45,totalFee:274,points:1,trafficFine:true,aliases:['failure to obey sign','verkehrszeichen missachtet'],note:'Grundbuße $45; veröffentlichter Gesamtbetrag ca. $274.',source:source('VEH','21461')}
 );
 
 const englishNames = {
@@ -184,6 +229,25 @@ const englishNames = {
   'HSC 11350':'Possession of a controlled substance','HSC 11351':'Possession of a controlled substance for sale',
   'HSC 11359':'Possession of cannabis for sale','HSC 11377':'Possession of specified controlled substances'
 };
+
+Object.assign(englishNames, {
+  'PC 69':'Resisting or deterring an executive officer by force','PC 415':'Disturbing the peace','PC 242':'Battery','PC 207':'Kidnapping','PC 215':'Carjacking',
+  'VC 22349(a) · 1–15 mph':'Speeding 1–15 mph over the limit','VC 22349(a) · 16–25 mph':'Speeding 16–25 mph over the limit',
+  'VC 22349(a) · 26+ mph':'Speeding 26+ mph over the limit','VC 22348(b) · >100 mph':'Speeding over 100 mph',
+  'VC 21453(a),(c)':'Running a red light','VC 22450(a)':'Failure to stop at a stop sign',
+  'VC 23123.5(a)':'Handheld phone use while driving','VC 21703':'Following too closely',
+  'VC 22107':'Unsafe turn or lane change','VC 22108':'Failure to signal before turning or changing lanes',
+  'VC 22350 · 1–15 mph':'Unsafe speed, 1–15 mph over','VC 22350 · 16–25 mph':'Unsafe speed, 16–25 mph over','VC 22350 · 26+ mph':'Unsafe speed, 26+ mph over',
+  'VC 21453(b)':'Improper right turn on red','VC 21809(a)':'Move-over violation','VC 21950(a),(c)':'Failure to yield to a pedestrian',
+  'VC 21951':'Passing a vehicle stopped for a pedestrian','VC 22450(b)':'Failure to stop at a railroad crossing',
+  'VC 22454(a)':'Passing a school bus with flashing signals','VC 27315(d)':'Seat belt violation','VC 27360(a)':'Child restraint violation',
+  'VC 22500.1':'Stopping in a fire lane','VC 23222(a)':'Open alcohol container while driving','VC 21461(a)':'Failure to obey a traffic sign or signal',
+  'HNC 655(a) · Bow/Gunwale':'Unsafe riding on bow, gunwale, or transom','HNC 655.2(a)':'Power boat speed restriction',
+  'HNC 655.3 · Equipment':'Required vessel equipment missing','HNC 655.7(a-d)':'Personal watercraft violation',
+  'HNC 655.7(e)(1)':'Missing or inoperable engine cutoff switch','HNC 654(b)':'Improper vessel muffler or cutout',
+  'HNC 654.05(a)':'Motorized vessel noise violation','HNC 655(a) · Reckless':'Reckless or negligent vessel operation',
+  'HNC 655(b)':'Boating under the influence','HNC 656(a)':'Vessel hit-and-run'
+});
 
 const friendlyGeneratedNames = {
   'PC 32':['Beihilfe nach der Tat','Accessory after the fact'],'PC 67':['Bestechung eines Staatsbeamten','Bribery of a state executive officer'],
@@ -207,7 +271,9 @@ const generatedCatalog = Array.isArray(window.OFFICIAL_CATALOG)
   : [];
 const catalog = [...curatedCatalog, ...generatedCatalog].map((item, index) => {
   const numeric = Number.parseFloat(String(item.code).replace(/^[A-Z]+\s+/, '')) || 0;
-  const category = item.code.startsWith('VC ')
+  const category = item.code.startsWith('HNC ')
+    ? 'boating'
+    : item.code.startsWith('VC ')
     ? 'vehicle'
     : item.code.startsWith('HSC ')
       ? 'health'
@@ -229,8 +295,8 @@ const catalog = [...curatedCatalog, ...generatedCatalog].map((item, index) => {
     type: inferredType,
     months: estimatedMonths,
     fine: estimatedFine,
-    jail: item.lifeTerms ? 'Lebenslang' : `${estimated ? '≈ ' : ''}${generatedMonthsLabel(estimatedMonths)}`,
-    fineText: `${estimated ? '≈ ' : ''}${generatedMoneyLabel(estimatedFine)}`,
+    jail: item.jail || (item.lifeTerms ? 'Lebenslang' : `${estimated ? '≈ ' : ''}${generatedMonthsLabel(estimatedMonths)}`),
+    fineText: item.fineText || `${estimated ? '≈ ' : ''}${generatedMoneyLabel(estimatedFine)}`,
     estimated,
     originalText: item.generated ? item.name : null,
     nameDe: item.generated ? (friendly?.[0] || `Straftatbestand nach ${item.code}`) : item.name,
@@ -241,6 +307,12 @@ const catalog = [...curatedCatalog, ...generatedCatalog].map((item, index) => {
 });
 
 const state = { entries: [], sequence: 1, language: 'de', agency: '' };
+const ticketState = new Map();
+const ticketFormState = {
+  personName:'', caseNumber:'', citationNumber:'', violationDate:'', violationTime:'', location:'',
+  licensePlate:'', vehicle:'', officer:'', badgeNumber:'', court:'', signatureText:'', signatureData:''
+};
+const trafficArrestCodes = new Set(['VC 23152','VC 23153','VC 14601.1(A)','VC 2800.1','VC 2800.2','VC 20001(B)(2)','VC 20002','VC 23103','VC 12500']);
 const input = document.querySelector('#offense-input');
 const form = document.querySelector('#offense-form');
 const list = document.querySelector('#offense-list');
@@ -251,6 +323,38 @@ const toast = document.querySelector('#toast');
 const catalogList = document.querySelector('#catalog-list');
 const catalogSearch = document.querySelector('#catalog-search');
 const catalogUi = { filter: 'all', selected: new Set(), visibleIds: [] };
+
+const L = (de, en) => state.language === 'en' ? en : de;
+
+function randomDigits(length) {
+  const bytes = new Uint32Array(1);
+  crypto.getRandomValues(bytes);
+  return String(bytes[0] % (10 ** length)).padStart(length, '0');
+}
+
+function localDateTimeParts() {
+  const now = new Date();
+  const pad = value => String(value).padStart(2, '0');
+  return { date:`${now.getFullYear()}-${pad(now.getMonth()+1)}-${pad(now.getDate())}`, time:`${pad(now.getHours())}:${pad(now.getMinutes())}` };
+}
+
+function syncTicketIdentifiers(regenerate = false) {
+  const current = localDateTimeParts();
+  if (!ticketFormState.violationDate) ticketFormState.violationDate = current.date;
+  if (!ticketFormState.violationTime) ticketFormState.violationTime = current.time;
+  if (!ticketFormState.citationNumber || regenerate) ticketFormState.citationNumber = randomDigits(8);
+  if (!ticketFormState.caseSuffix || regenerate) ticketFormState.caseSuffix = randomDigits(6);
+  const agency = (state.agency || 'AGENCY').replace(/[^A-Z0-9]+/gi,'').toUpperCase() || 'AGENCY';
+  ticketFormState.caseNumber = `${agency}-${ticketFormState.caseSuffix}`;
+  const dateInput = document.querySelector('[data-ticket-field="violationDate"]');
+  if (dateInput && !dateInput.value) dateInput.value = ticketFormState.violationDate;
+  const caseNode = document.querySelector('#auto-case-number');
+  const citationNode = document.querySelector('#auto-citation-number');
+  const dateNode = document.querySelector('#auto-ticket-datetime');
+  if (caseNode) caseNode.textContent = ticketFormState.caseNumber;
+  if (citationNode) citationNode.textContent = ticketFormState.citationNumber;
+  if (dateNode) dateNode.textContent = `${ticketDate(ticketFormState.violationDate)} · ${ticketFormState.violationTime}`;
+}
 
 function itemName(item) {
   return state.language === 'en'
@@ -347,12 +451,12 @@ function formatMoney(amount) {
 
 function formatMonths(months) {
   if (months === null || months === undefined) return '—';
-  if (months === 0) return '0 Monate';
+  if (months === 0) return L('0 Monate','0 months');
   const years = Math.floor(months / 12);
   const rest = months % 12;
   const parts = [];
-  if (years) parts.push(`${years} ${years === 1 ? 'Jahr' : 'Jahre'}`);
-  if (rest) parts.push(`${rest} ${rest === 1 ? 'Monat' : 'Monate'}`);
+  if (years) parts.push(`${years} ${state.language === 'en' ? (years === 1 ? 'year' : 'years') : (years === 1 ? 'Jahr' : 'Jahre')}`);
+  if (rest) parts.push(`${rest} ${state.language === 'en' ? (rest === 1 ? 'month' : 'months') : (rest === 1 ? 'Monat' : 'Monate')}`);
   return parts.join(' ');
 }
 
@@ -409,8 +513,8 @@ function render() {
   const known = state.entries.filter(entry => !entry.unknown).length;
   document.querySelector('#total-count').textContent = String(state.entries.length);
   document.querySelector('#known-count').textContent = state.entries.length
-    ? `${known} verifiziert · ${state.entries.length - known} offen`
-    : 'Noch keine Auswahl';
+    ? L(`${known} verifiziert · ${state.entries.length - known} offen`,`${known} verified · ${state.entries.length - known} unresolved`)
+    : L('Noch keine Auswahl','No selection yet');
   document.querySelector('#total-jail').textContent = totalJailLabel(total);
   document.querySelector('#total-fine').textContent = totalFineLabel(total);
   const bail = totalBail();
@@ -421,14 +525,16 @@ function render() {
   if (!state.entries.length) {
     list.innerHTML = `<div class="empty-state">
       <div class="empty-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 4h8M9 3h6v4H9zM6 5h12v16H6zM9 11h6M9 15h6"/></svg></div>
-      <h3>Noch keine Delikte</h3><p>Gib links einen Code oder Suchbegriff ein, um die Berechnung zu starten.</p>
+      <h3>${L('Noch keine Delikte','No offenses yet')}</h3><p>${L('Gib links einen Code oder Suchbegriff ein, um die Berechnung zu starten.','Enter a code or search term on the left to begin.')}</p>
     </div>`;
   } else {
     list.innerHTML = state.entries.map((entry, index) => offenseCard(entry, index)).join('');
   }
   discordOutput.textContent = discordTable();
   document.querySelector('#embed-output').textContent = discordEmbedJson();
+  renderDiscordPreview();
   if (!document.querySelector('#panel-catalog').hidden) renderCatalog();
+  if (!document.querySelector('#panel-tickets').hidden) renderTickets();
 }
 
 function escapeHtml(value) {
@@ -441,16 +547,17 @@ function offenseCard(entry, index) {
   return `<article class="offense-card ${entry.unknown ? 'unknown-card' : ''}">
     <div class="offense-main">
       <div>
-        <div class="offense-title-row"><span class="code-badge">${escapeHtml(entry.code)}</span><h3>${escapeHtml(itemName(entry))}</h3>${entry.estimated ? '<span class="estimate-badge">geschätzt</span>' : ''}</div>
-        <div class="offense-data"><span class="type-tag">${escapeHtml(entry.type)}</span><span>Haft: <b>${escapeHtml(prison)}</b></span><span>Geldstrafe: <b>${escapeHtml(entry.fineText)}</b></span><span>Kaution: <b>${escapeHtml(bail.label)}</b></span></div>
+        <div class="offense-title-row"><span class="code-badge">${escapeHtml(entry.code)}</span><h3>${escapeHtml(itemName(entry))}</h3>${entry.estimated ? `<span class="estimate-badge">${L('geschätzt','estimated')}</span>` : ''}</div>
+        <div class="offense-data"><span class="type-tag">${escapeHtml(entry.type)}</span><span>${L('Haft','Custody')}: <b>${escapeHtml(prison)}</b></span><span>${entry.trafficFine ? L('Ticket gesamt','Ticket total') : L('Geldstrafe','Fine')}: <b>${escapeHtml(entry.fineText)}</b></span>${entry.trafficFine ? `<span>${L('Grundbuße','Base fine')}: <b>${escapeHtml(formatMoney(entry.baseFine))}</b></span><span>DMV: <b>${entry.points} ${L(`Punkt${entry.points === 1 ? '' : 'e'}`,`point${entry.points === 1 ? '' : 's'}`)}</b></span>` : `<span>${L('Kaution','Bail')}: <b>${escapeHtml(bail.label)}</b></span>`}</div>
       </div>
       <div class="offense-actions">
+        <button class="icon-button add-one" type="button" data-increment="${entry.instanceId}" aria-label="${escapeHtml(entry.code)} ein weiteres Mal hinzufügen" title="Weiteres hinzufügen">＋</button>
         <button class="icon-button" type="button" data-remove="${entry.instanceId}" aria-label="Zeile ${index + 1} entfernen" title="Entfernen">
           <svg viewBox="0 0 24 24"><path d="M4 7h16M9 7V4h6v3M8 11v7M12 11v7M16 11v7M6 7l1 14h10l1-14"/></svg>
         </button>
       </div>
     </div>
-    <div class="offense-meta"><p>${escapeHtml(entry.note)} <strong>Kaution:</strong> ${escapeHtml(bail.reason)}</p><a href="${escapeHtml(entry.source)}" target="_blank" rel="noopener">Gesetzestext ↗</a></div>
+    <div class="offense-meta"><p>${escapeHtml(entry.note)} <strong>${L('Kaution','Bail')}:</strong> ${escapeHtml(bail.reason)}</p><a href="${escapeHtml(entry.source)}" target="_blank" rel="noopener">${L('Gesetzestext','Statute text')} ↗</a></div>
   </article>`;
 }
 
@@ -461,7 +568,7 @@ function truncate(value, max) {
 
 function discordTable() {
   const widths = [25, 15, 10, 20, 14];
-  const headers = ['Delikt', 'Code', 'Typ', 'Max. Haft', 'Max. Strafe'];
+  const headers = state.language === 'en' ? ['Offense','Code','Type','Max. custody','Max. penalty'] : ['Delikt', 'Code', 'Typ', 'Max. Haft', 'Max. Strafe'];
   const fit = (value, width) => truncate(value, width).padEnd(width, ' ');
   const border = `+${widths.map(width => '-'.repeat(width + 2)).join('+')}+`;
   const row = values => `| ${values.map((value, i) => fit(value, widths[i])).join(' | ')} |`;
@@ -469,15 +576,15 @@ function discordTable() {
     itemShort(entry), entry.code, entry.type, entry.jail, entry.fineText
   ]));
   const total = totals();
-  const totalRow = row(['GESAMT (Maximum)', '', '', totalJailLabel(total, true), `${totalFineLabel(total)}*`]);
-  const agency = (state.agency || 'Nicht angegeben').replace(/[\r\n`_]/g, ' ').trim();
+  const totalRow = row([L('GESAMT (Maximum)','TOTAL (Maximum)'), '', '', totalJailLabel(total, true), `${totalFineLabel(total)}*`]);
+  const agency = (state.agency || L('Nicht angegeben','Not provided')).replace(/[\r\n`_]/g, ' ').trim();
   const bail = totalBail();
-  const content = [`Akte von ${agency}`, '', border, row(headers), border, ...(rows.length ? rows : [row(['—', '—', '—', '—', '—'])]), border, totalRow, border,
-    `Mögliche Kaution (LA County 2026): ${bail.label}`,
-    `Grund: ${bail.reason}`,
-    '* zzgl. gerichtlicher Aufschläge & Gebühren',
-    '* kumulative Maximalrechnung; concurrent sentencing und PC 654 möglich',
-    '* ≈ / geschätzt = Näherung, kein verbindlicher Gerichts- oder Kautionswert'
+  const content = [`${L('Akte von','Record by')} ${agency}`, '', border, row(headers), border, ...(rows.length ? rows : [row(['—', '—', '—', '—', '—'])]), border, totalRow, border,
+    `${L('Mögliche Kaution','Possible bail')} (LA County 2026): ${bail.label}`,
+    `${L('Grund','Reason')}: ${bail.reason}`,
+    L('* Ticket-Gesamtwerte enthalten die aufgeführten 2026-Aufschläge; bei anderen Delikten kommen Gebühren extra hinzu','* Ticket totals include listed 2026 assessments; other offenses may have additional fees'),
+    L('* kumulative Maximalrechnung; concurrent sentencing und PC 654 möglich','* cumulative maximum; concurrent sentencing and PC 654 may apply'),
+    L('* ≈ / geschätzt = Näherung, kein verbindlicher Gerichts- oder Kautionswert','* ≈ / estimated = nonbinding approximation')
   ].join('\n');
   return `\`\`\`\n${content}\n\`\`\``;
 }
@@ -487,7 +594,7 @@ function discordEmbedJson() {
   const bail = totalBail();
   const agency = (state.agency || 'Nicht angegeben').replace(/[\r\n`_*]/g, ' ').trim();
   const lines = state.entries.length
-    ? state.entries.map((entry, index) => `**${index + 1}. ${itemShort(entry)}** · \`${entry.code}\`\n${entry.type} · Haft: ${entry.jail} · Geld: ${entry.fineText} · Kaution: ${bailFor(entry).label}`).join('\n\n')
+    ? state.entries.map((entry, index) => `**${index + 1}. ${itemShort(entry)}** · \`${entry.code}\`\n${entry.type} · Haft: ${entry.jail} · ${entry.trafficFine ? `Ticket: ${entry.fineText} · Grundbuße: ${formatMoney(entry.baseFine)} · DMV: ${entry.points}` : `Geld: ${entry.fineText} · Kaution: ${bailFor(entry).label}`}`).join('\n\n')
     : '*Noch keine Delikte ausgewählt.*';
   const payload = {
     flags: 32768,
@@ -495,17 +602,27 @@ function discordEmbedJson() {
       type: 17,
       accent_color: 14133851,
       components: [
-        { type: 10, content: `## Akte von ${agency}\nCalifornia Strafrechner` },
+        { type: 10, content: `## ⚖️ Akte von ${agency}\n-# California Strafrechner · vorläufige Maximalberechnung` },
         { type: 14, divider: true, spacing: 1 },
         { type: 10, content: lines.slice(0, 3800) },
         { type: 14, divider: true, spacing: 1 },
-        { type: 10, content: `### Gesamt (Maximum)\n**Haft:** ${totalJailLabel(total, true)}\n**Geldstrafe:** ${totalFineLabel(total)}*\n**Mögliche Kaution:** ${bail.label}\n-# ${bail.reason}` },
+        { type: 10, content: `### 📊 Gesamt (Maximum)\n> **Haft:** ${totalJailLabel(total, true)}\n> **Geldstrafe / Tickets:** ${totalFineLabel(total)}*\n> **Mögliche Kaution:** ${bail.label}\n-# ${bail.reason}` },
         { type: 14, divider: true, spacing: 1 },
         { type: 10, content: '-# Schätzwerte sind unverbindlich. Zuschläge, Gebühren, Enhancements, concurrent sentencing und PC 654 können das Ergebnis verändern.' }
       ]
     }]
   };
   return JSON.stringify(payload, null, 2);
+}
+
+function renderDiscordPreview() {
+  const target = document.querySelector('#discord-preview');
+  if (!target) return;
+  const total = totals();
+  const bail = totalBail();
+  const agency = escapeHtml((state.agency || 'Nicht angegeben').replace(/[\r\n`_*]/g, ' ').trim());
+  const entries = state.entries.length ? state.entries.map((entry, index) => `<div class="discord-offense"><strong>${index + 1}. ${escapeHtml(itemShort(entry))}</strong><code>${escapeHtml(entry.code)}</code><span>${escapeHtml(entry.type)} · Haft ${escapeHtml(entry.jail)} · ${entry.trafficFine ? `Ticket ${escapeHtml(entry.fineText)}` : `Geld ${escapeHtml(entry.fineText)}`}</span></div>`).join('') : '<p class="discord-empty">Noch keine Delikte ausgewählt.</p>';
+  target.innerHTML = `<div class="discord-message"><div class="discord-avatar">CA</div><div class="discord-message-body"><div class="discord-author">California Strafrechner <span>APP</span><time>Heute um ${new Date().toLocaleTimeString('de-DE',{hour:'2-digit',minute:'2-digit'})}</time></div><div class="discord-component"><h3>⚖️ Akte von ${agency}</h3><small>California Strafrechner · vorläufige Maximalberechnung</small><div class="discord-separator"></div>${entries}<div class="discord-separator"></div><h4>📊 Gesamt (Maximum)</h4><p><b>Haft:</b> ${escapeHtml(totalJailLabel(total,true))}<br><b>Geldstrafe / Tickets:</b> ${escapeHtml(totalFineLabel(total))}*<br><b>Mögliche Kaution:</b> ${escapeHtml(bail.label)}</p><div class="discord-separator"></div><small>Schätzwerte sind unverbindlich. Gebühren, Enhancements, concurrent sentencing und PC 654 können das Ergebnis verändern.</small></div></div></div>`;
 }
 
 function showSuggestions() {
@@ -526,6 +643,7 @@ function catalogResults() {
   const query = normalize(catalogSearch.value);
   return catalog.filter(item => {
     const filterMatch = catalogUi.filter === 'all'
+      || (catalogUi.filter === 'trafficFine' && item.trafficFine)
       || item.category === catalogUi.filter
       || item.type === catalogUi.filter;
     if (!filterMatch) return false;
@@ -584,14 +702,104 @@ function activateTab(name) {
     panel.classList.toggle('active', active);
   });
   if (name === 'catalog') renderCatalog();
+  if (name === 'tickets') { syncTicketIdentifiers(); renderTickets(); }
+}
+
+function renderTickets() {
+  const query = normalize(document.querySelector('#ticket-search')?.value || '');
+  const tickets = catalog.filter(item => item.trafficFine && (!query || normalize([item.code,item.nameDe,item.nameEn,...item.aliases].join(' ')).includes(query)));
+  const warnings = catalog.filter(item => (item.arrestWarning || trafficArrestCodes.has(String(item.code).toUpperCase())) && (!query || normalize([item.code,item.nameDe,item.nameEn,...item.aliases].join(' ')).includes(query)));
+  let count = 0, total = 0, points = 0;
+  for (const [id, quantity] of ticketState) {
+    const item = catalog[id];
+    if (!item || !item.trafficFine) continue;
+    count += quantity; total += item.totalFee * quantity; points += (item.points || 0) * quantity;
+  }
+  document.querySelector('#ticket-count').textContent = String(count);
+  document.querySelector('#ticket-total').textContent = formatMoney(total);
+  document.querySelector('#ticket-points').textContent = String(points);
+  document.querySelector('#clear-tickets').disabled = count === 0;
+  document.querySelector('#ticket-result-count').textContent = state.language === 'en' ? `${tickets.length} fines · ${warnings.length} arrest warnings` : `${tickets.length} Bußgelder · ${warnings.length} Festnahmehinweise`;
+  const ticketCards = tickets.map(item => {
+    const quantity = ticketState.get(item.catalogId) || 0;
+    return `<article class="ticket-card ${quantity ? 'selected-ticket' : ''}">
+    <div class="ticket-card-top"><span class="code-badge">${escapeHtml(item.code)}</span><span class="points-badge">${item.points} DMV ${state.language === 'en' ? `point${item.points === 1 ? '' : 's'}` : `P${item.points === 1 ? 'unkt' : 'unkte'}`}</span></div>
+    <h3>${escapeHtml(itemName(item))}</h3>
+    <div class="ticket-money"><div><span>${L('Grundbuße','Base fine')}</span><strong>${escapeHtml(formatMoney(item.baseFine))}</strong></div><div class="ticket-total"><span>${L('Gesamt ca.','Est. total')}</span><strong>${escapeHtml(formatMoney(item.totalFee))}</strong></div></div>
+    <p>${escapeHtml(item.note)}</p>
+    <div class="ticket-quantity"><button type="button" data-ticket-action="minus" data-ticket="${item.catalogId}" ${quantity ? '' : 'disabled'} aria-label="${L('Ein Ticket entfernen','Remove one ticket')}">−</button><strong>${quantity}</strong><button type="button" data-ticket-action="plus" data-ticket="${item.catalogId}" aria-label="${L('Ein Ticket hinzufügen','Add one ticket')}">＋</button></div>
+  </article>`; }).join('');
+  const warningCards = warnings.map(item => `<article class="ticket-card arrest-card"><div class="ticket-card-top"><span class="code-badge">${escapeHtml(item.code)}</span><span class="arrest-badge">${L('Festnahme möglich','Arrest possible')}</span></div><h3>${escapeHtml(itemName(item))}</h3><p><strong>${L('Warum:','Why:')}</strong> ${escapeHtml(arrestReason(item))}</p><div class="arrest-penalty"><span>${escapeHtml(item.type)}</span><b>${L('Haft','Custody')}: ${escapeHtml(item.jail)}</b><b>${L('Geld','Fine')}: ${escapeHtml(item.fineText)}</b></div><button type="button" class="ticket-add danger-ticket" data-arrest-add="${item.catalogId}">${L('Im Strafrechner prüfen','Open in calculator')}</button></article>`).join('');
+  document.querySelector('#ticket-grid').innerHTML = ticketCards + warningCards || `<div class="catalog-empty">${L('Keine passenden Verkehrsverstöße gefunden.','No matching traffic violations found.')}</div>`;
+}
+
+function arrestReason(item) {
+  const code = String(item.code).toUpperCase();
+  if (code.startsWith('HNC ')) return L('Dieser Bootsverstoß ist ein Misdemeanor; Festnahme und Haft sind möglich.','This boating violation is a misdemeanor; arrest and custody are possible.');
+  if (code.startsWith('VC 23152') || code.startsWith('VC 23153')) return L('DUI ist regelmäßig ein Misdemeanor bzw. bei Verletzung ein Wobbler; Gewahrsam, chemischer Test und Führerscheinmaßnahmen sind möglich.','DUI is generally a misdemeanor, or a wobbler when injury is involved; detention, chemical testing, and license action are possible.');
+  if (code.startsWith('VC 20001') || code === 'VC 20002') return L('Fahrerflucht ist je nach Schaden, Verletzung oder Tod ein Misdemeanor oder Felony und nicht nur eine Infraction.','Hit-and-run may be a misdemeanor or felony depending on damage, injury, or death—not merely an infraction.');
+  if (code.startsWith('VC 2800')) return L('Flucht vor einem Polizeifahrzeug ist eine Straftat; rücksichtsloses Fahren oder Verletzungen verschärfen sie.','Evading a police vehicle is a crime; reckless driving or injury increases the severity.');
+  if (code.startsWith('VC 14601')) return L('Bewusstes Fahren trotz ausgesetzter Fahrerlaubnis ist ein Misdemeanor mit möglicher Haft.','Knowingly driving on a suspended license is a misdemeanor with possible custody.');
+  if (code === 'VC 23103') return L('Rücksichtsloses Fahren ist ein Misdemeanor und kann zu Festnahme, Haft und Führerscheinfolgen führen.','Reckless driving is a misdemeanor and can lead to arrest, custody, and license consequences.');
+  return L('Dieser Vehicle-Code kann als Misdemeanor verfolgt werden und ist deshalb kein einfacher Strafzettel.','This Vehicle Code violation may be prosecuted as a misdemeanor and is not a simple ticket.');
+}
+
+function ticketDate(value) {
+  if (!value) return L('Nicht angegeben','Not provided');
+  const [year, month, day] = value.split('-').map(Number);
+  return year && month && day ? new Intl.DateTimeFormat(state.language === 'en' ? 'en-US' : 'de-DE').format(new Date(year, month - 1, day)) : value;
+}
+
+function ticketField(key, fallback = null) {
+  const value = String(ticketFormState[key] || '').trim();
+  return escapeHtml(value || fallback || L('Nicht angegeben','Not provided'));
+}
+
+function ticketDocumentHtml() {
+  const selected = [...ticketState.entries()].map(([id, quantity]) => ({ item: catalog[id], quantity })).filter(row => row.item?.trafficFine && row.quantity > 0);
+  const total = selected.reduce((sum, row) => sum + row.item.totalFee * row.quantity, 0);
+  const points = selected.reduce((sum, row) => sum + (row.item.points || 0) * row.quantity, 0);
+  const rows = selected.length ? selected.map((row, index) => `<tr><td>${index + 1}</td><td><b>${escapeHtml(row.item.code)}</b><br>${escapeHtml(itemName(row.item))}</td><td>${row.quantity}</td><td>${escapeHtml(formatMoney(row.item.baseFine))}</td><td>${escapeHtml(formatMoney(row.item.totalFee))}</td><td>${escapeHtml(formatMoney(row.item.totalFee * row.quantity))}</td><td>${row.item.points * row.quantity}</td></tr>`).join('') : `<tr><td colspan="7" class="empty-row">${L('Keine Verstöße ausgewählt','No violations selected')}</td></tr>`;
+  const agency = escapeHtml(state.agency || L('Nicht angegeben','Not provided'));
+  const generated = new Intl.DateTimeFormat(state.language === 'en' ? 'en-US' : 'de-DE', { dateStyle:'medium', timeStyle:'short' }).format(new Date());
+  const logoUrl = new URL('city-of-los-angeles-seal.png', window.location.href).href;
+  const signature = ticketFormState.signatureData ? `<img src="${escapeHtml(ticketFormState.signatureData)}" alt="Signature">` : `<span>${ticketField('signatureText')}</span>`;
+  return `<!doctype html><html lang="${state.language}"><head><meta charset="utf-8"><title>${L('Strafzettel','Citation')}-${ticketField('citationNumber')}</title><style>
+    @page{size:A4;margin:12mm}*{box-sizing:border-box}body{margin:0;color:#111;background:#fff;font-family:Arial,Helvetica,sans-serif;font-size:10.5px;line-height:1.35}header{display:grid;grid-template-columns:70px 1fr;align-items:center;gap:15px;padding-bottom:10px;border-bottom:3px solid #111}header img{width:64px;height:64px;object-fit:contain}h1{margin:0;font-size:19px;text-transform:uppercase;letter-spacing:.04em}header p{margin:3px 0 0;color:#444}.document-tag{display:inline-block;margin-top:5px;padding:3px 7px;border:1px solid #555;font-size:8px;font-weight:bold;text-transform:uppercase;letter-spacing:.08em}.section{margin-top:12px}.section-title{padding:4px 6px;border:1px solid #222;background:#e8e8e8;font-size:10px;font-weight:bold;text-transform:uppercase}.fields{display:grid;grid-template-columns:1fr 1fr;border:1px solid #222;border-top:0}.field{min-height:37px;padding:6px 8px;border-right:1px solid #bbb;border-bottom:1px solid #bbb}.field:nth-child(even){border-right:0}.field.wide{grid-column:1/-1;border-right:0}.field span{display:block;margin-bottom:2px;color:#555;font-size:8px;font-weight:bold;text-transform:uppercase}.field b{font-size:10.5px}.charges{width:100%;border-collapse:collapse;border:1px solid #222;border-top:0}.charges th,.charges td{padding:6px;border-right:1px solid #aaa;border-bottom:1px solid #aaa;text-align:left;vertical-align:top}.charges th{background:#f2f2f2;font-size:8px;text-transform:uppercase}.charges th:last-child,.charges td:last-child{border-right:0}.charges td:nth-child(n+3){white-space:nowrap;text-align:right}.summary{display:grid;grid-template-columns:1fr 1fr 1fr;margin-top:10px;border:2px solid #111}.summary div{padding:9px;border-right:1px solid #555}.summary div:last-child{border-right:0}.summary span{display:block;color:#555;font-size:8px;text-transform:uppercase}.summary strong{display:block;margin-top:3px;font-size:15px}.notice{margin-top:12px;padding:9px;border:1px solid #555;background:#f6f6f6;font-size:9px}.signature-box{height:75px;display:flex;align-items:end;padding:8px;border:1px solid #222;border-top:0}.signature-box img{max-width:260px;max-height:60px}.signature-box span{font:italic 24px "Segoe Script",cursive}.footer{display:flex;justify-content:space-between;margin-top:18px;padding-top:6px;border-top:1px solid #777;color:#666;font-size:8px}.empty-row{text-align:center!important;color:#777}
+  </style></head><body><header><img src="${escapeHtml(logoUrl)}" alt=""><div><h1>California Traffic Citation Record</h1><p>${L('Strafzettelakte','Citation record')} · ${agency}</p><span class="document-tag">${L('Informationsdokument – keine amtliche Gerichtsurkunde','Information document — not an official court record')}</span></div></header>
+  <section class="section"><div class="section-title">${L('Akte und Person','Case and person')}</div><div class="fields"><div class="field"><span>${L('Fallakte','Case file')}</span><b>${ticketField('caseNumber')}</b></div><div class="field"><span>${L('Citation-Nummer','Citation number')}</span><b>${ticketField('citationNumber')}</b></div><div class="field"><span>${L('Name','Name')}</span><b>${ticketField('personName')}</b></div><div class="field"><span>${L('Datum / Uhrzeit','Date / time')}</span><b>${escapeHtml(ticketDate(ticketFormState.violationDate))} · ${escapeHtml(ticketFormState.violationTime)}</b></div><div class="field"><span>${L('Kennzeichen','License plate')}</span><b>${ticketField('licensePlate')}</b></div><div class="field"><span>${L('Fahrzeug','Vehicle')}</span><b>${ticketField('vehicle')}</b></div><div class="field"><span>Officer</span><b>${ticketField('officer')}</b></div><div class="field"><span>${L('Badge-Nummer','Badge number')}</span><b>${ticketField('badgeNumber')}</b></div><div class="field wide"><span>${L('Ort','Location')}</span><b>${ticketField('location')}</b></div><div class="field wide"><span>${L('Gericht / Department','Court / department')}</span><b>${ticketField('court')}</b></div></div></section>
+  <section class="section"><div class="section-title">${L('Verstöße und Geldbeträge','Violations and amounts')}</div><table class="charges"><thead><tr><th>#</th><th>${L('Code / Verstoß','Code / violation')}</th><th>${L('Anzahl','Qty.')}</th><th>${L('Grundbuße','Base fine')}</th><th>${L('Gesamt je Verstoß','Total each')}</th><th>${L('Zwischensumme','Subtotal')}</th><th>${L('Punkte','Points')}</th></tr></thead><tbody>${rows}</tbody></table><div class="summary"><div><span>${L('Verstöße','Violations')}</span><strong>${selected.reduce((sum,row)=>sum+row.quantity,0)}</strong></div><div><span>${L('Mögliche DMV-Punkte','Possible DMV points')}</span><strong>${points}</strong></div><div><span>${L('Geschätzter Gesamtbetrag','Estimated total')}</span><strong>${escapeHtml(formatMoney(total))}</strong></div></div></section>
+  <section class="section"><div class="section-title">${L('Unterschrift','Signature')}</div><div class="signature-box">${signature}</div></section><div class="notice"><b>${L('Hinweis','Notice')}:</b> ${L('Die Beträge sind unverbindliche Näherungen nach veröffentlichten Plänen 2026. County, Gericht, Vorverstöße und weitere Umstände können den tatsächlichen Betrag verändern. Dieses Dokument ist keine Rechtsberatung und keine amtliche Citation.','Amounts are nonbinding estimates based on published 2026 schedules. County, court, prior violations, and other circumstances can change the actual amount. This document is not legal advice or an official citation.')}</div><div class="footer"><span>${L('Erstellt mit California Strafrechner','Created with California Penalty Calculator')} · ${escapeHtml(generated)}</span><span>${L('Seite 1 von 1','Page 1 of 1')}</span></div><script>window.addEventListener('load',()=>setTimeout(()=>window.print(),250));<\/script></body></html>`;
+}
+
+function downloadTicketPdf() {
+  const missing = [...document.querySelectorAll('#ticket-form [required]')].find(field => !String(field.value || '').trim());
+  if (missing) { missing.focus(); notify(L('Bitte alle Pflichtfelder ausfüllen','Please complete all required fields')); return; }
+  if (signatureMode === 'draw' && !ticketFormState.signatureData) { notify(L('Bitte eine Unterschrift zeichnen','Please draw a signature')); return; }
+  if (!ticketState.size) { notify(L('Bitte mindestens einen Verstoß auswählen','Please select at least one violation')); return; }
+  const popup = window.open('', '_blank');
+  if (!popup) { notify(L('Pop-up blockiert – bitte Pop-ups erlauben','Pop-up blocked — please allow pop-ups')); return; }
+  popup.document.open();
+  popup.document.write(ticketDocumentHtml());
+  popup.document.close();
+  notify(L('PDF-Druckansicht geöffnet','PDF print view opened'));
 }
 
 function reportHtml() {
   const total = totals();
   const bail = totalBail();
-  const agency = escapeHtml(state.agency || 'Nicht angegeben');
-  const rows = state.entries.length ? state.entries.map(entry => `<tr><td>${escapeHtml(itemName(entry))}</td><td>${escapeHtml(entry.code)}</td><td>${escapeHtml(entry.type)}</td><td>${escapeHtml(entry.jail)}</td><td>${escapeHtml(entry.fineText)}</td></tr>`).join('') : '<tr><td colspan="5">Keine Delikte ausgewählt</td></tr>';
-  return `<!doctype html><html><head><meta charset="utf-8"><title>California Strafrechner</title><style>body{font-family:Arial,sans-serif;color:#17202a;margin:36px}h1{margin-bottom:4px}p{color:#59636f}table{width:100%;border-collapse:collapse;margin:22px 0}th,td{border:1px solid #aab1ba;padding:8px;text-align:left;font-size:12px}th{background:#e9edf1}.total{font-weight:bold}.note{font-size:11px;color:#555}</style></head><body><h1>California Strafrechner</h1><p><strong>Akte von ${agency}</strong></p><table><thead><tr><th>Delikt</th><th>Code</th><th>Typ</th><th>Max. Haft</th><th>Max. Geldstrafe</th></tr></thead><tbody>${rows}<tr class="total"><td>GESAMT (Maximum)</td><td></td><td></td><td>${escapeHtml(totalJailLabel(total,true))}</td><td>${escapeHtml(totalFineLabel(total))}*</td></tr></tbody></table><p><strong>Mögliche Kaution (LA County 2026):</strong> ${escapeHtml(bail.label)}<br>${escapeHtml(bail.reason)}</p><p class="note">* zzgl. gerichtlicher Aufschläge & Gebühren. Kumulative Maximalrechnung; concurrent sentencing und PC 654 können die Gesamtstrafe verändern. ≈ kennzeichnet Schätzwerte. Keine Rechtsberatung.</p></body></html>`;
+  const agency = escapeHtml(state.agency || L('Nicht angegeben','Not provided'));
+  const generated = new Intl.DateTimeFormat(state.language === 'en' ? 'en-US' : 'de-DE',{dateStyle:'long',timeStyle:'short'}).format(new Date());
+  const logoUrl = new URL('city-of-los-angeles-seal.png', window.location.href).href;
+  const rows = state.entries.length ? state.entries.map((entry,index) => `<tr><td>${index+1}</td><td><b>${escapeHtml(entry.code)}</b><br>${escapeHtml(itemName(entry))}</td><td>${escapeHtml(entry.type)}</td><td>${escapeHtml(entry.jail)}</td><td>${escapeHtml(entry.fineText)}</td></tr>`).join('') : `<tr><td colspan="5" class="empty">${L('Keine Delikte ausgewählt','No offenses selected')}</td></tr>`;
+  return `<!doctype html><html lang="${state.language}"><head><meta charset="utf-8"><title>${L('California Strafakte','California penalty record')}</title><style>@page{size:A4;margin:13mm}*{box-sizing:border-box}body{margin:0;color:#15191f;font:10.5px/1.4 Arial,Helvetica,sans-serif}header{display:grid;grid-template-columns:70px 1fr;gap:15px;align-items:center;padding-bottom:11px;border-bottom:4px solid #d7a93f}header img{width:64px;height:64px;object-fit:contain}h1{margin:0;font-size:22px;letter-spacing:.03em}header p{margin:3px 0;color:#555}.tag{display:inline-block;padding:3px 7px;border:1px solid #999;font-size:8px;text-transform:uppercase}.section{margin-top:15px}.title{padding:5px 7px;background:#172433;color:#fff;font-weight:bold;text-transform:uppercase;letter-spacing:.06em}table{width:100%;border-collapse:collapse}th,td{padding:7px;border:1px solid #aeb5bd;text-align:left;vertical-align:top}th{background:#edf0f3;font-size:8px;text-transform:uppercase}td:nth-child(n+4),th:nth-child(n+4){white-space:nowrap}.empty{text-align:center;color:#777}.totals{display:grid;grid-template-columns:1fr 1fr 1fr;margin-top:12px;border:2px solid #172433}.totals div{padding:10px;border-right:1px solid #87909a}.totals div:last-child{border:0}.totals span{display:block;color:#68717a;font-size:8px;text-transform:uppercase}.totals strong{display:block;margin-top:3px;font-size:15px}.bail{margin-top:12px;padding:10px;border-left:4px solid #d7a93f;background:#f5f2e9}.notice{margin-top:13px;padding:10px;border:1px solid #bbb;background:#f6f7f8;font-size:9px}.footer{display:flex;justify-content:space-between;margin-top:20px;padding-top:6px;border-top:1px solid #777;color:#666;font-size:8px}</style></head><body><header><img src="${escapeHtml(logoUrl)}" alt=""><div><h1>${L('California Strafakte','California Penalty Record')}</h1><p>${L('Akte von','Record by')} <b>${agency}</b> · ${escapeHtml(generated)}</p><span class="tag">${L('Informationsdokument – keine amtliche Gerichtsurkunde','Information document — not an official court record')}</span></div></header><section class="section"><div class="title">${L('Delikte und Strafrahmen','Offenses and penalty ranges')}</div><table><thead><tr><th>#</th><th>${L('Delikt / Code','Offense / code')}</th><th>${L('Typ','Type')}</th><th>${L('Max. Haft','Max. custody')}</th><th>${L('Max. Geld / Ticket','Max. fine / ticket')}</th></tr></thead><tbody>${rows}</tbody></table><div class="totals"><div><span>${L('Einträge','Entries')}</span><strong>${state.entries.length}</strong></div><div><span>${L('Maximale Haft','Maximum custody')}</span><strong>${escapeHtml(totalJailLabel(total,true))}</strong></div><div><span>${L('Maximales Geld','Maximum money')}</span><strong>${escapeHtml(totalFineLabel(total))}*</strong></div></div></section><div class="bail"><b>${L('Mögliche Kaution (LA County 2026)','Possible bail (LA County 2026)')}:</b> ${escapeHtml(bail.label)}<br>${escapeHtml(bail.reason)}</div><div class="notice"><b>${L('Wichtiger Hinweis','Important notice')}:</b> ${L('Kumulative Maximalrechnung. Gerichte können Strafen concurrent verhängen; PC 654 kann Mehrfachbestrafung ausschließen. Zuschläge, Gebühren und Enhancements können hinzukommen. Schätzwerte sind unverbindlich. Keine Rechtsberatung.','Cumulative maximum calculation. Courts may impose concurrent sentences; PC 654 may bar multiple punishment. Assessments, fees, and enhancements may apply. Estimates are nonbinding. Not legal advice.')}</div><div class="footer"><span>California Strafrechner · ${escapeHtml(generated)}</span><span>${L('Seite 1 von 1','Page 1 of 1')}</span></div><script>window.addEventListener('load',()=>setTimeout(()=>window.print(),250));<\/script></body></html>`;
+}
+
+function downloadCasePdf() {
+  const popup = window.open('', '_blank');
+  if (!popup) { notify(L('Pop-up blockiert – bitte Pop-ups erlauben','Pop-up blocked — please allow pop-ups')); return; }
+  popup.document.open(); popup.document.write(reportHtml()); popup.document.close();
+  notify(L('PDF-Druckansicht geöffnet','PDF print view opened'));
 }
 
 function downloadDoc() {
@@ -602,6 +810,89 @@ function downloadDoc() {
   document.body.appendChild(link); link.click(); link.remove();
   window.setTimeout(() => URL.revokeObjectURL(link.href), 500);
   notify('Google-Docs-kompatible DOC-Datei erstellt');
+}
+
+let signatureMode = 'type';
+const signatureCanvas = document.querySelector('#signature-canvas');
+const signatureContext = signatureCanvas?.getContext('2d');
+let drawingSignature = false;
+
+function setSignatureMode(mode) {
+  signatureMode = mode;
+  const typePanel = document.querySelector('#signature-type-panel');
+  const drawPanel = document.querySelector('#signature-draw-panel');
+  const typed = document.querySelector('[data-ticket-field="signatureText"]');
+  typePanel.hidden = mode !== 'type';
+  drawPanel.hidden = mode !== 'draw';
+  typed.required = mode === 'type';
+  document.querySelectorAll('[data-signature-mode]').forEach(button => button.classList.toggle('active', button.dataset.signatureMode === mode));
+}
+
+function signaturePoint(event) {
+  const rect = signatureCanvas.getBoundingClientRect();
+  return { x:(event.clientX-rect.left)*(signatureCanvas.width/rect.width), y:(event.clientY-rect.top)*(signatureCanvas.height/rect.height) };
+}
+
+function clearDrawnSignature() {
+  if (signatureContext) signatureContext.clearRect(0,0,signatureCanvas.width,signatureCanvas.height);
+  ticketFormState.signatureData = '';
+}
+
+async function sendDiscordWebhook() {
+  const inputNode = document.querySelector('#webhook-url');
+  const button = document.querySelector('#send-webhook');
+  const status = document.querySelector('#webhook-status');
+  let url;
+  try { url = new URL(inputNode.value.trim()); } catch { url = null; }
+  const allowedHost = url && (url.hostname === 'discord.com' || url.hostname === 'discordapp.com');
+  if (!url || url.protocol !== 'https:' || !allowedHost || !/^\/api\/webhooks\/\d+\/[A-Za-z0-9._-]+\/?$/.test(url.pathname)) {
+    status.textContent = L('Bitte einen gültigen Discord-Webhook-Link eingeben.','Enter a valid Discord webhook URL.');
+    status.className = 'error'; inputNode.focus(); return;
+  }
+  button.disabled = true; status.className = ''; status.textContent = L('Wird gesendet …','Sending …');
+  try {
+    const response = await fetch(url.href,{method:'POST',headers:{'Content-Type':'application/json'},body:discordEmbedJson()});
+    if (!response.ok) throw new Error(`Discord HTTP ${response.status}`);
+    status.className = 'success'; status.textContent = L('Erfolgreich an Discord gesendet.','Successfully sent to Discord.');
+  } catch (error) {
+    status.className = 'error'; status.textContent = L(`Senden fehlgeschlagen: ${error.message}`,`Send failed: ${error.message}`);
+  } finally { button.disabled = false; }
+}
+
+function applyUiLanguage() {
+  document.documentElement.lang = state.language;
+  document.title = L('California Strafrechner','California Penalty Calculator');
+  const set = (selector,de,en) => { const node=document.querySelector(selector); if(node) node.textContent=L(de,en); };
+  const html = (selector,de,en) => { const node=document.querySelector(selector); if(node) node.innerHTML=L(de,en); };
+  const placeholder = (selector,de,en) => { const node=document.querySelector(selector); if(node) node.placeholder=L(de,en); };
+  set('.status-pill','● Datenstand 04.10.2026','● Data current 10/04/2026');
+  set('#page-title','Strafrahmen. Klar. Einsatzbereit.','Penalty ranges. Clear. Ready.');
+  set('.hero #page-title + p','Gesetze durchsuchen, Höchstwerte kumulieren und eine fertige Akte für Discord, PDF oder Google Docs erstellen.','Search laws, total maximum penalties, and create a finished record for Discord, PDF, or Google Docs.');
+  set('.hero-stat span','durchsuchbare Einträge','searchable entries');
+  html('#tab-calculator','<span>01</span> Rechner','<span>01</span> Calculator'); html('#tab-catalog','<span>02</span> Deliktkatalog','<span>02</span> Offense catalog'); html('#tab-export','<span>03</span> Export','<span>03</span> Export'); html('#tab-embed','<span>04</span> Embed JSON','<span>04</span> Embed JSON'); html('#tab-tickets','<span>05</span> Strafzettel','<span>05</span> Citations');
+  set('#panel-calculator .entry-panel h2','Akte vorbereiten','Prepare record'); set('.agency-field label','Fraktion / Behörde','Agency / department'); placeholder('#agency-input','z. B. LAPD, LASD oder CHP','e.g. LAPD, LASD, or CHP');
+  set('#offense-form > label','Gesetzesnummer oder Beschreibung','Code section or description'); placeholder('#offense-input','z. B. PC 26350, DUI, robbery','e.g. PC 26350, DUI, robbery'); set('.field-help','Mehrere Einträge mit Komma, Semikolon oder neuer Zeile trennen.','Separate multiple entries with commas, semicolons, or new lines.');
+  html('#offense-form .primary-button','<span>＋</span> Zur Berechnung hinzufügen','<span>＋</span> Add to calculation'); html('#open-catalog','Katalog öffnen <span id="catalog-button-count">'+catalog.length+'</span>','Open catalog <span id="catalog-button-count">'+catalog.length+'</span>'); set('.quick-section .section-label','Häufig gesucht','Popular searches');
+  set('#panel-calculator .results-panel h2','Berechnung','Calculation'); set('#clear-all','Alle entfernen','Remove all');
+  set('.principle-note strong','Wichtig','Important'); set('.principle-note p','Die Summe unterstellt aufeinanderfolgende Höchststrafen. Gerichte können Strafen concurrent verhängen; PC 654 kann Mehrfachbestrafung ausschließen.','The total assumes consecutive maximum sentences. Courts may impose concurrent sentences; PC 654 may bar multiple punishment.');
+  set('.summary-card:nth-child(1) > span','Delikte','Offenses'); set('.summary-card:nth-child(2) > span','Max. Haft','Max. custody'); set('.summary-card:nth-child(2) small','Kumulativ gerechnet','Calculated cumulatively'); set('.summary-card:nth-child(3) > span','Max. Geldstrafe / Ticket','Max. fine / ticket'); set('.summary-card:nth-child(3) small','Ticketwerte ggf. inkl. Aufschläge','Ticket totals may include assessments'); set('.summary-card:nth-child(4) > span','Mögliche Kaution','Possible bail');
+  set('#panel-catalog .catalog-header .eyebrow','Offizieller Deliktindex','Official offense index'); set('#panel-catalog .catalog-header h2','Gesetze auswählen','Select laws'); set('#panel-catalog .catalog-header h2 + p','Suche deutsch oder englisch, filtere nach Rechtsgebiet und füge mehrere Tatbestände gemeinsam hinzu.','Search in German or English, filter by area of law, and add several offenses together.'); placeholder('#catalog-search','Code oder Tatbestand suchen','Search code or offense');
+  set('[data-filter="all"]','Alle','All'); set('[data-filter="trafficFine"]','Bußgelder','Fines'); set('[data-filter="boating"]','Bootsverkehr','Boating'); set('[data-filter="weapons"]','Waffenrecht','Weapons'); set('#add-catalog-selection','Auswahl hinzufügen','Add selection');
+  set('#panel-export .export-panel h2','Discord-Codeblock','Discord code block'); set('#copy-output','Kopieren','Copy'); set('#panel-export .export-actions h2','Akte exportieren','Export record'); set('#panel-export .export-actions h2 + p','Das PDF wird über den Druckdialog gespeichert. Die DOC-Datei lässt sich direkt in Google Docs oder Word öffnen.','Save the PDF through the print dialog. The DOC file opens in Google Docs or Word.');
+  set('#export-pdf strong','Als PDF speichern','Save as PDF'); set('#export-pdf small','Druckfertige Akte','Print-ready record'); set('#export-doc strong','Für Google Docs','For Google Docs'); set('#export-doc small','Compatible Word file','Compatible Word file');
+  set('#panel-embed .export-panel h2','Discord Components V2 JSON','Discord Components V2 JSON'); set('#copy-embed','JSON kopieren','Copy JSON'); set('.discord-preview-panel h2','So erscheint die Akte','How the record appears'); set('.webhook-panel h2','Embed direkt senden','Send embed directly'); set('.webhook-panel h2 + p','Der Link wird nur für diesen Versand im Browser verwendet und nicht gespeichert.','The URL is used only for this browser request and is not stored.'); set('.webhook-controls label','Webhook-Link','Webhook URL'); set('#send-webhook','An Discord senden','Send to Discord');
+  set('#panel-tickets .catalog-header h2','Strafzettel & Verkehrsverstöße','Citations & traffic violations'); set('#panel-tickets .catalog-header h2 + p','Grundbuße, mögliche Gesamtsumme mit Aufschlägen und DMV-Punkte auf einen Blick. Mit + und − lassen sich Verstöße mehrfach berechnen.','See base fines, estimated totals with assessments, and DMV points. Use + and − to add repeated violations.'); set('.ticket-note strong','Warum ist „Gesamt“ höher?','Why is the total higher?');
+  set('.ticket-note span','Zur Grundbuße kommen staatliche und örtliche Penalty Assessments sowie Gerichtsgebühren. Die angezeigten Gesamtwerte orientieren sich am veröffentlichten Yolo-County-Plan 2026; der konkrete Betrag kann je nach County und Fall abweichen.','State and local penalty assessments and court fees are added to the base fine. Displayed totals follow the published 2026 Yolo County schedule; the actual amount varies by county and case.');
+  set('#ticket-form-title','Strafzettel ausfüllen','Complete citation'); set('.ticket-form-heading > span','Angaben erscheinen im PDF und bleiben im Browser','Details appear in the PDF and remain in your browser'); placeholder('#ticket-search','z. B. rote Ampel, Handy, 20 mph, DUI','e.g. red light, phone, 20 mph, DUI'); set('#clear-tickets','Auswahl leeren','Clear selection'); set('#download-ticket-pdf','PDF speichern','Save PDF');
+  set('.ticket-auto-grid > div:nth-child(1) span','Fallakte','Case file'); set('.ticket-auto-grid > div:nth-child(2) span','Citation-Nummer','Citation number'); set('.ticket-auto-grid > div:nth-child(3) span','Automatisch erfasst','Recorded automatically');
+  const formLabels = [['Name','Name'],['Datum','Date'],['Kennzeichen / License Plate','License plate'],['Fahrzeug','Vehicle'],['Officer','Officer'],['Badge-Nummer','Badge number'],['Ort','Location'],['Gericht / Department','Court / department']];
+  document.querySelectorAll('#ticket-form > label > span').forEach((node,index) => { if(formLabels[index]) node.textContent=L(...formLabels[index]); });
+  set('.signature-heading > span','Unterschrift','Signature'); set('[data-signature-mode="type"]','Schreiben','Type'); set('[data-signature-mode="draw"]','Malen','Draw'); set('#clear-signature','Löschen','Clear'); set('#signature-draw-panel p','Mit Maus, Stift oder Finger unterschreiben.','Sign with mouse, pen, or finger.');
+  set('.ticket-calculator > div:nth-child(1) span','Ausgewählte Strafzettel','Selected citations'); set('.ticket-calculator > div:nth-child(2) span','Geschätzte Gesamtsumme','Estimated total'); set('.ticket-calculator > div:nth-child(3) span','Mögliche DMV-Punkte','Possible DMV points');
+  set('.arrest-warning-box strong','Festnahme statt einfachem Ticket möglich','Arrest may replace a simple citation'); set('.arrest-warning-box span','DUI, Fahrerflucht, rücksichtsloses Fahren, Flucht vor der Polizei, Fahren trotz Sperre und weitere Misdemeanors/Felonies sind keine normalen Bußgeldfälle. Die roten Warnkarten erklären warum.','DUI, hit-and-run, reckless driving, evading police, driving while suspended, and other misdemeanors/felonies are not ordinary citation cases. Red warning cards explain why.');
+  set('.ticket-document-actions strong','Strafzettelakte als PDF','Citation record as PDF'); set('.ticket-document-actions span','Erstellt ein druckfertiges Dokument mit den Angaben oben und allen ausgewählten Verstößen.','Creates a print-ready document with the information above and all selected violations.');
+  set('footer p','Allgemeine Information · Kein Ersatz für anwaltliche Beratung.','General information · Not a substitute for legal advice.');
+  document.querySelectorAll('[data-language]').forEach(item => { const active=item.dataset.language===state.language; item.classList.toggle('active',active); item.setAttribute('aria-pressed',String(active)); });
 }
 
 form.addEventListener('submit', event => {
@@ -631,6 +922,15 @@ suggestions.addEventListener('click', event => {
 });
 
 list.addEventListener('click', event => {
+  const increment = event.target.closest('[data-increment]');
+  if (increment) {
+    const item = state.entries.find(entry => entry.instanceId === Number(increment.dataset.increment));
+    if (!item) return;
+    state.entries.push({ ...item, instanceId: state.sequence++ });
+    render();
+    notify(`${item.code} ein weiteres Mal hinzugefügt`);
+    return;
+  }
   const button = event.target.closest('[data-remove]');
   if (!button) return;
   const id = Number(button.dataset.remove);
@@ -690,26 +990,63 @@ document.querySelector('#catalog-button-count').textContent = String(catalog.len
 document.querySelector('#hero-catalog-count').textContent = String(catalog.length);
 
 document.querySelector('#open-catalog').addEventListener('click', openCatalog);
+document.querySelector('#ticket-grid').addEventListener('click', event => {
+  const arrestButton = event.target.closest('[data-arrest-add]');
+  if (arrestButton) {
+    const item = catalog[Number(arrestButton.dataset.arrestAdd)];
+    if (!item) return;
+    state.entries.push({ ...item, instanceId: state.sequence++ });
+    activateTab('calculator'); render(); notify(`${item.code} im Strafrechner geöffnet`); return;
+  }
+  const button = event.target.closest('[data-ticket-action]');
+  if (!button) return;
+  const id = Number(button.dataset.ticket);
+  const current = ticketState.get(id) || 0;
+  if (button.dataset.ticketAction === 'plus') ticketState.set(id, current + 1);
+  else if (current > 1) ticketState.set(id, current - 1);
+  else ticketState.delete(id);
+  renderTickets();
+});
+document.querySelector('#ticket-search').addEventListener('input', renderTickets);
+document.querySelector('#clear-tickets').addEventListener('click', () => { ticketState.clear(); renderTickets(); notify('Strafzettel-Rechner geleert'); });
+document.querySelector('#ticket-form').addEventListener('input', event => {
+  const field = event.target.closest('[data-ticket-field]');
+  if (!field) return;
+  ticketFormState[field.dataset.ticketField] = field.value;
+});
+document.querySelectorAll('[data-signature-mode]').forEach(button => button.addEventListener('click', () => setSignatureMode(button.dataset.signatureMode)));
+document.querySelector('#clear-signature').addEventListener('click', () => {
+  clearDrawnSignature();
+  const typed = document.querySelector('[data-ticket-field="signatureText"]');
+  typed.value = ''; ticketFormState.signatureText = '';
+  notify(L('Unterschrift gelöscht','Signature cleared'));
+});
+if (signatureCanvas && signatureContext) {
+  signatureContext.lineWidth = 5; signatureContext.lineCap = 'round'; signatureContext.lineJoin = 'round'; signatureContext.strokeStyle = '#111827';
+  signatureCanvas.addEventListener('pointerdown', event => { drawingSignature=true; signatureCanvas.setPointerCapture(event.pointerId); const p=signaturePoint(event); signatureContext.beginPath(); signatureContext.moveTo(p.x,p.y); });
+  signatureCanvas.addEventListener('pointermove', event => { if(!drawingSignature) return; const p=signaturePoint(event); signatureContext.lineTo(p.x,p.y); signatureContext.stroke(); });
+  const finishSignature = () => { if(!drawingSignature) return; drawingSignature=false; ticketFormState.signatureData=signatureCanvas.toDataURL('image/png'); };
+  signatureCanvas.addEventListener('pointerup', finishSignature); signatureCanvas.addEventListener('pointercancel', finishSignature); signatureCanvas.addEventListener('pointerleave', finishSignature);
+}
+document.querySelector('#download-ticket-pdf').addEventListener('click', downloadTicketPdf);
+document.querySelector('#send-webhook').addEventListener('click', sendDiscordWebhook);
 document.querySelectorAll('[data-tab]').forEach(button => button.addEventListener('click', () => activateTab(button.dataset.tab)));
 document.querySelectorAll('[data-language]').forEach(button => button.addEventListener('click', () => {
   state.language = button.dataset.language;
-  document.documentElement.lang = state.language;
-  document.querySelectorAll('[data-language]').forEach(item => {
-    const active = item === button;
-    item.classList.toggle('active', active);
-    item.setAttribute('aria-pressed', String(active));
-  });
+  applyUiLanguage();
   render();
   showSuggestions();
+  syncTicketIdentifiers();
 }));
 const agencyInput = document.querySelector('#agency-input');
-agencyInput.addEventListener('input', () => { state.agency = agencyInput.value; render(); });
+agencyInput.addEventListener('input', () => { state.agency = agencyInput.value; syncTicketIdentifiers(); render(); });
 document.querySelectorAll('[data-agency]').forEach(button => button.addEventListener('click', () => {
   agencyInput.value = button.dataset.agency;
   state.agency = button.dataset.agency;
+  syncTicketIdentifiers();
   render();
 }));
-document.querySelector('#export-pdf').addEventListener('click', () => { activateTab('export'); window.print(); });
+document.querySelector('#export-pdf').addEventListener('click', downloadCasePdf);
 document.querySelector('#export-doc').addEventListener('click', downloadDoc);
 catalogSearch.addEventListener('input', renderCatalog);
 document.querySelector('#catalog-filters').addEventListener('click', event => {
@@ -779,5 +1116,8 @@ function registerWebMcp() {
   }
 }
 
+syncTicketIdentifiers();
+setSignatureMode('type');
+applyUiLanguage();
 render();
 registerWebMcp();
