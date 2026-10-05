@@ -35,13 +35,14 @@
       <button id="tab-export" role="tab" aria-selected="false" aria-controls="panel-export" data-tab="export"><span>03</span> Export</button>
       <button id="tab-embed" role="tab" aria-selected="false" aria-controls="panel-embed" data-tab="embed"><span>04</span> Embed JSON</button>
       <button id="tab-tickets" role="tab" aria-selected="false" aria-controls="panel-tickets" data-tab="tickets"><span>05</span> Strafzettel</button>
+      <button id="tab-reports" role="tab" aria-selected="false" aria-controls="panel-reports" data-tab="reports"><span>06</span> Berichte</button>
     </nav>
 
     <section class="tab-panel active" id="panel-calculator" role="tabpanel" aria-labelledby="tab-calculator">
       <div class="workspace">
         <div class="entry-panel panel">
           <div class="panel-heading"><div><span class="step">01</span><h2>Akte vorbereiten</h2></div><span id="catalog-count" class="catalog-count"></span></div>
-          <div class="agency-field"><label for="agency-input">Fraktion / Behörde</label><input id="agency-input" type="text" maxlength="80" placeholder="z. B. LAPD, LASD oder CHP"><div class="agency-presets" aria-label="Behörde schnell auswählen"><button type="button" data-agency="LAPD">LAPD</button><button type="button" data-agency="LASD">LASD</button><button type="button" data-agency="CHP">CHP</button></div></div>
+          <div class="agency-field"><label for="agency-input">Fraktion / Behörde</label><select id="agency-input"><option value="">Bitte Behörde auswählen</option><option>LAPD</option><option>LASD</option><option>CHP</option><option>USMS</option><option>USBP</option><option>CDFW</option></select><p class="field-help">Die Fallakten-ID wird nach der Auswahl automatisch erstellt.</p></div>
           <form id="offense-form" autocomplete="off">
             <label for="offense-input">Gesetzesnummer oder Beschreibung</label>
             <div class="search-wrap"><svg class="search-icon" viewBox="0 0 24 24" aria-hidden="true"><circle cx="10.8" cy="10.8" r="6.8"/><path d="m16 16 4.5 4.5"/></svg><textarea id="offense-input" rows="3" placeholder="z. B. PC 26350, DUI, robbery"></textarea><kbd>Ctrl ↵</kbd></div>
@@ -97,16 +98,17 @@
         <div class="ticket-note"><strong>Warum ist „Gesamt“ höher?</strong><span>Zur Grundbuße kommen staatliche und örtliche Penalty Assessments sowie Gerichtsgebühren. Die angezeigten Gesamtwerte orientieren sich am veröffentlichten Yolo-County-Plan 2026; der konkrete Betrag kann je nach County und Fall abweichen.</span></div>
         <section class="ticket-form-section" aria-labelledby="ticket-form-title">
           <div class="ticket-form-heading"><div><span class="step">01</span><h3 id="ticket-form-title">Strafzettel ausfüllen</h3></div><span>Angaben erscheinen im PDF und bleiben im Browser</span></div>
-          <div class="ticket-auto-grid"><div><span>Fallakte</span><strong id="auto-case-number">AGENCY-000000</strong></div><div><span>Citation-Nummer</span><strong id="auto-citation-number">00000000</strong></div><div><span>Automatisch erfasst</span><strong id="auto-ticket-datetime">—</strong></div></div>
+          <div class="ticket-auto-grid"><div><span>Fallakte</span><strong id="auto-case-number">Behörde auswählen</strong></div><div><span>Citation-Nummer</span><strong id="auto-citation-number">00000000</strong></div><div><span>Automatisch erfasst</span><strong id="auto-ticket-datetime">—</strong></div></div>
           <div class="ticket-form-grid" id="ticket-form">
-            <label><span>Name</span><input type="text" data-ticket-field="personName" placeholder="Vor- und Nachname" required></label>
+            <label class="wide-field"><span>Behörde / Department</span><select id="ticket-agency-input" required><option value="">Bitte Behörde auswählen</option><option>LAPD</option><option>LASD</option><option>CHP</option><option>USMS</option><option>USBP</option><option>CDFW</option></select></label>
+            <div class="subject-switch wide-field"><span>Strafzettel für</span><div><button class="active" type="button" data-subject-type="person">Person</button><button type="button" data-subject-type="vehicle">Fahrzeug</button></div></div>
+            <div class="subject-fields" id="person-fields"><label class="wide-field"><span>Name der Person</span><input type="text" data-ticket-field="personName" placeholder="Vor- und Nachname" required></label></div>
+            <div class="subject-fields" id="vehicle-fields" hidden><label><span>Kennzeichen / License Plate</span><input type="text" data-ticket-field="licensePlate" placeholder="z. B. 8ABC123"></label><label><span>Fahrzeug</span><input type="text" data-ticket-field="vehicle" placeholder="Marke, Modell, Farbe"></label></div>
             <label><span>Datum</span><input type="date" data-ticket-field="violationDate" required></label>
-            <label><span>Kennzeichen / License Plate</span><input type="text" data-ticket-field="licensePlate" placeholder="z. B. 8ABC123" required></label>
-            <label><span>Fahrzeug</span><input type="text" data-ticket-field="vehicle" placeholder="Marke, Modell, Farbe" required></label>
             <label><span>Officer</span><input type="text" data-ticket-field="officer" placeholder="Name des Officers" required></label>
             <label><span>Badge-Nummer</span><input type="text" data-ticket-field="badgeNumber" placeholder="Dienstnummer" required></label>
             <label class="wide-field"><span>Ort</span><input type="text" data-ticket-field="location" placeholder="Straße / Kreuzung / Gewässer" required></label>
-            <label class="wide-field"><span>Gericht / Department</span><select data-ticket-field="court" required><option value="">Bitte auswählen</option><option>Supreme Court</option><option>Superior Court</option><option>Department of Justice</option><option value="Unbekannt">Unbekannt</option><option value="Nicht verfügbar">Nicht verfügbar</option></select></label>
+            <label class="wide-field"><span>Gericht / Department</span><select data-ticket-field="court" required><option value="">Bitte auswählen</option><option>Department of Justice</option><option>Supreme Court</option><option>Superior Court</option><option value="Unbekannt">Unbekannt</option></select></label>
             <div class="signature-field wide-field"><div class="signature-heading"><span>Unterschrift</span><div><button class="active" type="button" data-signature-mode="type">Schreiben</button><button type="button" data-signature-mode="draw">Malen</button><button type="button" id="clear-signature">Löschen</button></div></div><div id="signature-type-panel"><input type="text" data-ticket-field="signatureText" placeholder="Name als Unterschrift" required></div><div id="signature-draw-panel" hidden><canvas id="signature-canvas" width="900" height="220" aria-label="Unterschrift zeichnen"></canvas><p>Mit Maus, Stift oder Finger unterschreiben.</p></div></div>
           </div>
         </section>
@@ -121,6 +123,21 @@
         <div class="ticket-grid" id="ticket-grid"></div>
         <div class="ticket-document-actions"><div><strong>Strafzettelakte als PDF</strong><span>Erstellt ein druckfertiges Dokument mit den Angaben oben und allen ausgewählten Verstößen.</span></div><button id="download-ticket-pdf" type="button">PDF speichern</button></div>
         <div class="ticket-source"><span>Stand: 2026 · Erstverstoß/Grundfall</span><a href="https://www.yolo.courts.ca.gov/sites/default/files/yolo/default/Bail%20Schedule.html" target="_blank" rel="noopener">2026 Uniform Bail & Penalty Schedule ↗</a></div>
+      </div>
+    </section>
+
+    <section class="tab-panel" id="panel-reports" role="tabpanel" aria-labelledby="tab-reports" hidden>
+      <div class="reports-page panel">
+        <div class="catalog-header"><div><p class="eyebrow">California Law Enforcement Reports</p><h2>Polizeiliches Berichtswesen</h2><p>Berichtstyp auswählen, Pflichtfelder ausfüllen und anschließend als PDF oder DOC exportieren.</p></div><button id="open-report-archive" class="secondary-button" type="button">Berichts-Archiv</button></div>
+        <div class="report-type-picker"><label for="report-type">Berichtstyp <b>Pflicht</b></label><select id="report-type"><option value="">Bitte Bericht auswählen</option></select></div>
+        <div id="report-editor" hidden>
+          <div class="report-editor-head"><div><span class="step">01</span><div><h3 id="report-title"></h3><p id="report-subtitle"></p></div></div><span id="report-required-progress">0 / 0 Pflichtfelder</span></div>
+          <form id="report-form" class="report-form-grid"></form>
+          <section class="report-charges" id="report-charges-section" hidden><div class="section-label">Straftaten und Rechtsgrundlagen <b>Pflicht</b></div><div class="report-charge-search"><input id="report-charge-input" type="search" placeholder="Code oder Tatbestand suchen"><button id="report-charge-add" type="button">Hinzufügen</button></div><div id="report-charge-suggestions"></div><div id="report-charge-list"></div></section>
+          <section class="report-signature"><div class="signature-heading"><span>Unterschrift des Beamten <b>Pflicht</b></span><div><button class="active" type="button" data-report-signature="type">Schreiben</button><button type="button" data-report-signature="draw">Malen</button><button type="button" id="clear-report-signature">Löschen</button></div></div><div id="report-signature-type"><input id="report-signature-text" type="text" placeholder="Name als Unterschrift"></div><div id="report-signature-draw" hidden><canvas id="report-signature-canvas" width="900" height="220"></canvas><p>Mit Maus, Stift oder Finger unterschreiben.</p></div></section>
+          <div class="report-submit-area"><label><input id="report-send-discord" type="checkbox"> Zum Akten-Discord schicken? / Send to report Discord server?</label><div class="report-webhook-row" id="report-webhook-row" hidden><input id="report-webhook-url" type="url" placeholder="Webhook für diesen Berichtstyp"><small>Der Webhook wird nicht gespeichert.</small></div><div class="report-actions"><button id="report-export-pdf" type="button">PDF exportieren</button><button id="report-export-doc" type="button">Google-Docs-Datei</button><button id="submit-report" class="primary-button" type="button">Submit Report</button></div><p id="report-status"></p></div>
+        </div>
+        <div id="report-archive" hidden><div class="report-editor-head"><div><span class="step">A</span><div><h3>Geschütztes Berichts-Archiv</h3><p>Auf diesem Gerät gespeicherte Berichte.</p></div></div><button id="close-report-archive" type="button">Zurück</button></div><div id="archive-lock"><input id="archive-password" type="password" placeholder="Archiv-Passwort"><button id="unlock-archive" type="button">Entsperren</button><p id="archive-error"></p></div><div id="archive-content" hidden><div id="archive-list"></div></div></div>
       </div>
     </section>
   </main>

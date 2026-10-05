@@ -10,6 +10,9 @@ Die Website läuft vollständig im Browser. Es ist kein Server nötig.
 - Strafzettel mit automatischer Fallakten-/Citation-Nummer und Datum/Uhrzeit
 - Signatur durch Tippen oder Zeichnen
 - Straßen- und Bootsverkehrsverstöße mit Bußgeld- und Festnahmehinweisen
+- Acht dynamische Polizeiberichte: Festnahme, Einsatz, OIS, Use of Force, Unfall, Fahrzeugdurchsuchung, Beweismittel und Verkehrskontrolle
+- Pflichtfeldprüfung, Datenschutzfilter, Charges-Suche, Unterschrift sowie PDF-/DOC-Export für Berichte
+- Optionaler Berichtversand an Discord und passwortgeschütztes lokales Berichtsarchiv
 
 ## Kostenlos öffentlich bereitstellen
 
