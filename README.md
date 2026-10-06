@@ -12,7 +12,11 @@ Die Website läuft vollständig im Browser. Es ist kein Server nötig.
 - Straßen- und Bootsverkehrsverstöße mit Bußgeld- und Festnahmehinweisen
 - Acht dynamische Polizeiberichte: Festnahme, Einsatz, OIS, Use of Force, Unfall, Fahrzeugdurchsuchung, Beweismittel und Verkehrskontrolle
 - Pflichtfeldprüfung, Datenschutzfilter, Charges-Suche, Unterschrift sowie PDF-/DOC-Export für Berichte
-- Optionaler Berichtversand an Discord und passwortgeschütztes lokales Berichtsarchiv
+- Berichte mit getrennten Einzelfeldern, automatischem Datum/Uhrzeit, Pflicht-Narrativ und Behördenauswahl im Berichte-Panel
+- Berichtversand an Discord ist für eine sichere Backend-Konfiguration vorbereitet; Webhook-URLs werden nicht im Browser eingegeben oder gespeichert
+- Passwortgeschütztes lokales Berichtsarchiv
+- Verschlüsseltes Admin-Menü für getrennte Strafzettel- und Berichts-Webhooks je Behörde
+- Bericht-PDFs mit denselben logisch getrennten Kategorien wie die Eingabeformulare
 
 ## Kostenlos öffentlich bereitstellen
 

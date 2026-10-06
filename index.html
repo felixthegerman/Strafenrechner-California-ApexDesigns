@@ -19,6 +19,7 @@
         <button class="active" type="button" data-language="de" aria-pressed="true">DE</button>
         <button type="button" data-language="en" aria-pressed="false">EN</button>
       </div>
+      <button id="open-admin-menu" class="admin-menu-button" type="button">Admin</button>
       <span class="status-pill"><i></i> Datenstand 04.10.2026</span>
     </div>
   </header>
@@ -89,7 +90,7 @@
         <div class="panel export-panel"><div class="panel-heading"><div><span class="step">04</span><h2>Discord Components V2 JSON</h2></div><button class="copy-button" id="copy-embed" type="button">JSON kopieren</button></div><pre id="embed-output" tabindex="0"></pre><div class="discord-footer"><span><i></i> Live-Vorschau</span><span>IS_COMPONENTS_V2 · Container · Separator</span></div></div>
         <aside class="panel discord-preview-panel"><p class="eyebrow">Live-Vorschau</p><h2>So erscheint die Akte</h2><div class="discord-preview" id="discord-preview"></div><div class="legal-flag"><strong>Hinweis</strong><span>Die Vorschau bildet Components V2 nach. Das echte Ergebnis kann je nach Discord-Client geringfügig abweichen; ein Bot oder Webhook muss das JSON senden.</span></div></aside>
       </div>
-      <div class="panel webhook-panel"><div><p class="eyebrow">Discord Webhook</p><h2>Embed direkt senden</h2><p>Der Link wird nur für diesen Versand im Browser verwendet und nicht gespeichert.</p></div><div class="webhook-controls"><label for="webhook-url">Webhook-Link</label><div><input id="webhook-url" type="url" autocomplete="off" placeholder="https://discord.com/api/webhooks/…"><button id="send-webhook" type="button">An Discord senden</button></div><small id="webhook-status">Noch nicht gesendet</small></div></div>
+      <div class="panel webhook-panel"><div><p class="eyebrow">Discord Webhook</p><h2>Embed direkt senden</h2><p>Verwendet den im Admin-Menü hinterlegten Berichts-Webhook der ausgewählten Behörde.</p></div><div class="webhook-controls"><button id="send-webhook" type="button">An Discord senden</button><small id="webhook-status">Noch nicht gesendet</small></div></div>
     </section>
 
     <section class="tab-panel" id="panel-tickets" role="tabpanel" aria-labelledby="tab-tickets" hidden>
@@ -121,7 +122,7 @@
         <div class="ticket-toolbar"><label class="sr-only" for="ticket-search">Strafzettel durchsuchen</label><input id="ticket-search" type="search" placeholder="z. B. rote Ampel, Handy, 20 mph, DUI"><span id="ticket-result-count"></span></div>
         <div class="arrest-warning-box"><strong>Festnahme statt einfachem Ticket möglich</strong><span>DUI, Fahrerflucht, rücksichtsloses Fahren, Flucht vor der Polizei, Fahren trotz Sperre und weitere Misdemeanors/Felonies sind keine normalen Bußgeldfälle. Die roten Warnkarten erklären warum.</span></div>
         <div class="ticket-grid" id="ticket-grid"></div>
-        <div class="ticket-document-actions"><div><strong>Strafzettelakte als PDF</strong><span>Erstellt ein druckfertiges Dokument mit den Angaben oben und allen ausgewählten Verstößen.</span></div><button id="download-ticket-pdf" type="button">PDF speichern</button></div>
+        <div class="ticket-document-actions"><div><strong>Strafzettelakte als PDF</strong><span>Erstellt ein druckfertiges Dokument mit den Angaben oben und allen ausgewählten Verstößen.</span></div><div><button id="send-ticket-webhook" type="button">An Akten-Discord</button><button id="download-ticket-pdf" type="button">PDF speichern</button></div></div>
         <div class="ticket-source"><span>Stand: 2026 · Erstverstoß/Grundfall</span><a href="https://www.yolo.courts.ca.gov/sites/default/files/yolo/default/Bail%20Schedule.html" target="_blank" rel="noopener">2026 Uniform Bail & Penalty Schedule ↗</a></div>
       </div>
     </section>
@@ -129,13 +130,16 @@
     <section class="tab-panel" id="panel-reports" role="tabpanel" aria-labelledby="tab-reports" hidden>
       <div class="reports-page panel">
         <div class="catalog-header"><div><p class="eyebrow">California Law Enforcement Reports</p><h2>Polizeiliches Berichtswesen</h2><p>Berichtstyp auswählen, Pflichtfelder ausfüllen und anschließend als PDF oder DOC exportieren.</p></div><button id="open-report-archive" class="secondary-button" type="button">Berichts-Archiv</button></div>
-        <div class="report-type-picker"><label for="report-type">Berichtstyp <b>Pflicht</b></label><select id="report-type"><option value="">Bitte Bericht auswählen</option></select></div>
+        <div class="report-type-picker">
+          <label for="report-agency-input"><span>Behörde</span><b>Pflicht</b></label><select id="report-agency-input"><option value="">Bitte Behörde auswählen</option><option>LAPD</option><option>LASD</option><option>CHP</option><option>USMS</option><option>USBP</option><option>CDFW</option></select>
+          <label for="report-type"><span>Berichtstyp</span><b>Pflicht</b></label><select id="report-type"><option value="">Bitte Bericht auswählen</option></select>
+        </div>
         <div id="report-editor" hidden>
           <div class="report-editor-head"><div><span class="step">01</span><div><h3 id="report-title"></h3><p id="report-subtitle"></p></div></div><span id="report-required-progress">0 / 0 Pflichtfelder</span></div>
           <form id="report-form" class="report-form-grid"></form>
           <section class="report-charges" id="report-charges-section" hidden><div class="section-label">Straftaten und Rechtsgrundlagen <b>Pflicht</b></div><div class="report-charge-search"><input id="report-charge-input" type="search" placeholder="Code oder Tatbestand suchen"><button id="report-charge-add" type="button">Hinzufügen</button></div><div id="report-charge-suggestions"></div><div id="report-charge-list"></div></section>
           <section class="report-signature"><div class="signature-heading"><span>Unterschrift des Beamten <b>Pflicht</b></span><div><button class="active" type="button" data-report-signature="type">Schreiben</button><button type="button" data-report-signature="draw">Malen</button><button type="button" id="clear-report-signature">Löschen</button></div></div><div id="report-signature-type"><input id="report-signature-text" type="text" placeholder="Name als Unterschrift"></div><div id="report-signature-draw" hidden><canvas id="report-signature-canvas" width="900" height="220"></canvas><p>Mit Maus, Stift oder Finger unterschreiben.</p></div></section>
-          <div class="report-submit-area"><label><input id="report-send-discord" type="checkbox"> Zum Akten-Discord schicken? / Send to report Discord server?</label><div class="report-webhook-row" id="report-webhook-row" hidden><input id="report-webhook-url" type="url" placeholder="Webhook für diesen Berichtstyp"><small>Der Webhook wird nicht gespeichert.</small></div><div class="report-actions"><button id="report-export-pdf" type="button">PDF exportieren</button><button id="report-export-doc" type="button">Google-Docs-Datei</button><button id="submit-report" class="primary-button" type="button">Submit Report</button></div><p id="report-status"></p></div>
+          <div class="report-submit-area"><label><input id="report-send-discord" type="checkbox"><span>Zum Akten-Discord schicken?</span></label><small id="report-discord-note">Der passende Webhook wird sicher über das Backend der Behörde gewählt.</small><div class="report-actions"><button id="report-export-pdf" type="button">PDF exportieren</button><button id="report-export-doc" type="button">Google-Docs-Datei</button><button id="submit-report" class="primary-button" type="button">Bericht speichern</button></div><p id="report-status"></p></div>
         </div>
         <div id="report-archive" hidden><div class="report-editor-head"><div><span class="step">A</span><div><h3>Geschütztes Berichts-Archiv</h3><p>Auf diesem Gerät gespeicherte Berichte.</p></div></div><button id="close-report-archive" type="button">Zurück</button></div><div id="archive-lock"><input id="archive-password" type="password" placeholder="Archiv-Passwort"><button id="unlock-archive" type="button">Entsperren</button><p id="archive-error"></p></div><div id="archive-content" hidden><div id="archive-list"></div></div></div>
       </div>
@@ -143,6 +147,7 @@
   </main>
   <footer><span>California Strafrechner</span><p>Allgemeine Information · Kein Ersatz für anwaltliche Beratung.</p></footer>
   <div class="toast" id="toast" role="status" aria-live="polite"></div>
+  <div class="admin-modal" id="admin-modal" hidden><div class="admin-dialog" role="dialog" aria-modal="true" aria-labelledby="admin-title"><div class="admin-dialog-head"><div><p class="eyebrow">Lokale sichere Konfiguration</p><h2 id="admin-title">Webhook-Verwaltung</h2></div><button id="close-admin-menu" type="button" aria-label="Schließen">×</button></div><div id="admin-auth"><p id="admin-auth-help"></p><label><span>Admin-Passwort</span><input id="admin-password" type="password" autocomplete="current-password"></label><label id="admin-password-confirm-row"><span>Passwort bestätigen</span><input id="admin-password-confirm" type="password" autocomplete="new-password"></label><button id="admin-unlock" class="primary-button" type="button">Admin-Menü öffnen</button></div><div id="admin-config" hidden><p class="admin-note">Die Webhooks werden mit dem Admin-Passwort verschlüsselt und nur in diesem Browser gespeichert.</p><div id="admin-webhook-grid"></div><div class="admin-actions"><button id="admin-lock" type="button">Sperren</button><button id="admin-save" class="primary-button" type="button">Webhooks speichern</button></div></div><p id="admin-status"></p></div></div>
   <script src="catalog.generated.js"></script><script src="app.js"></script>
 </body>
 </html>
