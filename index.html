@@ -6,7 +6,7 @@
   <meta name="description" content="Kalifornische Strafrahmen durchsuchen, berechnen und für Discord, PDF oder Google Docs exportieren.">
   <title>California Strafrechner</title>
   <link rel="icon" type="image/png" href="city-of-los-angeles-seal.png">
-  <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="styles.css?v=17">
 </head>
 <body>
   <header class="topbar">
@@ -69,7 +69,7 @@
         <div class="catalog-controls">
           <label class="sr-only" for="catalog-search">Katalog durchsuchen</label>
           <div class="catalog-search-wrap"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="10.8" cy="10.8" r="6.8"/><path d="m16 16 4.5 4.5"/></svg><input id="catalog-search" type="search" placeholder="Code oder Tatbestand suchen"></div>
-          <div class="catalog-filters" id="catalog-filters" aria-label="Katalog filtern"><button class="active" type="button" data-filter="all">Alle</button><button type="button" data-filter="trafficFine">Bußgelder</button><button type="button" data-filter="vehicle">Vehicle Code</button><button type="button" data-filter="boating">Bootsverkehr</button><button type="button" data-filter="penal">Penal Code</button><button type="button" data-filter="weapons">Waffenrecht</button><button type="button" data-filter="health">Health & Safety</button><button type="button" data-filter="Felony">Felony</button><button type="button" data-filter="Wobbler">Wobbler</button><button type="button" data-filter="Misd.">Misd.</button><button type="button" data-filter="Infraction">Infraction</button></div>
+          <div class="catalog-filters" id="catalog-filters" aria-label="Katalog filtern"><button class="active" type="button" data-filter="all">Alle</button><button type="button" data-filter="trafficFine">Bußgelder</button><button type="button" data-filter="vehicle">Vehicle Code</button><button type="button" data-filter="fishWildlife">Fish & Wildlife</button><button type="button" data-filter="boating">Bootsverkehr</button><button type="button" data-filter="penal">Penal Code</button><button type="button" data-filter="weapons">Waffenrecht</button><button type="button" data-filter="health">Health & Safety</button><button type="button" data-filter="Felony">Felony</button><button type="button" data-filter="Wobbler">Wobbler</button><button type="button" data-filter="Misd.">Misd.</button><button type="button" data-filter="Infraction">Infraction</button></div>
           <div class="catalog-result-bar"><span id="catalog-result-count"></span><button type="button" id="select-visible">Sichtbare auswählen</button></div>
         </div>
         <div class="catalog-list" id="catalog-list"></div>
@@ -137,7 +137,7 @@
         <div id="report-editor" hidden>
           <div class="report-editor-head"><div><span class="step">01</span><div><h3 id="report-title"></h3><p id="report-subtitle"></p></div></div><span id="report-required-progress">0 / 0 Pflichtfelder</span></div>
           <form id="report-form" class="report-form-grid"></form>
-          <section class="report-charges" id="report-charges-section" hidden><div class="section-label">Straftaten und Rechtsgrundlagen <b>Pflicht</b></div><div class="report-charge-search"><input id="report-charge-input" type="search" placeholder="Code oder Tatbestand suchen"><button id="report-charge-add" type="button">Hinzufügen</button></div><div id="report-charge-suggestions"></div><div id="report-charge-list"></div></section>
+          <section class="report-charges" id="report-charges-section" hidden><div class="section-label">Straftaten und Rechtsgrundlagen <b>Optional</b></div><label class="no-charges-option"><input id="report-no-charges" type="checkbox"><span>Keine Straftaten / nur Dokumentation</span></label><div class="report-charge-search"><input id="report-charge-input" type="search" placeholder="Code oder Tatbestand suchen"><button id="report-charge-add" type="button">Hinzufügen</button></div><div id="report-charge-suggestions"></div><div id="report-charge-list"></div></section>
           <section class="report-signature"><div class="signature-heading"><span>Unterschrift des Beamten <b>Pflicht</b></span><div><button class="active" type="button" data-report-signature="type">Schreiben</button><button type="button" data-report-signature="draw">Malen</button><button type="button" id="clear-report-signature">Löschen</button></div></div><div id="report-signature-type"><input id="report-signature-text" type="text" placeholder="Name als Unterschrift"></div><div id="report-signature-draw" hidden><canvas id="report-signature-canvas" width="900" height="220"></canvas><p>Mit Maus, Stift oder Finger unterschreiben.</p></div></section>
           <div class="report-submit-area"><label><input id="report-send-discord" type="checkbox"><span>Zum Akten-Discord schicken?</span></label><small id="report-discord-note">Der passende Webhook wird sicher über das Backend der Behörde gewählt.</small><div class="report-actions"><button id="report-export-pdf" type="button">PDF exportieren</button><button id="report-export-doc" type="button">Google-Docs-Datei</button><button id="submit-report" class="primary-button" type="button">Bericht speichern</button></div><p id="report-status"></p></div>
         </div>
@@ -148,6 +148,6 @@
   <footer><span>California Strafrechner</span><p>Allgemeine Information · Kein Ersatz für anwaltliche Beratung.</p></footer>
   <div class="toast" id="toast" role="status" aria-live="polite"></div>
   <div class="admin-modal" id="admin-modal" hidden><div class="admin-dialog" role="dialog" aria-modal="true" aria-labelledby="admin-title"><div class="admin-dialog-head"><div><p class="eyebrow">Lokale sichere Konfiguration</p><h2 id="admin-title">Webhook-Verwaltung</h2></div><button id="close-admin-menu" type="button" aria-label="Schließen">×</button></div><div id="admin-auth"><p id="admin-auth-help"></p><label><span>Admin-Passwort</span><input id="admin-password" type="password" autocomplete="current-password"></label><label id="admin-password-confirm-row"><span>Passwort bestätigen</span><input id="admin-password-confirm" type="password" autocomplete="new-password"></label><button id="admin-unlock" class="primary-button" type="button">Admin-Menü öffnen</button></div><div id="admin-config" hidden><p class="admin-note">Die Webhooks werden mit dem Admin-Passwort verschlüsselt und nur in diesem Browser gespeichert.</p><div id="admin-webhook-grid"></div><div class="admin-actions"><button id="admin-lock" type="button">Sperren</button><button id="admin-save" class="primary-button" type="button">Webhooks speichern</button></div></div><p id="admin-status"></p></div></div>
-  <script src="catalog.generated.js"></script><script src="app.js"></script>
+  <script src="catalog.generated.js"></script><script src="catalog.extended.js"></script><script src="app.js"></script>
 </body>
 </html>

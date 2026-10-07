@@ -5,8 +5,9 @@ Die Website läuft vollständig im Browser. Es ist kein Server nötig.
 ## Enthalten
 
 - Oberfläche komplett auf Deutsch oder Englisch umschaltbar
+- 815 durchsuchbare Einträge, darunter ein deutlich erweiterter California-Vehicle-Code-Katalog sowie 63 Fish-, Wildlife- und Naturschutz-Einträge
 - Strafrechner mit PDF-, DOC-, Discord-Codeblock- und Components-V2-Export
-- Optionaler Discord-Webhook-Versand; der Link wird nicht gespeichert
+- Modernisierte Discord-Components-V2-Ausgabe für Rechner, Strafzettel und Berichte
 - Strafzettel mit automatischer Fallakten-/Citation-Nummer und Datum/Uhrzeit
 - Signatur durch Tippen oder Zeichnen
 - Straßen- und Bootsverkehrsverstöße mit Bußgeld- und Festnahmehinweisen
@@ -17,6 +18,7 @@ Die Website läuft vollständig im Browser. Es ist kein Server nötig.
 - Passwortgeschütztes lokales Berichtsarchiv
 - Verschlüsseltes Admin-Menü für getrennte Strafzettel- und Berichts-Webhooks je Behörde
 - Bericht-PDFs mit denselben logisch getrennten Kategorien wie die Eingabeformulare
+- Berichte können ausdrücklich ohne Straftat nur zur Dokumentation angelegt werden
 
 ## Kostenlos öffentlich bereitstellen
 
@@ -38,6 +40,8 @@ Die Website läuft vollständig im Browser. Es ist kein Server nötig.
 ## Hinweis
 
 Die Angaben sind allgemeine, teils geschätzte Informationen und keine Rechtsberatung. Vor realer Verwendung immer Gesetzestext, County-Regeln und konkreten Sachverhalt prüfen.
+
+PDF-Dateien werden derzeit separat über den Druckdialog gespeichert. Der Discord-Versand überträgt die strukturierte Akte, hängt aber noch keine PDF-Datei an; dafür muss die PDF-Erzeugung in der Serverfunktion eingerichtet werden.
 
 ## Zentrale Webhook-Datenbank
 

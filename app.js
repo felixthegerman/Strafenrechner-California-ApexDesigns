@@ -265,13 +265,16 @@ const friendlyGeneratedNames = {
   'VC 23109':['Illegales Straßenrennen','Illegal speed contest'],'VC 2800.3':['Flucht mit Verletzung oder Tod','Evading causing injury or death']
 };
 
-const curatedCodes = new Set(curatedCatalog.map(item => item.code.toUpperCase()));
+const extendedCatalog = Array.isArray(window.EXTENDED_CATALOG) ? window.EXTENDED_CATALOG : [];
+const curatedCodes = new Set([...curatedCatalog,...extendedCatalog].map(item => item.code.toUpperCase()));
 const generatedCatalog = Array.isArray(window.OFFICIAL_CATALOG)
   ? window.OFFICIAL_CATALOG.filter(item => !curatedCodes.has(String(item.code).toUpperCase()))
   : [];
-const catalog = [...curatedCatalog, ...generatedCatalog].map((item, index) => {
+const catalog = [...curatedCatalog, ...extendedCatalog, ...generatedCatalog].map((item, index) => {
   const numeric = Number.parseFloat(String(item.code).replace(/^[A-Z]+\s+/, '')) || 0;
-  const category = item.code.startsWith('HNC ')
+  const category = item.fishWildlife || item.code.startsWith('FGC ') || item.code.startsWith('14 CCR ')
+    ? 'fishWildlife'
+    : item.code.startsWith('HNC ')
     ? 'boating'
     : item.code.startsWith('VC ')
     ? 'vehicle'
@@ -299,8 +302,8 @@ const catalog = [...curatedCatalog, ...generatedCatalog].map((item, index) => {
     fineText: item.fineText || `${estimated ? '≈ ' : ''}${generatedMoneyLabel(estimatedFine)}`,
     estimated,
     originalText: item.generated ? item.name : null,
-    nameDe: item.generated ? (friendly?.[0] || `Straftatbestand nach ${item.code}`) : item.name,
-    nameEn: item.generated ? (friendly?.[1] || `Offense under ${item.code}`) : (englishNames[item.code] || item.name),
+    nameDe: item.nameDe || (item.generated ? (friendly?.[0] || `Straftatbestand nach ${item.code}`) : item.name),
+    nameEn: item.nameEn || (item.generated ? (friendly?.[1] || `Offense under ${item.code}`) : (englishNames[item.code] || item.name)),
     category,
     catalogId: index
   };
@@ -368,6 +371,8 @@ function itemShort(item) {
     : (item.nameDe || item.short || item.nameEn || item.name);
   return truncate(value, 40);
 }
+
+function custodyLabel(item){if(state.language!=='en')return item.jail;if(item.lifeTerms)return 'Life / LWOP';const months=Number(item.months||0);if(!months)return 'No custody';const years=Math.floor(months/12),rest=months%12,parts=[];if(years)parts.push(`${years} ${years===1?'year':'years'}`);if(rest)parts.push(`${rest} ${rest===1?'month':'months'}`);return `${item.estimated?'≈ ':''}${parts.join(' ')}`}
 
 function normalize(value) {
   return String(value || '')
@@ -474,16 +479,23 @@ function totals() {
 
 function totalJailLabel(total, compact = false) {
   const finite = total.months ? formatMonths(total.months) : '';
-  const open = total.openJail ? ' + offen' : '';
+  const open = total.openJail ? ` + ${L('offen','open')}` : '';
   if (total.lifeTerms) {
-    const life = `${total.lifeTerms}× lebenslang`;
+    const life = `${total.lifeTerms}× ${L('lebenslang','life')}`;
     return (finite ? `${life} + ${finite}` : life) + open;
   }
-  return (finite || (compact ? '0 Monate' : '0 Monate')) + open;
+  return (finite || L('0 Monate','0 months')) + open;
 }
 
 function totalFineLabel(total) {
-  return `${formatMoney(total.fine)}${total.openFine ? ' + offen' : ''}`;
+  return `${formatMoney(total.fine)}${total.openFine ? ` + ${L('offen','open')}` : ''}`;
+}
+
+function itemNote(item) {
+  if (state.language === 'de') return item.noteDe || item.note || 'Einzelfall und amtliche Quelle prüfen.';
+  return item.noteEn || (item.estimated
+    ? 'Estimated value; the actual court total depends on the county, bail schedule, assessments, and case facts.'
+    : 'Review the official source and case-specific requirements.');
 }
 
 function bailFor(entry) {
@@ -502,10 +514,10 @@ function bailFor(entry) {
 }
 
 function totalBail() {
-  if (!state.entries.length) return { amount:0, label:'$0 / OR', reason:'Noch keine Auswahl · LA County 2026' };
+  if (!state.entries.length) return { amount:0, label:'$0 / OR', reason:L('Noch keine Auswahl · LA County 2026','No selection yet · LA County 2026') };
   const values = state.entries.map(bailFor);
   const highest = values.reduce((best, item) => item.amount > best.amount ? item : best, values[0]);
-  return { ...highest, reason: `${highest.reason} Mehrere Delikte werden meist nicht einfach addiert.` };
+  return { ...highest, reason: `${highest.reason} ${L('Mehrere Delikte werden meist nicht einfach addiert.','Bail amounts for multiple offenses are generally not simply added together.')}` };
 }
 
 function render() {
@@ -542,7 +554,7 @@ function escapeHtml(value) {
 }
 
 function offenseCard(entry, index) {
-  const prison = entry.lifeTerms ? entry.jail : entry.jail;
+  const prison = custodyLabel(entry);
   const bail = bailFor(entry);
   return `<article class="offense-card ${entry.unknown ? 'unknown-card' : ''}">
     <div class="offense-main">
@@ -557,7 +569,7 @@ function offenseCard(entry, index) {
         </button>
       </div>
     </div>
-    <div class="offense-meta"><p>${escapeHtml(entry.note)} <strong>${L('Kaution','Bail')}:</strong> ${escapeHtml(bail.reason)}</p><a href="${escapeHtml(entry.source)}" target="_blank" rel="noopener">${L('Gesetzestext','Statute text')} ↗</a></div>
+    <div class="offense-meta"><p>${escapeHtml(itemNote(entry))} <strong>${L('Kaution','Bail')}:</strong> ${escapeHtml(bail.reason)}</p><a href="${escapeHtml(entry.source)}" target="_blank" rel="noopener">${L('Gesetzestext','Statute text')} ↗</a></div>
   </article>`;
 }
 
@@ -573,7 +585,7 @@ function discordTable() {
   const border = `+${widths.map(width => '-'.repeat(width + 2)).join('+')}+`;
   const row = values => `| ${values.map((value, i) => fit(value, widths[i])).join(' | ')} |`;
   const rows = state.entries.map(entry => row([
-    itemShort(entry), entry.code, entry.type, entry.jail, entry.fineText
+    itemShort(entry), entry.code, entry.type, custodyLabel(entry), entry.fineText
   ]));
   const total = totals();
   const totalRow = row([L('GESAMT (Maximum)','TOTAL (Maximum)'), '', '', totalJailLabel(total, true), `${totalFineLabel(total)}*`]);
@@ -592,23 +604,23 @@ function discordTable() {
 function discordEmbedJson() {
   const total = totals();
   const bail = totalBail();
-  const agency = (state.agency || 'Nicht angegeben').replace(/[\r\n`_*]/g, ' ').trim();
+  const agency = (state.agency || L('Nicht angegeben','Not provided')).replace(/[\r\n`_*]/g, ' ').trim();
   const lines = state.entries.length
-    ? state.entries.map((entry, index) => `**${index + 1}. ${itemShort(entry)}** · \`${entry.code}\`\n${entry.type} · Haft: ${entry.jail} · ${entry.trafficFine ? `Ticket: ${entry.fineText} · Grundbuße: ${formatMoney(entry.baseFine)} · DMV: ${entry.points}` : `Geld: ${entry.fineText} · Kaution: ${bailFor(entry).label}`}`).join('\n\n')
-    : '*Noch keine Delikte ausgewählt.*';
+    ? state.entries.map((entry, index) => `**${index + 1}. ${itemShort(entry)}** · \`${entry.code}\`\n${entry.type} · ${L('Haft','Custody')}: ${custodyLabel(entry)} · ${entry.trafficFine ? `${L('Ticket','Ticket')}: ${entry.fineText} · ${L('Grundbuße','Base fine')}: ${formatMoney(entry.baseFine)} · DMV: ${entry.points}` : `${L('Geld','Fine')}: ${entry.fineText} · ${L('Kaution','Bail')}: ${bailFor(entry).label}`}`).join('\n\n')
+    : L('*Noch keine Delikte ausgewählt.*','*No offenses selected yet.*');
   const payload = {
     flags: 32768,
     components: [{
       type: 17,
       accent_color: 14133851,
       components: [
-        { type: 10, content: `## ⚖️ Akte von ${agency}\n-# California Strafrechner · vorläufige Maximalberechnung` },
+        { type: 10, content: `## ⚖️ ${L('Akte von','Record by')} ${agency}\n-# California Strafrechner · ${L('vorläufige Maximalberechnung','preliminary maximum calculation')}` },
         { type: 14, divider: true, spacing: 1 },
         { type: 10, content: lines.slice(0, 3800) },
         { type: 14, divider: true, spacing: 1 },
-        { type: 10, content: `### 📊 Gesamt (Maximum)\n> **Haft:** ${totalJailLabel(total, true)}\n> **Geldstrafe / Tickets:** ${totalFineLabel(total)}*\n> **Mögliche Kaution:** ${bail.label}\n-# ${bail.reason}` },
+        { type: 10, content: `### 📊 ${L('Gesamt (Maximum)','Total (Maximum)')}\n> **${L('Haft','Custody')}:** ${totalJailLabel(total, true)}\n> **${L('Geldstrafe / Tickets','Fine / tickets')}:** ${totalFineLabel(total)}*\n> **${L('Mögliche Kaution','Possible bail')}:** ${bail.label}\n-# ${bail.reason}` },
         { type: 14, divider: true, spacing: 1 },
-        { type: 10, content: '-# Schätzwerte sind unverbindlich. Zuschläge, Gebühren, Enhancements, concurrent sentencing und PC 654 können das Ergebnis verändern.' }
+        { type: 10, content: `-# ${L('Schätzwerte sind unverbindlich. Zuschläge, Gebühren, Enhancements, concurrent sentencing und PC 654 können das Ergebnis verändern.','Estimates are nonbinding. Assessments, fees, enhancements, concurrent sentencing, and PC 654 may change the result.')}` }
       ]
     }]
   };
@@ -620,7 +632,7 @@ function discordWebhookJson() {
   const bail = totalBail();
   const agency = (state.agency || L('Nicht angegeben','Not provided')).replace(/[\r\n`_*]/g,' ').trim();
   const description = state.entries.length
-    ? state.entries.map((entry,index) => `**${index+1}. ${itemShort(entry)}** · \`${entry.code}\`\n${entry.type} · ${L('Haft','Custody')}: ${entry.jail} · ${entry.trafficFine ? `${L('Ticket','Ticket')}: ${entry.fineText}` : `${L('Geld','Fine')}: ${entry.fineText}`}`).join('\n\n').slice(0,3900)
+    ? state.entries.map((entry,index) => `**${index+1}. ${itemShort(entry)}** · \`${entry.code}\`\n${entry.type} · ${L('Haft','Custody')}: ${custodyLabel(entry)} · ${entry.trafficFine ? `${L('Ticket','Ticket')}: ${entry.fineText}` : `${L('Geld','Fine')}: ${entry.fineText}`}`).join('\n\n').slice(0,3900)
     : L('*Noch keine Delikte ausgewählt.*','*No offenses selected yet.*');
   return JSON.stringify({
     username:'California Strafrechner',
@@ -643,9 +655,9 @@ function renderDiscordPreview() {
   if (!target) return;
   const total = totals();
   const bail = totalBail();
-  const agency = escapeHtml((state.agency || 'Nicht angegeben').replace(/[\r\n`_*]/g, ' ').trim());
-  const entries = state.entries.length ? state.entries.map((entry, index) => `<div class="discord-offense"><strong>${index + 1}. ${escapeHtml(itemShort(entry))}</strong><code>${escapeHtml(entry.code)}</code><span>${escapeHtml(entry.type)} · Haft ${escapeHtml(entry.jail)} · ${entry.trafficFine ? `Ticket ${escapeHtml(entry.fineText)}` : `Geld ${escapeHtml(entry.fineText)}`}</span></div>`).join('') : '<p class="discord-empty">Noch keine Delikte ausgewählt.</p>';
-  target.innerHTML = `<div class="discord-message"><div class="discord-avatar">CA</div><div class="discord-message-body"><div class="discord-author">California Strafrechner <span>APP</span><time>Heute um ${new Date().toLocaleTimeString('de-DE',{hour:'2-digit',minute:'2-digit'})}</time></div><div class="discord-component"><h3>⚖️ Akte von ${agency}</h3><small>California Strafrechner · vorläufige Maximalberechnung</small><div class="discord-separator"></div>${entries}<div class="discord-separator"></div><h4>📊 Gesamt (Maximum)</h4><p><b>Haft:</b> ${escapeHtml(totalJailLabel(total,true))}<br><b>Geldstrafe / Tickets:</b> ${escapeHtml(totalFineLabel(total))}*<br><b>Mögliche Kaution:</b> ${escapeHtml(bail.label)}</p><div class="discord-separator"></div><small>Schätzwerte sind unverbindlich. Gebühren, Enhancements, concurrent sentencing und PC 654 können das Ergebnis verändern.</small></div></div></div>`;
+  const agency = escapeHtml((state.agency || L('Nicht angegeben','Not provided')).replace(/[\r\n`_*]/g, ' ').trim());
+  const entries = state.entries.length ? state.entries.map((entry, index) => `<div class="discord-offense"><strong>${index + 1}. ${escapeHtml(itemShort(entry))}</strong><code>${escapeHtml(entry.code)}</code><span>${escapeHtml(entry.type)} · ${L('Haft','Custody')} ${escapeHtml(custodyLabel(entry))} · ${entry.trafficFine ? `${L('Ticket','Ticket')} ${escapeHtml(entry.fineText)}` : `${L('Geld','Fine')} ${escapeHtml(entry.fineText)}`}</span></div>`).join('') : `<p class="discord-empty">${L('Noch keine Delikte ausgewählt.','No offenses selected yet.')}</p>`;
+  target.innerHTML = `<div class="discord-message"><div class="discord-avatar">CA</div><div class="discord-message-body"><div class="discord-author">California Strafrechner <span>APP</span><time>${L('Heute um','Today at')} ${new Date().toLocaleTimeString(state.language === 'en' ? 'en-US' : 'de-DE',{hour:'2-digit',minute:'2-digit'})}</time></div><div class="discord-component"><h3>⚖️ ${L('Akte von','Record by')} ${agency}</h3><small>California Strafrechner · ${L('vorläufige Maximalberechnung','preliminary maximum calculation')}</small><div class="discord-separator"></div>${entries}<div class="discord-separator"></div><h4>📊 ${L('Gesamt (Maximum)','Total (Maximum)')}</h4><p><b>${L('Haft','Custody')}:</b> ${escapeHtml(totalJailLabel(total,true))}<br><b>${L('Geldstrafe / Tickets','Fine / tickets')}:</b> ${escapeHtml(totalFineLabel(total))}*<br><b>${L('Mögliche Kaution','Possible bail')}:</b> ${escapeHtml(bail.label)}</p><div class="discord-separator"></div><small>${L('Schätzwerte sind unverbindlich. Gebühren, Enhancements, concurrent sentencing und PC 654 können das Ergebnis verändern.','Estimates are nonbinding. Fees, enhancements, concurrent sentencing, and PC 654 may change the result.')}</small></div></div></div>`;
 }
 
 function showSuggestions() {
@@ -679,19 +691,19 @@ function catalogResults() {
 function renderCatalog() {
   const results = catalogResults();
   catalogUi.visibleIds = results.map(item => item.catalogId);
-  document.querySelector('#catalog-result-count').textContent = `${results.length} von ${catalog.length} Delikten`;
+  document.querySelector('#catalog-result-count').textContent = L(`${results.length} von ${catalog.length} Einträgen`,`${results.length} of ${catalog.length} entries`);
   const allVisibleSelected = results.length > 0 && results.every(item => catalogUi.selected.has(item.catalogId));
-  document.querySelector('#select-visible').textContent = allVisibleSelected ? 'Sichtbare abwählen' : 'Sichtbare auswählen';
+  document.querySelector('#select-visible').textContent = allVisibleSelected ? L('Sichtbare abwählen','Deselect visible') : L('Sichtbare auswählen','Select visible');
   catalogList.innerHTML = results.length
     ? results.map(item => `<label class="catalog-row">
         <input type="checkbox" data-catalog-item="${item.catalogId}" ${catalogUi.selected.has(item.catalogId) ? 'checked' : ''}>
         <span class="catalog-row-main">
-          <span class="catalog-row-title"><span class="code-badge">${escapeHtml(item.code)}</span><strong>${escapeHtml(item.type)}</strong>${item.estimated ? '<span class="estimate-badge">geschätzt</span>' : ''}</span>
+          <span class="catalog-row-title"><span class="code-badge">${escapeHtml(item.code)}</span><strong>${escapeHtml(item.type)}</strong>${item.estimated ? `<span class="estimate-badge">${L('geschätzt','estimated')}</span>` : ''}</span>
           <p>${escapeHtml(itemName(item))}${state.language === 'de' && !item.nameDe ? ' · EN Original' : ''}</p>
         </span>
-        <span class="catalog-row-meta"><span>Haft <b>${escapeHtml(item.jail)}</b></span><span>Geld <b>${escapeHtml(item.fineText)}</b></span></span>
+        <span class="catalog-row-meta"><span>${L('Haft','Custody')} <b>${escapeHtml(custodyLabel(item))}</b></span><span>${L('Geld','Fine')} <b>${escapeHtml(item.fineText)}</b></span></span>
       </label>`).join('')
-    : '<div class="catalog-empty">Keine passenden Delikte gefunden.</div>';
+    : `<div class="catalog-empty">${L('Keine passenden Einträge gefunden.','No matching entries found.')}</div>`;
   document.querySelector('#catalog-selected-count').textContent = String(catalogUi.selected.size);
   document.querySelector('#add-catalog-selection').disabled = catalogUi.selected.size === 0;
 }
@@ -749,10 +761,10 @@ function renderTickets() {
     <div class="ticket-card-top"><span class="code-badge">${escapeHtml(item.code)}</span><span class="points-badge">${item.points} DMV ${state.language === 'en' ? `point${item.points === 1 ? '' : 's'}` : `P${item.points === 1 ? 'unkt' : 'unkte'}`}</span></div>
     <h3>${escapeHtml(itemName(item))}</h3>
     <div class="ticket-money"><div><span>${L('Grundbuße','Base fine')}</span><strong>${escapeHtml(formatMoney(item.baseFine))}</strong></div><div class="ticket-total"><span>${L('Gesamt ca.','Est. total')}</span><strong>${escapeHtml(formatMoney(item.totalFee))}</strong></div></div>
-    <p>${escapeHtml(item.note)}</p>
+    <p>${escapeHtml(itemNote(item))}</p>
     <div class="ticket-quantity"><button type="button" data-ticket-action="minus" data-ticket="${item.catalogId}" ${quantity ? '' : 'disabled'} aria-label="${L('Ein Ticket entfernen','Remove one ticket')}">−</button><strong>${quantity}</strong><button type="button" data-ticket-action="plus" data-ticket="${item.catalogId}" aria-label="${L('Ein Ticket hinzufügen','Add one ticket')}">＋</button></div>
   </article>`; }).join('');
-  const warningCards = warnings.map(item => `<article class="ticket-card arrest-card"><div class="ticket-card-top"><span class="code-badge">${escapeHtml(item.code)}</span><span class="arrest-badge">${L('Festnahme möglich','Arrest possible')}</span></div><h3>${escapeHtml(itemName(item))}</h3><p><strong>${L('Warum:','Why:')}</strong> ${escapeHtml(arrestReason(item))}</p><div class="arrest-penalty"><span>${escapeHtml(item.type)}</span><b>${L('Haft','Custody')}: ${escapeHtml(item.jail)}</b><b>${L('Geld','Fine')}: ${escapeHtml(item.fineText)}</b></div><button type="button" class="ticket-add danger-ticket" data-arrest-add="${item.catalogId}">${L('Im Strafrechner prüfen','Open in calculator')}</button></article>`).join('');
+  const warningCards = warnings.map(item => `<article class="ticket-card arrest-card"><div class="ticket-card-top"><span class="code-badge">${escapeHtml(item.code)}</span><span class="arrest-badge">${L('Festnahme möglich','Arrest possible')}</span></div><h3>${escapeHtml(itemName(item))}</h3><p><strong>${L('Warum:','Why:')}</strong> ${escapeHtml(arrestReason(item))}</p><div class="arrest-penalty"><span>${escapeHtml(item.type)}</span><b>${L('Haft','Custody')}: ${escapeHtml(custodyLabel(item))}</b><b>${L('Geld','Fine')}: ${escapeHtml(item.fineText)}</b></div><button type="button" class="ticket-add danger-ticket" data-arrest-add="${item.catalogId}">${L('Im Strafrechner prüfen','Open in calculator')}</button></article>`).join('');
   document.querySelector('#ticket-grid').innerHTML = ticketCards + warningCards || `<div class="catalog-empty">${L('Keine passenden Verkehrsverstöße gefunden.','No matching traffic violations found.')}</div>`;
 }
 
@@ -812,7 +824,7 @@ function downloadTicketPdf() {
   notify(L('PDF-Druckansicht geöffnet','PDF print view opened'));
 }
 
-async function sendTicketWebhook(){if(!state.agency){notify(L('Bitte zuerst eine Behörde auswählen','Please select an agency first'));return}const url=configuredWebhook('ticket');if(!url){notify(L('Admin-Menü entsperren und den Strafzettel-Webhook dieser Behörde eintragen.','Unlock the admin menu and configure this agency’s citation webhook.'));return}const selected=[...ticketState.entries()].map(([id,quantity])=>({item:catalog[id],quantity})).filter(row=>row.item?.trafficFine&&row.quantity>0);if(!selected.length){notify(L('Bitte mindestens einen Verstoß auswählen','Please select at least one violation'));return}const fields=[{name:L('Betroffene Person / Fahrzeug','Subject / vehicle'),value:ticketFormState.subjectType==='vehicle'?`${ticketFormState.licensePlate||'—'} · ${ticketFormState.vehicle||'—'}`:(ticketFormState.personName||'—')},{name:L('Ort und Zeitpunkt','Location and time'),value:`${ticketFormState.location||'—'} · ${ticketFormState.violationDate||'—'} ${ticketFormState.violationTime||''}`},{name:L('Verstöße','Violations'),value:selected.map(row=>`${row.quantity}× ${row.item.code} · ${itemName(row.item)} · ${formatMoney(row.item.totalFee*row.quantity)}`).join('\n').slice(0,1024)}];try{await postWebhook(url,JSON.stringify({username:'California Citations',embeds:[{title:`${state.agency} · ${ticketFormState.citationNumber||L('Strafzettel','Citation')}`,color:14133851,fields,timestamp:new Date().toISOString()}]}));notify(L('Strafzettel an Discord gesendet.','Citation sent to Discord.'))}catch(error){notify(error.message)}}
+async function sendTicketWebhook(){if(!state.agency){notify(L('Bitte zuerst eine Behörde auswählen','Please select an agency first'));return}const url=configuredWebhook('ticket');if(!url){notify(L('Admin-Menü entsperren und den Strafzettel-Webhook dieser Behörde eintragen.','Unlock the admin menu and configure this agency’s citation webhook.'));return}const selected=[...ticketState.entries()].map(([id,quantity])=>({item:catalog[id],quantity})).filter(row=>row.item?.trafficFine&&row.quantity>0);if(!selected.length){notify(L('Bitte mindestens einen Verstoß auswählen','Please select at least one violation'));return}const total=selected.reduce((sum,row)=>sum+row.item.totalFee*row.quantity,0),points=selected.reduce((sum,row)=>sum+(row.item.points||0)*row.quantity,0),subject=ticketFormState.subjectType==='vehicle'?`${ticketFormState.licensePlate||'—'} · ${ticketFormState.vehicle||'—'}`:(ticketFormState.personName||'—'),violations=selected.map(row=>`**${row.quantity}× ${row.item.code}** · ${itemName(row.item)}\n${formatMoney(row.item.totalFee*row.quantity)}`).join('\n\n').slice(0,3500);const payload={flags:32768,components:[{type:17,accent_color:14133851,components:[{type:10,content:`## 🚔 ${L('Strafzettel','Traffic Citation')} · ${state.agency}\n-# ${ticketFormState.citationNumber||'—'} · ${ticketFormState.caseNumber||'—'}`},{type:14,divider:true,spacing:1},{type:10,content:`### 👤 ${L('Betroffene Person / Fahrzeug','Subject / vehicle')}\n${subject}\n📍 ${ticketFormState.location||'—'} · 🕒 ${ticketFormState.violationDate||'—'} ${ticketFormState.violationTime||''}`},{type:14,divider:true,spacing:1},{type:10,content:`### 📋 ${L('Verstöße','Violations')}\n${violations}`},{type:14,divider:true,spacing:1},{type:10,content:`### 💵 ${L('Zusammenfassung','Summary')}\n> **${L('Geschätzter Gesamtbetrag','Estimated total')}:** ${formatMoney(total)}\n> **${L('Mögliche DMV-Punkte','Possible DMV points')}:** ${points}\n-# ${L('Unverbindliche Schätzung; County und Gericht können abweichen.','Nonbinding estimate; county and court amounts may vary.')}`}]}]};try{await postWebhook(url,JSON.stringify(payload));notify(L('Strafzettel an Discord gesendet.','Citation sent to Discord.'))}catch(error){notify(error.message)}}
 
 function reportHtml() {
   const total = totals();
@@ -820,7 +832,7 @@ function reportHtml() {
   const agency = escapeHtml(state.agency || L('Nicht angegeben','Not provided'));
   const generated = new Intl.DateTimeFormat(state.language === 'en' ? 'en-US' : 'de-DE',{dateStyle:'long',timeStyle:'short'}).format(new Date());
   const logoUrl = new URL('city-of-los-angeles-seal.png', window.location.href).href;
-  const rows = state.entries.length ? state.entries.map((entry,index) => `<tr><td>${index+1}</td><td><b>${escapeHtml(entry.code)}</b><br>${escapeHtml(itemName(entry))}</td><td>${escapeHtml(entry.type)}</td><td>${escapeHtml(entry.jail)}</td><td>${escapeHtml(entry.fineText)}</td></tr>`).join('') : `<tr><td colspan="5" class="empty">${L('Keine Delikte ausgewählt','No offenses selected')}</td></tr>`;
+  const rows = state.entries.length ? state.entries.map((entry,index) => `<tr><td>${index+1}</td><td><b>${escapeHtml(entry.code)}</b><br>${escapeHtml(itemName(entry))}</td><td>${escapeHtml(entry.type)}</td><td>${escapeHtml(custodyLabel(entry))}</td><td>${escapeHtml(entry.fineText)}</td></tr>`).join('') : `<tr><td colspan="5" class="empty">${L('Keine Delikte ausgewählt','No offenses selected')}</td></tr>`;
   return `<!doctype html><html lang="${state.language}"><head><meta charset="utf-8"><title>${L('California Strafakte','California penalty record')}</title><style>@page{size:A4;margin:13mm}*{box-sizing:border-box}body{margin:0;color:#15191f;font:10.5px/1.4 Arial,Helvetica,sans-serif}header{display:grid;grid-template-columns:70px 1fr;gap:15px;align-items:center;padding-bottom:11px;border-bottom:4px solid #d7a93f}header img{width:64px;height:64px;object-fit:contain}h1{margin:0;font-size:22px;letter-spacing:.03em}header p{margin:3px 0;color:#555}.tag{display:inline-block;padding:3px 7px;border:1px solid #999;font-size:8px;text-transform:uppercase}.section{margin-top:15px}.title{padding:5px 7px;background:#172433;color:#fff;font-weight:bold;text-transform:uppercase;letter-spacing:.06em}table{width:100%;border-collapse:collapse}th,td{padding:7px;border:1px solid #aeb5bd;text-align:left;vertical-align:top}th{background:#edf0f3;font-size:8px;text-transform:uppercase}td:nth-child(n+4),th:nth-child(n+4){white-space:nowrap}.empty{text-align:center;color:#777}.totals{display:grid;grid-template-columns:1fr 1fr 1fr;margin-top:12px;border:2px solid #172433}.totals div{padding:10px;border-right:1px solid #87909a}.totals div:last-child{border:0}.totals span{display:block;color:#68717a;font-size:8px;text-transform:uppercase}.totals strong{display:block;margin-top:3px;font-size:15px}.bail{margin-top:12px;padding:10px;border-left:4px solid #d7a93f;background:#f5f2e9}.notice{margin-top:13px;padding:10px;border:1px solid #bbb;background:#f6f7f8;font-size:9px}.footer{display:flex;justify-content:space-between;margin-top:20px;padding-top:6px;border-top:1px solid #777;color:#666;font-size:8px}</style></head><body><header><img src="${escapeHtml(logoUrl)}" alt=""><div><h1>${L('California Strafakte','California Penalty Record')}</h1><p>${L('Akte von','Record by')} <b>${agency}</b> · ${escapeHtml(generated)}</p><span class="tag">${L('Informationsdokument – keine amtliche Gerichtsurkunde','Information document — not an official court record')}</span></div></header><section class="section"><div class="title">${L('Delikte und Strafrahmen','Offenses and penalty ranges')}</div><table><thead><tr><th>#</th><th>${L('Delikt / Code','Offense / code')}</th><th>${L('Typ','Type')}</th><th>${L('Max. Haft','Max. custody')}</th><th>${L('Max. Geld / Ticket','Max. fine / ticket')}</th></tr></thead><tbody>${rows}</tbody></table><div class="totals"><div><span>${L('Einträge','Entries')}</span><strong>${state.entries.length}</strong></div><div><span>${L('Maximale Haft','Maximum custody')}</span><strong>${escapeHtml(totalJailLabel(total,true))}</strong></div><div><span>${L('Maximales Geld','Maximum money')}</span><strong>${escapeHtml(totalFineLabel(total))}*</strong></div></div></section><div class="bail"><b>${L('Mögliche Kaution (LA County 2026)','Possible bail (LA County 2026)')}:</b> ${escapeHtml(bail.label)}<br>${escapeHtml(bail.reason)}</div><div class="notice"><b>${L('Wichtiger Hinweis','Important notice')}:</b> ${L('Kumulative Maximalrechnung. Gerichte können Strafen concurrent verhängen; PC 654 kann Mehrfachbestrafung ausschließen. Zuschläge, Gebühren und Enhancements können hinzukommen. Schätzwerte sind unverbindlich. Keine Rechtsberatung.','Cumulative maximum calculation. Courts may impose concurrent sentences; PC 654 may bar multiple punishment. Assessments, fees, and enhancements may apply. Estimates are nonbinding. Not legal advice.')}</div><div class="footer"><span>California Strafrechner · ${escapeHtml(generated)}</span><span>${L('Seite 1 von 1','Page 1 of 1')}</span></div><script>window.addEventListener('load',()=>setTimeout(()=>window.print(),250));<\/script></body></html>`;
 }
 
@@ -924,13 +936,15 @@ function applyUiLanguage() {
   html('#tab-calculator','<span>01</span> Rechner','<span>01</span> Calculator'); html('#tab-catalog','<span>02</span> Deliktkatalog','<span>02</span> Offense catalog'); html('#tab-export','<span>03</span> Export','<span>03</span> Export'); html('#tab-embed','<span>04</span> Embed JSON','<span>04</span> Embed JSON'); html('#tab-tickets','<span>05</span> Strafzettel','<span>05</span> Citations');
   html('#tab-reports','<span>06</span> Berichte','<span>06</span> Reports');
   set('#panel-calculator .entry-panel h2','Akte vorbereiten','Prepare record'); set('.agency-field label','Fraktion / Behörde','Agency / department'); placeholder('#agency-input','z. B. LAPD, LASD oder CHP','e.g. LAPD, LASD, or CHP');
-  set('#offense-form > label','Gesetzesnummer oder Beschreibung','Code section or description'); placeholder('#offense-input','z. B. PC 26350, DUI, robbery','e.g. PC 26350, DUI, robbery'); set('.field-help','Mehrere Einträge mit Komma, Semikolon oder neuer Zeile trennen.','Separate multiple entries with commas, semicolons, or new lines.');
+  set('#offense-form > label','Gesetzesnummer oder Beschreibung','Code section or description'); placeholder('#offense-input','z. B. PC 26350, DUI, robbery','e.g. PC 26350, DUI, robbery'); set('#offense-form .field-help','Mehrere Einträge mit Komma, Semikolon oder neuer Zeile trennen.','Separate multiple entries with commas, semicolons, or new lines.'); set('.agency-field .field-help','Die Fallakten-ID wird nach der Auswahl automatisch erstellt.','The case-file ID is created automatically after selection.');
   html('#offense-form .primary-button','<span>＋</span> Zur Berechnung hinzufügen','<span>＋</span> Add to calculation'); html('#open-catalog','Katalog öffnen <span id="catalog-button-count">'+catalog.length+'</span>','Open catalog <span id="catalog-button-count">'+catalog.length+'</span>'); set('.quick-section .section-label','Häufig gesucht','Popular searches');
   set('#panel-calculator .results-panel h2','Berechnung','Calculation'); set('#clear-all','Alle entfernen','Remove all');
   set('.principle-note strong','Wichtig','Important'); set('.principle-note p','Die Summe unterstellt aufeinanderfolgende Höchststrafen. Gerichte können Strafen concurrent verhängen; PC 654 kann Mehrfachbestrafung ausschließen.','The total assumes consecutive maximum sentences. Courts may impose concurrent sentences; PC 654 may bar multiple punishment.');
   set('.summary-card:nth-child(1) > span','Delikte','Offenses'); set('.summary-card:nth-child(2) > span','Max. Haft','Max. custody'); set('.summary-card:nth-child(2) small','Kumulativ gerechnet','Calculated cumulatively'); set('.summary-card:nth-child(3) > span','Max. Geldstrafe / Ticket','Max. fine / ticket'); set('.summary-card:nth-child(3) small','Ticketwerte ggf. inkl. Aufschläge','Ticket totals may include assessments'); set('.summary-card:nth-child(4) > span','Mögliche Kaution','Possible bail');
   set('#panel-catalog .catalog-header .eyebrow','Offizieller Deliktindex','Official offense index'); set('#panel-catalog .catalog-header h2','Gesetze auswählen','Select laws'); set('#panel-catalog .catalog-header h2 + p','Suche deutsch oder englisch, filtere nach Rechtsgebiet und füge mehrere Tatbestände gemeinsam hinzu.','Search in German or English, filter by area of law, and add several offenses together.'); placeholder('#catalog-search','Code oder Tatbestand suchen','Search code or offense');
-  set('[data-filter="all"]','Alle','All'); set('[data-filter="trafficFine"]','Bußgelder','Fines'); set('[data-filter="boating"]','Bootsverkehr','Boating'); set('[data-filter="weapons"]','Waffenrecht','Weapons'); set('#add-catalog-selection','Auswahl hinzufügen','Add selection');
+  document.querySelector('#catalog-search')?.setAttribute('aria-label',L('Katalog durchsuchen','Search catalog')); document.querySelector('#catalog-filters')?.setAttribute('aria-label',L('Katalog filtern','Filter catalog')); document.querySelector('.tabs')?.setAttribute('aria-label',L('Bereiche','Sections')); document.querySelector('.language-switch')?.setAttribute('aria-label',L('Sprache auswählen','Choose language'));
+  set('#catalog-count',`${catalog.length} Delikte`,`${catalog.length} offenses`);
+  set('[data-filter="all"]','Alle','All'); set('[data-filter="trafficFine"]','Bußgelder','Fines'); set('[data-filter="fishWildlife"]','Fisch, Wild & Natur','Fish, Wildlife & Nature'); set('[data-filter="boating"]','Bootsverkehr','Boating'); set('[data-filter="weapons"]','Waffenrecht','Weapons'); set('#add-catalog-selection','Auswahl hinzufügen','Add selection');
   set('#panel-export .export-panel h2','Discord-Codeblock','Discord code block'); set('#copy-output','Kopieren','Copy'); set('#panel-export .export-actions h2','Akte exportieren','Export record'); set('#panel-export .export-actions h2 + p','Das PDF wird über den Druckdialog gespeichert. Die DOC-Datei lässt sich direkt in Google Docs oder Word öffnen.','Save the PDF through the print dialog. The DOC file opens in Google Docs or Word.');
   set('#export-pdf strong','Als PDF speichern','Save as PDF'); set('#export-pdf small','Druckfertige Akte','Print-ready record'); set('#export-doc strong','Für Google Docs','For Google Docs'); set('#export-doc small','Compatible Word file','Compatible Word file');
   set('#panel-embed .export-panel h2','Discord Components V2 JSON','Discord Components V2 JSON'); set('#copy-embed','JSON kopieren','Copy JSON'); set('.discord-preview-panel h2','So erscheint die Akte','How the record appears'); set('.webhook-panel h2','Embed direkt senden','Send embed directly'); set('.webhook-panel h2 + p','Verwendet den im Admin-Menü hinterlegten Berichts-Webhook der ausgewählten Behörde.','Uses the selected agency’s report webhook configured in Admin.'); set('#send-webhook','An Discord senden','Send to Discord');
@@ -956,7 +970,8 @@ function applyUiLanguage() {
   set('.arrest-warning-box strong','Festnahme statt einfachem Ticket möglich','Arrest may replace a simple citation'); set('.arrest-warning-box span','DUI, Fahrerflucht, rücksichtsloses Fahren, Flucht vor der Polizei, Fahren trotz Sperre und weitere Misdemeanors/Felonies sind keine normalen Bußgeldfälle. Die roten Warnkarten erklären warum.','DUI, hit-and-run, reckless driving, evading police, driving while suspended, and other misdemeanors/felonies are not ordinary citation cases. Red warning cards explain why.');
   set('.ticket-document-actions strong','Strafzettelakte als PDF','Citation record as PDF'); set('.ticket-document-actions span','Erstellt ein druckfertiges Dokument mit den Angaben oben und allen ausgewählten Verstößen.','Creates a print-ready document with the information above and all selected violations.');
   set('#panel-reports .catalog-header .eyebrow','California Law Enforcement Reports','California Law Enforcement Reports'); set('#panel-reports .catalog-header h2','Polizeiliches Berichtswesen','Law Enforcement Reports'); set('#panel-reports .catalog-header h2 + p','Berichtstyp auswählen, Pflichtfelder ausfüllen und anschließend als PDF oder DOC exportieren.','Select a report type, complete all required fields, then export as PDF or DOC.'); set('#open-report-archive','Berichts-Archiv','Report archive');
-  set('.report-type-picker label[for="report-agency-input"] span','Behörde','Agency'); set('.report-type-picker label[for="report-type"] span','Berichtstyp','Report type'); set('.report-charges .section-label','Straftaten und Rechtsgrundlagen Pflicht','Charges and legal authority Required'); placeholder('#report-charge-input','Code oder Tatbestand suchen','Search code or offense'); set('#report-charge-add','Hinzufügen','Add');
+  set('.report-type-picker label[for="report-agency-input"] span','Behörde','Agency'); set('.report-type-picker label[for="report-type"] span','Berichtstyp','Report type'); set('.report-charges .section-label','Straftaten und Rechtsgrundlagen Optional','Charges and legal authority Optional'); set('.no-charges-option span','Keine Straftaten / nur Dokumentation','No charges / documentation only'); placeholder('#report-charge-input','Code oder Tatbestand suchen','Search code or offense'); set('#report-charge-add','Hinzufügen','Add');
+  document.querySelectorAll('.report-type-picker label b').forEach(node=>node.textContent=L('Pflicht','Required')); placeholder('#report-signature-text','Name als Unterschrift','Typed signature name');
   set('.report-signature .signature-heading > span','Unterschrift des Beamten Pflicht','Officer signature Required'); set('[data-report-signature="type"]','Schreiben','Type'); set('[data-report-signature="draw"]','Malen','Draw'); set('#clear-report-signature','Löschen','Clear'); set('#report-signature-draw p','Mit Maus, Stift oder Finger unterschreiben.','Sign with mouse, pen, or finger.');
   set('#report-export-pdf','PDF exportieren','Export PDF'); set('#report-export-doc','Google-Docs-Datei','Google Docs file'); set('#submit-report','Bericht speichern','Save report'); set('#report-discord-note','Der passende Webhook wird aus der verschlüsselten Admin-Konfiguration gewählt.','The matching webhook is selected from the encrypted Admin configuration.');
   set('.report-submit-area > label span','Zum Akten-Discord schicken?','Send to report Discord server?');
@@ -973,7 +988,7 @@ form.addEventListener('submit', event => {
   const count = addTerms(terms);
   input.value = '';
   suggestions.classList.remove('open');
-  notify(`${count} ${count === 1 ? 'Eintrag hinzugefügt' : 'Einträge hinzugefügt'}`);
+  notify(state.language === 'en' ? `${count} ${count === 1 ? 'entry added' : 'entries added'}` : `${count} ${count === 1 ? 'Eintrag hinzugefügt' : 'Einträge hinzugefügt'}`);
 });
 
 input.addEventListener('input', showSuggestions);
@@ -989,7 +1004,7 @@ suggestions.addEventListener('click', event => {
   addTerms([item.code]);
   input.value = '';
   suggestions.classList.remove('open');
-  notify(`${item.code} hinzugefügt`);
+  notify(`${item.code} ${L('hinzugefügt','added')}`);
 });
 
 list.addEventListener('click', event => {
@@ -999,7 +1014,7 @@ list.addEventListener('click', event => {
     if (!item) return;
     state.entries.push({ ...item, instanceId: state.sequence++ });
     render();
-    notify(`${item.code} ein weiteres Mal hinzugefügt`);
+    notify(`${item.code} ${L('ein weiteres Mal hinzugefügt','added again')}`);
     return;
   }
   const button = event.target.closest('[data-remove]');
@@ -1009,26 +1024,26 @@ list.addEventListener('click', event => {
   if (index < 0) return;
   state.entries.splice(index, 1);
   render();
-  notify('Eintrag entfernt');
+  notify(L('Eintrag entfernt','Entry removed'));
 });
 
 clearButton.addEventListener('click', () => {
   state.entries = [];
   render();
-  notify('Berechnung geleert');
+  notify(L('Berechnung geleert','Calculation cleared'));
 });
 
 document.querySelector('#copy-output').addEventListener('click', async () => {
   try {
     await navigator.clipboard.writeText(discordOutput.textContent);
-    notify('Discord-Codeblock kopiert');
+    notify(L('Discord-Codeblock kopiert','Discord code block copied'));
   } catch {
     const selection = window.getSelection();
     const range = document.createRange();
     range.selectNodeContents(discordOutput);
     selection.removeAllRanges();
     selection.addRange(range);
-    notify('Text markiert – jetzt kopieren');
+    notify(L('Text markiert – jetzt kopieren','Text selected — copy it now'));
   }
 });
 
@@ -1036,14 +1051,14 @@ document.querySelector('#copy-embed').addEventListener('click', async () => {
   const output = document.querySelector('#embed-output');
   try {
     await navigator.clipboard.writeText(output.textContent);
-    notify('Discord Components V2 JSON kopiert');
+    notify(L('Discord Components V2 JSON kopiert','Discord Components V2 JSON copied'));
   } catch {
     const selection = window.getSelection();
     const range = document.createRange();
     range.selectNodeContents(output);
     selection.removeAllRanges();
     selection.addRange(range);
-    notify('JSON markiert – jetzt kopieren');
+    notify(L('JSON markiert – jetzt kopieren','JSON selected — copy it now'));
   }
 });
 
@@ -1053,7 +1068,7 @@ document.querySelector('#quick-chips').addEventListener('click', event => {
   const button = event.target.closest('[data-quick]');
   if (!button) return;
   addTerms([button.dataset.quick]);
-  notify(`${button.dataset.quick} hinzugefügt`);
+  notify(`${button.dataset.quick} ${L('hinzugefügt','added')}`);
 });
 
 document.querySelector('#catalog-count').textContent = `${catalog.length} Delikte`;
@@ -1162,7 +1177,7 @@ document.querySelector('#add-catalog-selection').addEventListener('click', () =>
   const count = selectedItems.length;
   catalogUi.selected.clear();
   activateTab('calculator');
-  notify(`${count} ${count === 1 ? 'Delikt hinzugefügt' : 'Delikte hinzugefügt'}`);
+  notify(state.language === 'en' ? `${count} ${count === 1 ? 'offense added' : 'offenses added'}` : `${count} ${count === 1 ? 'Delikt hinzugefügt' : 'Delikte hinzugefügt'}`);
 });
 
 const commonReportFields=[
@@ -1198,7 +1213,7 @@ const reportTypes=[
 function reportLabel(type,id,de,en){const translated=en||[...commonReportFields,...type.fields].find(field=>field[0]===id)?.[5];return state.language==='en'?(translated||de):de;}
 const reportState={type:null,charges:[],signatureMode:'type',signatureData:''};
 const reportTypeSelect=document.querySelector('#report-type');
-function populateReportTypeOptions(){const current=reportTypeSelect.value;reportTypeSelect.innerHTML=`<option value="">${L('Bitte Bericht auswählen','Select a report')}</option>`+reportTypes.map(r=>`<option value="${r.id}">${state.language==='en'?`${r.en} · ${r.title}`:`${r.title} · ${r.en}`}</option>`).join('');reportTypeSelect.value=current;}
+function populateReportTypeOptions(){const current=reportTypeSelect.value;reportTypeSelect.innerHTML=`<option value="">${L('Bitte Bericht auswählen','Select a report')}</option>`+reportTypes.map(r=>`<option value="${r.id}">${state.language==='en'?r.en:r.title}</option>`).join('');reportTypeSelect.value=current;}
 populateReportTypeOptions();
 function localizedReportOption(value){const de={Yes:'Ja',No:'Nein',Unknown:'Unbekannt',None:'Keine',Male:'Männlich',Female:'Weiblich',Nonbinary:'Nichtbinär',Activated:'Aktiviert','Not Activated':'Nicht aktiviert','Not Equipped':'Nicht ausgestattet',Malfunction:'Fehlfunktion',Warning:'Verwarnung',Citation:'Strafzettel',Arrest:'Festnahme','No Action':'Keine Maßnahme',Open:'Offen',Pending:'Ausstehend',Closed:'Geschlossen','Cleared by Arrest':'Durch Festnahme geklärt'};return state.language==='en'?value:(de[value]||value)}
 function renderReportForm(preserve=true){
@@ -1206,7 +1221,7 @@ function renderReportForm(preserve=true){
   const type=reportTypes.find(r=>r.id===reportTypeSelect.value); reportState.type=type||null;if(previousType!==type?.id)reportState.charges=[];
   document.querySelector('#report-editor').hidden=!type; document.querySelector('#report-archive').hidden=true;
   if(!type)return;
-  document.querySelector('#report-title').textContent=state.language==='en'?type.en:type.title; document.querySelector('#report-subtitle').textContent=state.language==='en'?type.title:type.en;
+  document.querySelector('#report-title').textContent=state.language==='en'?type.en:type.title; document.querySelector('#report-subtitle').textContent=L('Strukturiertes Arbeitsformular für kalifornische Behörden','Structured working form for California agencies');
   let section='';const fields=[...commonReportFields,...type.fields];const now=new Date(),date=now.toISOString().slice(0,10),time=now.toTimeString().slice(0,5);
   document.querySelector('#report-form').innerHTML=fields.map(([id,label,kind,required,options,en,sectionDe,sectionEn])=>{let heading='';const next=state.language==='en'?sectionEn:sectionDe;if(next!==section){section=next;heading=`<h4 class="report-form-section-title">${escapeHtml(next)}</h4>`}const control=kind==='textarea'?`<textarea data-report-field="${id}" ${required?'required':''}></textarea>`:kind==='select'?`<select data-report-field="${id}" ${required?'required':''}><option value="">${L('Bitte auswählen','Please select')}</option>${options.split('|').map(o=>`<option value="${escapeHtml(o)}">${escapeHtml(localizedReportOption(o))}</option>`).join('')}</select>`:`<input type="${kind==='date'||kind==='time'||kind==='number'?kind:'text'}" data-report-field="${id}" ${required?'required':''}>`;return `${heading}<label class="${kind==='textarea'?'wide':''}"><span>${escapeHtml(reportLabel(type,id,label,en))} <${required?`em>${L('Pflicht','Required')}`:`i>${L('Optional','Optional')}`}</${required?'em':'i'}></span>${control}</label>`}).join('');
   fields.forEach(([id,,kind])=>{const node=document.querySelector(`[data-report-field="${id}"]`);if(node)node.value=prior[id]??(kind==='date'?date:kind==='time'?time:'')});
@@ -1216,18 +1231,19 @@ function updateReportProgress(){const required=[...document.querySelectorAll('#r
 function reportValues(){return Object.fromEntries([...document.querySelectorAll('[data-report-field]')].map(n=>[n.dataset.reportField,n.value.trim()]));}
 function reportChargeMatches(){return fuzzyMatches(document.querySelector('#report-charge-input').value,6);}
 function showReportChargeSuggestions(){const box=document.querySelector('#report-charge-suggestions');const matches=reportChargeMatches();box.innerHTML=matches.map(i=>`<button type="button" class="report-charge-suggestion" data-report-charge="${i.catalogId}"><span>${escapeHtml(itemName(i))}</span><b>${escapeHtml(i.code)}</b></button>`).join('');}
-function addReportCharge(id){const item=catalog[Number(id)];if(item&&!reportState.charges.some(x=>x.catalogId===item.catalogId)){reportState.charges.push(item);renderReportCharges();}document.querySelector('#report-charge-input').value='';document.querySelector('#report-charge-suggestions').innerHTML='';}
+function addReportCharge(id){const item=catalog[Number(id)];if(item&&!reportState.charges.some(x=>x.catalogId===item.catalogId)){reportState.charges.push(item);document.querySelector('#report-no-charges').checked=false;renderReportCharges();}document.querySelector('#report-charge-input').value='';document.querySelector('#report-charge-suggestions').innerHTML='';}
 function renderReportCharges(){document.querySelector('#report-charge-list').innerHTML=reportState.charges.map(i=>`<div class="report-charge-chip"><span><b>${escapeHtml(i.code)}</b> · ${escapeHtml(itemName(i))} · ${escapeHtml(i.type)}</span><button type="button" data-remove-report-charge="${i.catalogId}">${L('Entfernen','Remove')}</button></div>`).join('');}
-function validateReport(){if(!state.agency)return L('Bitte zuerst im Rechner eine Behörde auswählen.','Please select an agency in the calculator first.');const missing=[...document.querySelectorAll('#report-form [required]')].find(n=>!n.value.trim());if(missing){missing.focus();return L('Bitte alle Pflichtfelder ausfüllen.','Please complete all required fields.')}if(reportState.type?.charges&&!reportState.charges.length)return L('Bitte mindestens einen Straftatbestand auswählen.','Please select at least one charge.');if(reportState.signatureMode==='type'&&!document.querySelector('#report-signature-text').value.trim())return L('Bitte unterschreiben.','Please provide a signature.');if(reportState.signatureMode==='draw'&&!reportState.signatureData)return L('Bitte eine Unterschrift zeichnen.','Please draw a signature.');const joined=Object.values(reportValues()).join(' ');if(/[\w.+-]+@[\w.-]+\.[A-Za-z]{2,}|\b\d{3}[-.\s]\d{3}[-.\s]\d{4}\b|\b\d{3}-\d{2}-\d{4}\b/.test(joined))return L('Datenschutzfilter: E-Mail, Telefonnummern und SSN sind nicht erlaubt.','Privacy filter: email addresses, phone numbers, and SSNs are not allowed.');return '';}
+function validateReport(){if(!state.agency)return L('Bitte im Berichte-Panel eine Behörde auswählen.','Please select an agency in the Reports panel.');const missing=[...document.querySelectorAll('#report-form [required]')].find(n=>!n.value.trim());if(missing){missing.focus();return L('Bitte alle Pflichtfelder ausfüllen.','Please complete all required fields.')}if(reportState.signatureMode==='type'&&!document.querySelector('#report-signature-text').value.trim())return L('Bitte unterschreiben.','Please provide a signature.');if(reportState.signatureMode==='draw'&&!reportState.signatureData)return L('Bitte eine Unterschrift zeichnen.','Please draw a signature.');const joined=Object.values(reportValues()).join(' ');if(/[\w.+-]+@[\w.-]+\.[A-Za-z]{2,}|\b\d{3}[-.\s]\d{3}[-.\s]\d{4}\b|\b\d{3}-\d{2}-\d{4}\b/.test(joined))return L('Datenschutzfilter: E-Mail, Telefonnummern und SSN sind nicht erlaubt.','Privacy filter: email addresses, phone numbers, and SSNs are not allowed.');return '';}
 function reportDocumentHtml(){const type=reportState.type,values=reportValues(),agency=escapeHtml(state.agency||L('Nicht angegeben','Not provided')),generated=new Intl.DateTimeFormat(state.language==='en'?'en-US':'de-DE',{dateStyle:'long',timeStyle:'short'}).format(new Date()),logo=new URL('city-of-los-angeles-seal.png',location.href).href;const title=state.language==='en'?type.en:type.title,subtitle=state.language==='en'?type.title:type.en;const fields=type.fields.map(([id,label,,required])=>`<div class="field"><span>${escapeHtml(reportLabel(type,id,label))} · ${required?L('Pflicht','Required'):L('Optional','Optional')}</span><b>${escapeHtml(values[id]||'—')}</b></div>`).join('');const charges=reportState.charges.map(i=>`<li><b>${escapeHtml(i.code)}</b> · ${escapeHtml(itemName(i))} · ${escapeHtml(i.type)}</li>`).join('');const sig=reportState.signatureData?`<img src="${reportState.signatureData}">`:`<span>${escapeHtml(document.querySelector('#report-signature-text').value)}</span>`;return `<!doctype html><html lang="${state.language}"><head><meta charset="utf-8"><title>${escapeHtml(title)}</title><style>@page{size:A4;margin:13mm}*{box-sizing:border-box}body{font:10px/1.4 Arial;color:#15191f;margin:0}header{display:grid;grid-template-columns:65px 1fr;gap:14px;align-items:center;border-bottom:4px solid #d7a93f;padding-bottom:10px}header img{width:60px}h1{margin:0;font-size:20px}header p{margin:3px 0;color:#555}.section{margin-top:14px}.title{padding:5px 7px;background:#172433;color:#fff;font-weight:bold;text-transform:uppercase}.fields{display:grid;grid-template-columns:1fr 1fr;border-left:1px solid #bbb}.field{padding:7px;border-right:1px solid #bbb;border-bottom:1px solid #bbb;white-space:pre-wrap}.field span{display:block;color:#666;font-size:8px;text-transform:uppercase}.charges{margin:0;padding:10px 25px;border:1px solid #bbb}.signature{height:75px;padding:9px;border:1px solid #bbb}.signature img{max-height:55px;max-width:280px}.signature span{font:italic 23px cursive}.note{margin-top:12px;font-size:8px;color:#555}</style></head><body><header><img src="${logo}"><div><h1>${escapeHtml(title)}</h1><p>${escapeHtml(subtitle)} · ${agency} · ${escapeHtml(generated)}</p></div></header><section class="section"><div class="title">${L('Berichtsdaten','Report data')}</div><div class="fields">${fields}</div></section>${type.charges?`<section class="section"><div class="title">${L('Straftaten und Rechtsgrundlagen','Charges and legal authority')}</div><ul class="charges">${charges}</ul></section>`:''}<section class="section"><div class="title">${L('Unterschrift','Signature')}</div><div class="signature">${sig}</div></section><p class="note">${L('Keine privaten Kontaktdaten. Informations- und Arbeitsdokument; lokale Vorschriften und Freigabeverfahren beachten.','No private contact information. Informational working document; follow local policy and approval procedures.')}</p><script>addEventListener('load',()=>setTimeout(()=>print(),250));<\/script></body></html>`;}
 function groupedReportDocumentHtml(){const type=reportState.type,values=reportValues(),title=state.language==='en'?type.en:type.title,subtitle=state.language==='en'?type.title:type.en,agency=escapeHtml(state.agency||'—'),logo=new URL('city-of-los-angeles-seal.png',location.href).href;const groups=[];for(const field of [...commonReportFields,...type.fields]){const section=state.language==='en'?field[7]:field[6];let group=groups.find(item=>item.title===section);if(!group){group={title:section,fields:[]};groups.push(group)}group.fields.push(field)}const sections=groups.map(group=>`<section><h2>${escapeHtml(group.title)}</h2><div class="fields">${group.fields.map(([id,de,,required,,en])=>`<div class="field"><span>${escapeHtml(state.language==='en'?(en||de):de)} · ${required?L('Pflicht','Required'):L('Optional','Optional')}</span><b>${escapeHtml(values[id]||'—')}</b></div>`).join('')}</div></section>`).join('');const charges=type.charges?`<section><h2>${L('Straftaten und Rechtsgrundlagen','Charges and legal authority')}</h2><ul>${reportState.charges.map(item=>`<li><b>${escapeHtml(item.code)}</b> · ${escapeHtml(itemName(item))} · ${escapeHtml(item.type)}</li>`).join('')}</ul></section>`:'';const signature=reportState.signatureData?`<img src="${reportState.signatureData}">`:`<span class="typed">${escapeHtml(document.querySelector('#report-signature-text').value)}</span>`;return `<!doctype html><html lang="${state.language}"><head><meta charset="utf-8"><title>${escapeHtml(title)}</title><style>@page{size:A4;margin:12mm}*{box-sizing:border-box}body{margin:0;color:#17202b;font:10px/1.4 Arial,sans-serif}header{display:grid;grid-template-columns:62px 1fr;gap:14px;align-items:center;padding-bottom:10px;border-bottom:4px solid #c79b3b}header img{width:58px}h1{margin:0;font-size:20px}header p{margin:3px 0;color:#59636f}section{margin-top:12px;break-inside:avoid}h2{margin:0;padding:6px 9px;color:#fff;background:#172433;font-size:9px;letter-spacing:.06em;text-transform:uppercase}.fields{display:grid;grid-template-columns:1fr 1fr;border-left:1px solid #b8bec6}.field{min-height:42px;padding:7px 9px;border-right:1px solid #b8bec6;border-bottom:1px solid #b8bec6;white-space:pre-wrap}.field span{display:block;margin-bottom:3px;color:#647080;font-size:7.5px;text-transform:uppercase}.field b{font-size:10px}ul{margin:0;padding:10px 28px;border:1px solid #b8bec6}.signature{height:75px;padding:8px;border:1px solid #b8bec6}.signature img{max-height:58px;max-width:280px}.typed{font:italic 23px cursive}.footer{margin-top:14px;padding-top:7px;border-top:1px solid #9aa2ac;color:#68717c;font-size:8px}</style></head><body><header><img src="${logo}"><div><h1>${escapeHtml(title)}</h1><p>${escapeHtml(subtitle)} · ${agency} · ${escapeHtml(new Date().toLocaleString(state.language==='en'?'en-US':'de-DE'))}</p></div></header>${sections}${charges}<section><h2>${L('Unterschrift des bearbeitenden Officers','Reporting officer signature')}</h2><div class="signature">${signature}</div></section><div class="footer">${L('Informations- und Arbeitsdokument · lokale Freigabeverfahren beachten','Informational working document · follow local approval procedures')}</div><script>addEventListener('load',()=>setTimeout(()=>print(),250));<\/script></body></html>`}
 function exportReportPdf(){const error=validateReport();if(error){setReportStatus(error,true);return;}const w=open('','_blank');if(!w){setReportStatus(L('Pop-up blockiert.','Pop-up blocked.'),true);return;}w.document.write(groupedReportDocumentHtml());w.document.close();}
 function exportReportDoc(){const error=validateReport();if(error){setReportStatus(error,true);return;}const blob=new Blob(['\ufeff',groupedReportDocumentHtml().replace(/<script>[\s\S]*?<\/script>/,'' )],{type:'application/msword'}),a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download=`${reportState.type.id}-${Date.now()}.doc`;a.click();setTimeout(()=>URL.revokeObjectURL(a.href),500);}
 function setReportStatus(message,error=false){const n=document.querySelector('#report-status');n.textContent=message;n.style.color=error?'#ef8c85':'#78d6a2';}
 function saveReport(){const record={id:`${state.agency||'REPORT'}-${Date.now().toString().slice(-8)}`,type:reportState.type.id,title:reportState.type.title,agency:state.agency||'',created:new Date().toISOString(),fields:reportValues(),charges:reportState.charges.map(i=>({code:i.code,name:itemName(i),type:i.type}))};const rows=JSON.parse(localStorage.getItem('ca-report-archive')||'[]');rows.unshift(record);localStorage.setItem('ca-report-archive',JSON.stringify(rows.slice(0,200)));return record;}
-async function submitReport(){const error=validateReport();if(error){setReportStatus(error,true);return;}const record=saveReport();if(document.querySelector('#report-send-discord').checked){const url=configuredWebhook('report');if(!url){setReportStatus(L(`Bericht ${record.id} gespeichert. Admin-Menü entsperren und den Berichts-Webhook für ${state.agency} eintragen.`,`Report ${record.id} saved. Unlock Admin and configure the report webhook for ${state.agency}.`),true);return}const fields=Object.entries(record.fields).filter(([,value])=>value).slice(0,20).map(([key,value])=>({name:key,value:String(value).slice(0,1024),inline:false}));try{await postWebhook(url,JSON.stringify({username:'California Reports',embeds:[{title:`${record.title} · ${record.id}`,color:14133851,fields,footer:{text:`${record.agency} · ${record.charges.map(charge=>charge.code).join(', ')}`},timestamp:record.created}]}))}catch(sendError){setReportStatus(`${L('Bericht gespeichert, Versand fehlgeschlagen','Report saved, delivery failed')}: ${sendError.message}`,true);return}}setReportStatus(L(`Bericht ${record.id} gespeichert und übermittelt.`,`Report ${record.id} saved and delivered.`));}
+async function submitReport(){const error=validateReport();if(error){setReportStatus(error,true);return;}const record=saveReport();if(document.querySelector('#report-send-discord').checked){const url=configuredWebhook('report');if(!url){setReportStatus(L(`Bericht ${record.id} gespeichert. Admin-Menü entsperren und den Berichts-Webhook für ${state.agency} eintragen.`,`Report ${record.id} saved. Unlock Admin and configure the report webhook for ${state.agency}.`),true);return}const definitions=[...commonReportFields,...reportState.type.fields],groups=[];for(const field of definitions){const value=record.fields[field[0]];if(!value)continue;const section=state.language==='en'?field[7]:field[6];let group=groups.find(item=>item.section===section);if(!group){group={section,lines:[]};groups.push(group)}group.lines.push(`**${state.language==='en'?(field[5]||field[1]):field[1]}:** ${String(value).slice(0,700)}`)}const components=[{type:10,content:`## 🛡️ ${state.language==='en'?reportState.type.en:reportState.type.title}\n-# ${record.agency} · ${record.id} · ${new Date(record.created).toLocaleString(state.language==='en'?'en-US':'de-DE')}`}];for(const group of groups.slice(0,10)){components.push({type:14,divider:true,spacing:1},{type:10,content:`### ${group.section}\n${group.lines.join('\n').slice(0,3600)}`})}components.push({type:14,divider:true,spacing:1},{type:10,content:`### ⚖️ ${L('Straftaten und Rechtsgrundlagen','Charges and legal authority')}\n${record.charges.length?record.charges.map(charge=>`**${charge.code}** · ${charge.name}`).join('\n'):L('*Keine Straftaten ausgewählt – nur Dokumentation.*','*No charges selected — documentation only.*')}`},{type:14,divider:true,spacing:1},{type:10,content:`-# ${L('Polizeiliches Arbeitsdokument · lokale Prüf- und Freigabeverfahren beachten.','Law-enforcement working document · follow local review and approval procedures.')}`});const payload={flags:32768,components:[{type:17,accent_color:14133851,components:components.slice(0,39)}]};try{await postWebhook(url,JSON.stringify(payload))}catch(sendError){setReportStatus(`${L('Bericht gespeichert, Versand fehlgeschlagen','Report saved, delivery failed')}: ${sendError.message}`,true);return}}setReportStatus(L(`Bericht ${record.id} gespeichert und übermittelt.`,`Report ${record.id} saved and delivered.`));}
 function renderArchive(){const rows=JSON.parse(localStorage.getItem('ca-report-archive')||'[]');document.querySelector('#archive-list').innerHTML=rows.length?rows.map(r=>`<article class="archive-card"><h4>${escapeHtml(r.title)} · ${escapeHtml(r.id)}</h4><p>${escapeHtml(r.agency||L('Keine Behörde','No agency'))} · ${escapeHtml(new Date(r.created).toLocaleString(state.language==='en'?'en-US':'de-DE'))} · ${r.charges.length} Charges</p></article>`).join(''):`<div class="catalog-empty">${L('Noch keine Berichte gespeichert.','No reports saved yet.')}</div>`;}
 reportTypeSelect.addEventListener('change',renderReportForm);document.querySelector('#report-form').addEventListener('input',updateReportProgress);document.querySelector('#report-charge-input').addEventListener('input',showReportChargeSuggestions);document.querySelector('#report-charge-add').addEventListener('click',()=>{const m=reportChargeMatches();if(m[0])addReportCharge(m[0].catalogId)});document.querySelector('#report-charge-suggestions').addEventListener('click',e=>{const b=e.target.closest('[data-report-charge]');if(b)addReportCharge(b.dataset.reportCharge)});document.querySelector('#report-charge-list').addEventListener('click',e=>{const b=e.target.closest('[data-remove-report-charge]');if(!b)return;reportState.charges=reportState.charges.filter(i=>i.catalogId!==Number(b.dataset.removeReportCharge));renderReportCharges()});
+document.querySelector('#report-no-charges').addEventListener('change',event=>{if(event.target.checked){reportState.charges=[];renderReportCharges();document.querySelector('#report-charge-suggestions').innerHTML=''}document.querySelector('#report-charge-input').disabled=event.target.checked;document.querySelector('#report-charge-add').disabled=event.target.checked});
 document.querySelector('#report-export-pdf').addEventListener('click',exportReportPdf);document.querySelector('#report-export-doc').addEventListener('click',exportReportDoc);document.querySelector('#submit-report').addEventListener('click',submitReport);
 document.querySelector('#open-report-archive').addEventListener('click',()=>{document.querySelector('#report-editor').hidden=true;document.querySelector('.report-type-picker').hidden=true;document.querySelector('#report-archive').hidden=false});document.querySelector('#close-report-archive').addEventListener('click',()=>{document.querySelector('#report-archive').hidden=true;document.querySelector('.report-type-picker').hidden=false;renderReportForm()});document.querySelector('#unlock-archive').addEventListener('click',()=>{if(document.querySelector('#archive-password').value!=='LEO-CALIFORNIA-23532#!.-3'){document.querySelector('#archive-error').textContent='Falsches Passwort.';return;}document.querySelector('#archive-lock').hidden=true;document.querySelector('#archive-content').hidden=false;renderArchive()});
 const reportCanvas=document.querySelector('#report-signature-canvas'),reportCtx=reportCanvas.getContext('2d');reportCtx.lineWidth=5;reportCtx.lineCap='round';reportCtx.strokeStyle='#111';let reportDrawing=false;function reportPoint(e){const r=reportCanvas.getBoundingClientRect();return{x:(e.clientX-r.left)*reportCanvas.width/r.width,y:(e.clientY-r.top)*reportCanvas.height/r.height}}reportCanvas.addEventListener('pointerdown',e=>{reportDrawing=true;const p=reportPoint(e);reportCtx.beginPath();reportCtx.moveTo(p.x,p.y)});reportCanvas.addEventListener('pointermove',e=>{if(!reportDrawing)return;const p=reportPoint(e);reportCtx.lineTo(p.x,p.y);reportCtx.stroke()});const finishReportSignature=()=>{if(reportDrawing){reportDrawing=false;reportState.signatureData=reportCanvas.toDataURL()}};reportCanvas.addEventListener('pointerup',finishReportSignature);reportCanvas.addEventListener('pointerleave',finishReportSignature);document.querySelectorAll('[data-report-signature]').forEach(b=>b.addEventListener('click',()=>{reportState.signatureMode=b.dataset.reportSignature;document.querySelector('#report-signature-type').hidden=reportState.signatureMode!=='type';document.querySelector('#report-signature-draw').hidden=reportState.signatureMode!=='draw';document.querySelectorAll('[data-report-signature]').forEach(x=>x.classList.toggle('active',x===b))}));document.querySelector('#clear-report-signature').addEventListener('click',()=>{reportCtx.clearRect(0,0,reportCanvas.width,reportCanvas.height);reportState.signatureData='';document.querySelector('#report-signature-text').value=''});
