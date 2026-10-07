@@ -38,3 +38,7 @@ Die Website läuft vollständig im Browser. Es ist kein Server nötig.
 ## Hinweis
 
 Die Angaben sind allgemeine, teils geschätzte Informationen und keine Rechtsberatung. Vor realer Verwendung immer Gesetzestext, County-Regeln und konkreten Sachverhalt prüfen.
+
+## Zentrale Webhook-Datenbank
+
+Die vorbereitete Supabase-/PostgreSQL-Lösung befindet sich in `supabase/`. Die vollständige kostenlose Einrichtung steht in `SUPABASE-SETUP.md`. Webhook-URLs bleiben dabei ausschließlich auf dem Server und werden nicht an GitHub Pages ausgeliefert.
