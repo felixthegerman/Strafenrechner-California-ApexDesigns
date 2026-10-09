@@ -46,3 +46,5 @@ PDF-Dateien werden derzeit separat über den Druckdialog gespeichert. Der Discor
 ## Zentrale Webhook-Datenbank
 
 Die vorbereitete Supabase-/PostgreSQL-Lösung befindet sich in `supabase/`. Die vollständige kostenlose Einrichtung steht in `SUPABASE-SETUP.md`. Webhook-URLs bleiben dabei ausschließlich auf dem Server und werden nicht an GitHub Pages ausgeliefert.
+
+Alternativ kann die einzelne Datei `webhook-database.sql` direkt im Supabase SQL Editor oder in einer PostgreSQL-Datenbank ausgeführt werden. Sie legt die Tabelle, alle Behörden, URL-Prüfungen, Zeitstempel und gesperrte Browserrechte an.
