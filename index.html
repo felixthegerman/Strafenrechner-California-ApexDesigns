@@ -3,16 +3,16 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
-  <meta name="description" content="Kalifornische Strafrahmen durchsuchen, berechnen und für Discord, PDF oder Google Docs exportieren.">
-  <title>California Strafrechner</title>
-  <link rel="icon" type="image/png" href="city-of-los-angeles-seal.png">
+  <meta name="description" content="New Yorker Strafrahmen und Verkehrsverstöße durchsuchen, berechnen und für Discord, PDF oder Google Docs exportieren.">
+  <title>New York Strafrechner</title>
+  <link rel="icon" type="image/png" href="nyc-seal.png">
   <link rel="stylesheet" href="styles.css?v=17">
 </head>
 <body>
   <header class="topbar">
-    <a class="brand" href="#" aria-label="California Strafrechner Startseite">
-      <img src="city-of-los-angeles-seal.png" alt="Siegel der City of Los Angeles">
-      <span><strong>California Strafrechner</strong><small>Penal · Vehicle · Weapons</small></span>
+    <a class="brand" href="#" aria-label="New York Strafrechner Startseite">
+      <img src="nyc-seal.png" alt="Wappen der City of New York">
+      <span><strong>New York Strafrechner</strong><small>Penal Law · Vehicle &amp; Traffic · Environmental</small></span>
     </a>
     <div class="top-actions">
       <div class="language-switch" role="group" aria-label="Sprache der Deliktnamen">
@@ -26,7 +26,7 @@
 
   <main>
     <section class="hero" aria-labelledby="page-title">
-      <div><p class="eyebrow">California Criminal Code Toolkit</p><h1 id="page-title">Strafrahmen. Klar. Einsatzbereit.</h1><p>Gesetze durchsuchen, Höchstwerte kumulieren und eine fertige Akte für Discord, PDF oder Google Docs erstellen.</p></div>
+      <div><p class="eyebrow">New York Criminal &amp; Traffic Law Toolkit</p><h1 id="page-title">Strafrahmen. Klar. Einsatzbereit.</h1><p>New Yorker Gesetze durchsuchen, Höchstwerte kumulieren und eine fertige Akte für Discord, PDF oder Google Docs erstellen.</p></div>
       <div class="hero-stat"><strong id="hero-catalog-count">—</strong><span>durchsuchbare Einträge</span></div>
     </section>
 
@@ -43,7 +43,7 @@
       <div class="workspace">
         <div class="entry-panel panel">
           <div class="panel-heading"><div><span class="step">01</span><h2>Akte vorbereiten</h2></div><span id="catalog-count" class="catalog-count"></span></div>
-          <div class="agency-field"><label for="agency-input">Fraktion / Behörde</label><select id="agency-input"><option value="">Bitte Behörde auswählen</option><option>LAPD</option><option>LASD</option><option>CHP</option><option>USMS</option><option>USBP</option><option>CDFW</option></select><p class="field-help">Die Fallakten-ID wird nach der Auswahl automatisch erstellt.</p></div>
+          <div class="agency-field"><label for="agency-input">Fraktion / Behörde</label><select id="agency-input"><option value="">Bitte Behörde auswählen</option><option>NYPD</option><option>NYSP</option><option>MTA PD</option><option>PAPD</option><option>NYC Sheriff</option><option>NYS DEC</option></select><p class="field-help">Die Fallakten-ID wird nach der Auswahl automatisch erstellt.</p></div>
           <form id="offense-form" autocomplete="off">
             <label for="offense-input">Gesetzesnummer oder Beschreibung</label>
             <div class="search-wrap"><svg class="search-icon" viewBox="0 0 24 24" aria-hidden="true"><circle cx="10.8" cy="10.8" r="6.8"/><path d="m16 16 4.5 4.5"/></svg><textarea id="offense-input" rows="3" placeholder="z. B. PC 26350, DUI, robbery"></textarea><kbd>Ctrl ↵</kbd></div>
@@ -56,9 +56,9 @@
         </div>
         <div class="results-panel panel">
           <div class="panel-heading"><div><span class="step">02</span><h2>Berechnung</h2></div><button class="ghost-button danger" id="clear-all" type="button" disabled>Alle entfernen</button></div>
-          <div class="summary-grid" aria-live="polite"><div class="summary-card"><span>Delikte</span><strong id="total-count">0</strong><small id="known-count">Noch keine Auswahl</small></div><div class="summary-card accent"><span>Max. Haft</span><strong id="total-jail">0 Monate</strong><small>Kumulativ gerechnet</small></div><div class="summary-card"><span>Max. Geldstrafe / Ticket</span><strong id="total-fine">$0</strong><small>Ticketwerte ggf. inkl. Aufschläge</small></div><div class="summary-card bail"><span>Mögliche Kaution</span><strong id="total-bail">$0 / OR</strong><small id="bail-reason">LA County 2026 · Schätzung</small></div></div>
+          <div class="summary-grid" aria-live="polite"><div class="summary-card"><span>Delikte</span><strong id="total-count">0</strong><small id="known-count">Noch keine Auswahl</small></div><div class="summary-card accent"><span>Max. Haft</span><strong id="total-jail">0 Monate</strong><small>Kumulativ gerechnet</small></div><div class="summary-card"><span>Max. Geldstrafe / Ticket</span><strong id="total-fine">$0</strong><small>Ticketwerte ggf. inkl. Zuschläge</small></div><div class="summary-card bail"><span>Mögliche Kaution</span><strong id="total-bail">$0 / ROR</strong><small id="bail-reason">New York · unverbindliche Schätzung</small></div></div>
           <div class="offense-list" id="offense-list"></div>
-          <div class="principle-note"><strong>Wichtig</strong><p>Die Summe unterstellt aufeinanderfolgende Höchststrafen. Gerichte können Strafen concurrent verhängen; PC 654 kann Mehrfachbestrafung ausschließen.</p></div>
+          <div class="principle-note"><strong>Wichtig</strong><p>Die Summe unterstellt aufeinanderfolgende Höchststrafen. Gerichte können Strafen gleichzeitig vollstrecken; New Yorker Regeln können kumulative Bestrafung begrenzen.</p></div>
         </div>
       </div>
     </section>
@@ -69,7 +69,7 @@
         <div class="catalog-controls">
           <label class="sr-only" for="catalog-search">Katalog durchsuchen</label>
           <div class="catalog-search-wrap"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="10.8" cy="10.8" r="6.8"/><path d="m16 16 4.5 4.5"/></svg><input id="catalog-search" type="search" placeholder="Code oder Tatbestand suchen"></div>
-          <div class="catalog-filters" id="catalog-filters" aria-label="Katalog filtern"><button class="active" type="button" data-filter="all">Alle</button><button type="button" data-filter="trafficFine">Bußgelder</button><button type="button" data-filter="vehicle">Vehicle Code</button><button type="button" data-filter="fishWildlife">Fish & Wildlife</button><button type="button" data-filter="boating">Bootsverkehr</button><button type="button" data-filter="penal">Penal Code</button><button type="button" data-filter="weapons">Waffenrecht</button><button type="button" data-filter="health">Health & Safety</button><button type="button" data-filter="Felony">Felony</button><button type="button" data-filter="Wobbler">Wobbler</button><button type="button" data-filter="Misd.">Misd.</button><button type="button" data-filter="Infraction">Infraction</button></div>
+          <div class="catalog-filters" id="catalog-filters" aria-label="Katalog filtern"><button class="active" type="button" data-filter="all">Alle</button><button type="button" data-filter="trafficFine">Bußgelder</button><button type="button" data-filter="vehicle">Vehicle &amp; Traffic</button><button type="button" data-filter="fishWildlife">Fish, Wildlife &amp; Nature</button><button type="button" data-filter="boating">Bootsverkehr</button><button type="button" data-filter="penal">Penal Law</button><button type="button" data-filter="weapons">Waffenrecht</button><button type="button" data-filter="health">Drogen &amp; Gesundheit</button><button type="button" data-filter="Felony">Felony</button><button type="button" data-filter="Wobbler">Wobbler</button><button type="button" data-filter="Misd.">Misd.</button><button type="button" data-filter="Infraction">Infraction</button></div>
           <div class="catalog-result-bar"><span id="catalog-result-count"></span><button type="button" id="select-visible">Sichtbare auswählen</button></div>
         </div>
         <div class="catalog-list" id="catalog-list"></div>
@@ -95,13 +95,13 @@
 
     <section class="tab-panel" id="panel-tickets" role="tabpanel" aria-labelledby="tab-tickets" hidden>
       <div class="tickets-page panel">
-        <div class="catalog-header"><div><p class="eyebrow">California Traffic Tickets · 2026</p><h2>Strafzettel & Verkehrsverstöße</h2><p>Grundbuße, mögliche Gesamtsumme mit Aufschlägen und DMV-Punkte auf einen Blick. Mit + und − lassen sich Verstöße mehrfach berechnen.</p></div></div>
-        <div class="ticket-note"><strong>Warum ist „Gesamt“ höher?</strong><span>Zur Grundbuße kommen staatliche und örtliche Penalty Assessments sowie Gerichtsgebühren. Die angezeigten Gesamtwerte orientieren sich am veröffentlichten Yolo-County-Plan 2026; der konkrete Betrag kann je nach County und Fall abweichen.</span></div>
+        <div class="catalog-header"><div><p class="eyebrow">New York Traffic Tickets · 2026</p><h2>Strafzettel & Verkehrsverstöße</h2><p>Mögliche Geldbußen, Zuschläge und Punkte auf einen Blick. Mit + und − lassen sich Verstöße mehrfach berechnen.</p></div></div>
+        <div class="ticket-note"><strong>Warum sind Beträge geschätzt?</strong><span>In New York hängen Geldbußen und verpflichtende Zuschläge unter anderem von Gericht, Ort, Geschwindigkeit und Vorverstößen ab. Angezeigt wird deshalb eine unverbindliche Orientierung.</span></div>
         <section class="ticket-form-section" aria-labelledby="ticket-form-title">
           <div class="ticket-form-heading"><div><span class="step">01</span><h3 id="ticket-form-title">Strafzettel ausfüllen</h3></div><span>Angaben erscheinen im PDF und bleiben im Browser</span></div>
           <div class="ticket-auto-grid"><div><span>Fallakte</span><strong id="auto-case-number">Behörde auswählen</strong></div><div><span>Citation-Nummer</span><strong id="auto-citation-number">00000000</strong></div><div><span>Automatisch erfasst</span><strong id="auto-ticket-datetime">—</strong></div></div>
           <div class="ticket-form-grid" id="ticket-form">
-            <label class="wide-field"><span>Behörde / Department</span><select id="ticket-agency-input" required><option value="">Bitte Behörde auswählen</option><option>LAPD</option><option>LASD</option><option>CHP</option><option>USMS</option><option>USBP</option><option>CDFW</option></select></label>
+            <label class="wide-field"><span>Behörde / Department</span><select id="ticket-agency-input" required><option value="">Bitte Behörde auswählen</option><option>NYPD</option><option>NYSP</option><option>MTA PD</option><option>PAPD</option><option>NYC Sheriff</option><option>NYS DEC</option></select></label>
             <div class="subject-switch wide-field"><span>Strafzettel für</span><div><button class="active" type="button" data-subject-type="person">Person</button><button type="button" data-subject-type="vehicle">Fahrzeug</button></div></div>
             <div class="subject-fields" id="person-fields"><label class="wide-field"><span>Name der Person</span><input type="text" data-ticket-field="personName" placeholder="Vor- und Nachname" required></label></div>
             <div class="subject-fields" id="vehicle-fields" hidden><label><span>Kennzeichen / License Plate</span><input type="text" data-ticket-field="licensePlate" placeholder="z. B. 8ABC123"></label><label><span>Fahrzeug</span><input type="text" data-ticket-field="vehicle" placeholder="Marke, Modell, Farbe"></label></div>
@@ -109,7 +109,7 @@
             <label><span>Officer</span><input type="text" data-ticket-field="officer" placeholder="Name des Officers" required></label>
             <label><span>Badge-Nummer</span><input type="text" data-ticket-field="badgeNumber" placeholder="Dienstnummer" required></label>
             <label class="wide-field"><span>Ort</span><input type="text" data-ticket-field="location" placeholder="Straße / Kreuzung / Gewässer" required></label>
-            <label class="wide-field"><span>Gericht / Department</span><select data-ticket-field="court" required><option value="">Bitte auswählen</option><option>Department of Justice</option><option>Supreme Court</option><option>Superior Court</option><option value="Unbekannt">Unbekannt</option></select></label>
+            <label class="wide-field"><span>Gericht / Department</span><select data-ticket-field="court" required><option value="">Bitte auswählen</option><option>New York State Department of Justice</option><option>New York State Supreme Court</option><option>NYC Criminal Court</option><option>District / City / Town Court</option><option value="Unbekannt">Unbekannt</option></select></label>
             <div class="signature-field wide-field"><div class="signature-heading"><span>Unterschrift</span><div><button class="active" type="button" data-signature-mode="type">Schreiben</button><button type="button" data-signature-mode="draw">Malen</button><button type="button" id="clear-signature">Löschen</button></div></div><div id="signature-type-panel"><input type="text" data-ticket-field="signatureText" placeholder="Name als Unterschrift" required></div><div id="signature-draw-panel" hidden><canvas id="signature-canvas" width="900" height="220" aria-label="Unterschrift zeichnen"></canvas><p>Mit Maus, Stift oder Finger unterschreiben.</p></div></div>
           </div>
         </section>
@@ -123,15 +123,15 @@
         <div class="arrest-warning-box"><strong>Festnahme statt einfachem Ticket möglich</strong><span>DUI, Fahrerflucht, rücksichtsloses Fahren, Flucht vor der Polizei, Fahren trotz Sperre und weitere Misdemeanors/Felonies sind keine normalen Bußgeldfälle. Die roten Warnkarten erklären warum.</span></div>
         <div class="ticket-grid" id="ticket-grid"></div>
         <div class="ticket-document-actions"><div><strong>Strafzettelakte als PDF</strong><span>Erstellt ein druckfertiges Dokument mit den Angaben oben und allen ausgewählten Verstößen.</span></div><div><button id="send-ticket-webhook" type="button">An Akten-Discord</button><button id="download-ticket-pdf" type="button">PDF speichern</button></div></div>
-        <div class="ticket-source"><span>Stand: 2026 · Erstverstoß/Grundfall</span><a href="https://www.yolo.courts.ca.gov/sites/default/files/yolo/default/Bail%20Schedule.html" target="_blank" rel="noopener">2026 Uniform Bail & Penalty Schedule ↗</a></div>
+        <div class="ticket-source"><span>Stand: 2026 · Erstverstoß/Grundfall · unverbindliche Schätzung</span><a href="https://www.nysenate.gov/legislation/laws/VAT" target="_blank" rel="noopener">New York Vehicle &amp; Traffic Law ↗</a></div>
       </div>
     </section>
 
     <section class="tab-panel" id="panel-reports" role="tabpanel" aria-labelledby="tab-reports" hidden>
       <div class="reports-page panel">
-        <div class="catalog-header"><div><p class="eyebrow">California Law Enforcement Reports</p><h2>Polizeiliches Berichtswesen</h2><p>Berichtstyp auswählen, Pflichtfelder ausfüllen und anschließend als PDF oder DOC exportieren.</p></div><button id="open-report-archive" class="secondary-button" type="button">Berichts-Archiv</button></div>
+        <div class="catalog-header"><div><p class="eyebrow">New York Law Enforcement Reports</p><h2>Polizeiliches Berichtswesen</h2><p>Berichtstyp auswählen, Pflichtfelder ausfüllen und anschließend als PDF oder DOC exportieren.</p></div><button id="open-report-archive" class="secondary-button" type="button">Berichts-Archiv</button></div>
         <div class="report-type-picker">
-          <label for="report-agency-input"><span>Behörde</span><b>Pflicht</b></label><select id="report-agency-input"><option value="">Bitte Behörde auswählen</option><option>LAPD</option><option>LASD</option><option>CHP</option><option>USMS</option><option>USBP</option><option>CDFW</option></select>
+          <label for="report-agency-input"><span>Behörde</span><b>Pflicht</b></label><select id="report-agency-input"><option value="">Bitte Behörde auswählen</option><option>NYPD</option><option>NYSP</option><option>MTA PD</option><option>PAPD</option><option>NYC Sheriff</option><option>NYS DEC</option></select>
           <label for="report-type"><span>Berichtstyp</span><b>Pflicht</b></label><select id="report-type"><option value="">Bitte Bericht auswählen</option></select>
         </div>
         <div id="report-editor" hidden>
@@ -145,9 +145,9 @@
       </div>
     </section>
   </main>
-  <footer><span>California Strafrechner</span><p>Allgemeine Information · Kein Ersatz für anwaltliche Beratung.</p></footer>
+  <footer><span>New York Strafrechner</span><p>Allgemeine Information · Kein Ersatz für anwaltliche Beratung.</p></footer>
   <div class="toast" id="toast" role="status" aria-live="polite"></div>
   <div class="admin-modal" id="admin-modal" hidden><div class="admin-dialog" role="dialog" aria-modal="true" aria-labelledby="admin-title"><div class="admin-dialog-head"><div><p class="eyebrow">Lokale sichere Konfiguration</p><h2 id="admin-title">Webhook-Verwaltung</h2></div><button id="close-admin-menu" type="button" aria-label="Schließen">×</button></div><div id="admin-auth"><p id="admin-auth-help"></p><label><span>Admin-Passwort</span><input id="admin-password" type="password" autocomplete="current-password"></label><label id="admin-password-confirm-row"><span>Passwort bestätigen</span><input id="admin-password-confirm" type="password" autocomplete="new-password"></label><button id="admin-unlock" class="primary-button" type="button">Admin-Menü öffnen</button></div><div id="admin-config" hidden><p class="admin-note">Die Webhooks werden mit dem Admin-Passwort verschlüsselt und nur in diesem Browser gespeichert.</p><div id="admin-webhook-grid"></div><div class="admin-actions"><button id="admin-lock" type="button">Sperren</button><button id="admin-save" class="primary-button" type="button">Webhooks speichern</button></div></div><p id="admin-status"></p></div></div>
-  <script src="catalog.generated.js"></script><script src="catalog.extended.js"></script><script src="app.js?v=22"></script>
+  <script src="new-york-catalog.js"></script><script src="app.js?v=23"></script>
 </body>
 </html>
