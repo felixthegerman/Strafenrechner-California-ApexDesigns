@@ -43,7 +43,7 @@
       <div class="workspace">
         <div class="entry-panel panel">
           <div class="panel-heading"><div><span class="step">01</span><h2>Akte vorbereiten</h2></div><span id="catalog-count" class="catalog-count"></span></div>
-          <div class="agency-field"><label for="agency-input">Fraktion / Behörde</label><select id="agency-input"><option value="">Bitte Behörde auswählen</option><option>NYPD</option><option>NYSP</option><option>MTA PD</option><option>PAPD</option><option>NYC Sheriff</option><option>NYS DEC</option></select><p class="field-help">Die Fallakten-ID wird nach der Auswahl automatisch erstellt.</p></div>
+          <div class="agency-field"><label for="agency-input">Fraktion / Behörde</label><select id="agency-input"><option value="">Bitte Behörde auswählen</option><option>NYPD</option><option>NYCSO</option><option>NYSP</option><option>MTA PD</option><option>PAPD</option><option>NYS DEC</option></select><p class="field-help">Die Fallakten-ID wird nach der Auswahl automatisch erstellt.</p></div>
           <form id="offense-form" autocomplete="off">
             <label for="offense-input">Gesetzesnummer oder Beschreibung</label>
             <div class="search-wrap"><svg class="search-icon" viewBox="0 0 24 24" aria-hidden="true"><circle cx="10.8" cy="10.8" r="6.8"/><path d="m16 16 4.5 4.5"/></svg><textarea id="offense-input" rows="3" placeholder="z. B. PC 26350, DUI, robbery"></textarea><kbd>Ctrl ↵</kbd></div>
@@ -101,7 +101,7 @@
           <div class="ticket-form-heading"><div><span class="step">01</span><h3 id="ticket-form-title">Strafzettel ausfüllen</h3></div><span>Angaben erscheinen im PDF und bleiben im Browser</span></div>
           <div class="ticket-auto-grid"><div><span>Fallakte</span><strong id="auto-case-number">Behörde auswählen</strong></div><div><span>Citation-Nummer</span><strong id="auto-citation-number">00000000</strong></div><div><span>Automatisch erfasst</span><strong id="auto-ticket-datetime">—</strong></div></div>
           <div class="ticket-form-grid" id="ticket-form">
-            <label class="wide-field"><span>Behörde / Department</span><select id="ticket-agency-input" required><option value="">Bitte Behörde auswählen</option><option>NYPD</option><option>NYSP</option><option>MTA PD</option><option>PAPD</option><option>NYC Sheriff</option><option>NYS DEC</option></select></label>
+            <label class="wide-field"><span>Behörde / Department</span><select id="ticket-agency-input" required><option value="">Bitte Behörde auswählen</option><option>NYPD</option><option>NYCSO</option><option>NYSP</option><option>MTA PD</option><option>PAPD</option><option>NYS DEC</option></select></label>
             <div class="subject-switch wide-field"><span>Strafzettel für</span><div><button class="active" type="button" data-subject-type="person">Person</button><button type="button" data-subject-type="vehicle">Fahrzeug</button></div></div>
             <div class="subject-fields" id="person-fields"><label class="wide-field"><span>Name der Person</span><input type="text" data-ticket-field="personName" placeholder="Vor- und Nachname" required></label></div>
             <div class="subject-fields" id="vehicle-fields" hidden><label><span>Kennzeichen / License Plate</span><input type="text" data-ticket-field="licensePlate" placeholder="z. B. 8ABC123"></label><label><span>Fahrzeug</span><input type="text" data-ticket-field="vehicle" placeholder="Marke, Modell, Farbe"></label></div>
@@ -131,7 +131,7 @@
       <div class="reports-page panel">
         <div class="catalog-header"><div><p class="eyebrow">New York Law Enforcement Reports</p><h2>Polizeiliches Berichtswesen</h2><p>Berichtstyp auswählen, Pflichtfelder ausfüllen und anschließend als PDF oder DOC exportieren.</p></div><button id="open-report-archive" class="secondary-button" type="button">Berichts-Archiv</button></div>
         <div class="report-type-picker">
-          <label for="report-agency-input"><span>Behörde</span><b>Pflicht</b></label><select id="report-agency-input"><option value="">Bitte Behörde auswählen</option><option>NYPD</option><option>NYSP</option><option>MTA PD</option><option>PAPD</option><option>NYC Sheriff</option><option>NYS DEC</option></select>
+          <label for="report-agency-input"><span>Behörde</span><b>Pflicht</b></label><select id="report-agency-input"><option value="">Bitte Behörde auswählen</option><option>NYPD</option><option>NYCSO</option><option>NYSP</option><option>MTA PD</option><option>PAPD</option><option>NYS DEC</option></select>
           <label for="report-type"><span>Berichtstyp</span><b>Pflicht</b></label><select id="report-type"><option value="">Bitte Bericht auswählen</option></select>
         </div>
         <div id="report-editor" hidden>

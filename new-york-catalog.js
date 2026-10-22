@@ -103,6 +103,10 @@
     E('27-0707','Abfall rechtswidrig entsorgt','Unlawful disposal of solid waste',5000,180)
   ];
   const morePenal=[
+    P('145.60','Graffiti angebracht','Making graffiti','Class A Misd.',12,1000,'bis 364 Tage'),
+    P('145.65','Graffiti-Werkzeuge mit Sachbeschädigungsabsicht besessen','Possession of graffiti instruments','Class B Misd.',3,500,'bis 90 Tage'),
+    P('240.05','Aufruhr zweiten Grades','Riot in the second degree','Class A Misd.',12,1000,'bis 364 Tage'),
+    P('240.10','Unrechtmäßige Versammlung','Unlawful assembly','Class B Misd.',3,500,'bis 90 Tage'),
     P('105.05','Verschwörung fünften Grades','Conspiracy in the fifth degree','Class A Misd.',12,1000,'bis 364 Tage'),
     P('105.10','Verschwörung vierten Grades','Conspiracy in the fourth degree','Class E Felony',48,5000,'bis 4 Jahre'),
     P('110.00','Versuch einer Straftat','Attempt to commit a crime','Varies',null,5000,'abhängig vom Zieldelikt','Die Einstufung liegt regelmäßig unter dem vollendeten Zieldelikt; konkrete Berechnung prüfen.'),
@@ -180,6 +184,12 @@
     P('270.00','Rechtswidriges Abbrennen von Feuerwerk','Unlawfully dealing with fireworks','Class B Misd.',3,500,'bis 90 Tage')
   ];
   const moreTraffic=[
+    {...V('1145','Vorfahrt im Kreisverkehr missachtet','Failure to yield in a traffic circle',150,15,3),estimated:true,note:'Orientierungswert nach der allgemeinen Strafvorschrift des VTL § 1800; Zuschläge und lokale Gebühren kommen hinzu.'},
+    {...V('1152(a)','Fußgänger außerhalb eines Übergangs gefährdet','Failure to yield to pedestrian crossing outside a crosswalk',150,15,3),estimated:true,note:'Orientierungswert nach der allgemeinen Strafvorschrift des VTL § 1800; konkrete Umstände und örtliche Regeln beachten.'},
+    {...V('1152(b)','Fußgänger zwischen signalisierten Kreuzungen nicht vorgelassen','Failure to yield to pedestrian between signalized intersections',150,15,3),estimated:true,note:'Orientierungswert nach der allgemeinen Strafvorschrift des VTL § 1800; konkrete Umstände und örtliche Regeln beachten.'},
+    {...V('1192(4-a)','Fahren unter kombinierter Alkohol- und Drogeneinwirkung','Driving while impaired by combined influence of alcohol and drugs',1000,365,0),estimated:true,note:'DWI-Strafrahmen und Zusatzfolgen hängen von Vorstrafen und Umständen ab; Geldbetrag hier nur als Orientierung.'},
+    {...V('1192(5)','Alkoholgrenzwert für Nutzfahrzeugführer überschritten','Commercial motor vehicle alcohol threshold violation',500,15,0),estimated:true,note:'Gesonderte Commercial-Motor-Vehicle-Regel; genaue Einordnung und Lizenzfolgen gesondert prüfen.'},
+    {...V('1229-b','Kindersitz oder Rückhaltesystem fehlt','Required child safety seat or restraint missing',100,15,3),estimated:true,note:'Orientierungswert; Alters-/Größenanforderungen und konkrete Geldbuße anhand des aktuellen VTL prüfen.'},
     V('1102','Anweisung eines Polizeibeamten oder Verkehrshelfers missachtet','Failure to comply with police officer or flagperson',150,0,2),
     V('1110-a','Ampelvorrang eines Busses missachtet','Failure to obey bus rapid transit signal',150,0,2),
     V('1111-a','Verkehrskamera-Verstoß bei roter Ampel','Red-light camera violation',50,0,0),
@@ -255,6 +265,9 @@
     B('79-b','Boot ohne vorgeschriebene Rettungswesten betrieben','Required personal flotation devices missing',250,15)
   ];
   const moreEnvironment=[
+    E('11-1315','Köderfische entgegen Art-, Fang- oder Transportregeln verwendet','Using or transporting bait fish contrary to species, catch, or transport rules',500,15),
+    E('13-0309','Muscheln aus nicht zertifizierten Gewässern genommen oder transportiert','Taking or transporting shellfish from uncertified waters',1000,90),
+    E('13-0311','Kommerzielle Muschelernte ohne erforderliche Grabungserlaubnis','Commercial shellfish harvest without required digger permit',1000,90),
     E('11-0503','Geschützte Wildtiere ohne Erlaubnis genommen oder besessen','Taking or possessing protected wildlife without authorization',1000,90),
     E('11-0505','Endangered oder threatened species rechtswidrig genommen','Unlawful taking of endangered or threatened species',5000,180),
     E('11-0507','Wildtier rechtswidrig freigelassen oder eingeführt','Unlawful release or introduction of wildlife',1000,90),
